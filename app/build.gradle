@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+// Names the build outputs betterlauncher-<buildType>.apk / .aab instead of app-<buildType>.*
+base {
+    archivesName = 'betterlauncher'
+}
+
 android {
     compileSdk 36
 
@@ -45,6 +50,7 @@ android {
             }
             debuggable false
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
