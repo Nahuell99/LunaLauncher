@@ -19,3 +19,6 @@ google-services.json
 /node_modules/
 /lawnicons/
 betterlauncher
+
+# Studio-selected Gradle JDK (machine-specific absolute path)
+gradle/config.properties
