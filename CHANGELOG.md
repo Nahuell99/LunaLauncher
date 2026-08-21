@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/pierspad/BetterLauncher/compare/v1.4.0...v1.4.1) (2026-08-21)
+
+### Bug Fixes
+
+* shrinkResource = true ([d047491](https://github.com/pierspad/BetterLauncher/commit/d0474918888f5fc5590eee909236b9c45adb86aa))
+
 ## [1.4.0](https://github.com/pierspad/BetterLauncher/compare/v1.3.1...v1.4.0) (2026-08-21)
 
 ### Features
