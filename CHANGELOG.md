@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/pierspad/BetterLauncher/compare/v1.3.1...v1.4.0) (2026-08-21)
+
+### Features
+
+* first play store release and device ui fix ([29785c1](https://github.com/pierspad/BetterLauncher/commit/29785c1649bc579d7547c2aa8217b3097eb90675))
+
 ## [1.3.1](https://github.com/pierspad/BetterLauncher/compare/v1.3.0...v1.3.1) (2026-08-01)
 
 ### Bug Fixes
