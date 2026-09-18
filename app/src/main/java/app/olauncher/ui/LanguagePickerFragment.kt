@@ -46,6 +46,7 @@ class LanguagePickerFragment : Fragment() {
         LanguageOption("", "🌐", "Automatic", "Automatic", R.string.language_automatic),
         LanguageOption("ar", "🇸🇦", "العربية", "Arabic"),
         LanguageOption("bn", "🇧🇩", "বাংলা", "Bengali"),
+        LanguageOption("ca", "🇦🇩", "Català", "Catalan"),
         LanguageOption("zh", "🇨🇳", "中文", "Chinese"),
         LanguageOption("hr", "🇭🇷", "Hrvatski", "Croatian"),
         LanguageOption("nl", "🇳🇱", "Nederlands", "Dutch"),
