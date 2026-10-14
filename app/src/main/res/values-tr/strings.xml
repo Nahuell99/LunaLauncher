@@ -103,7 +103,6 @@
         \n\nAyrıca BetterLauncher geliştiricilerini desteklemenin en iyi yoludur. Mutlaka inceleyin!</string>
     <string name="wallpaper_message">BetterLauncher, ana ekranınıza taze bir görünüm kazandırmak için her gün yeni duvar kağıtları sunuyor. Hem de ücretsiz!
         \n\nDenemek ister misiniz?</string>
-    <string name="accessibility_service_description">Kilitlemek için çift dokunmayı ve son uygulamaları göstermek için ana ekran düğmesini etkinleştirmek için erişilebilirlik izni gereklidir. BetterLauncher tarafından bu hizmet aracılığıyla elde edilen hiçbir veri cihazınızdan ayrılmayacaktır.</string>
     <string name="support_olauncher_for_free">Amazon ortaklık bağlantımızı kullanarak BetterLauncher\'ı ücretsiz olarak destekleyin.</string>
     <string name="support_olauncher_message">Bağlantımızı kullanarak her bir şey satın aldığınızda, küçük bir komisyon alırız. Lütfen bağlantıyı kaydedin ve çevrimiçi alışveriş yaptığınızda kullanın. Teşekkür ederiz!</string>
     <string name="open">Linki aç</string>

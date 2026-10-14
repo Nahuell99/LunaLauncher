@@ -104,7 +104,6 @@
         \n\n这也是支持 BetterLauncher 开发者的最佳方式。快来看看吧！</string>
     <string name="wallpaper_message">BetterLauncher每天提供美丽的新壁纸。让你的主屏幕每天焕然一新，免费！
         \n\n想试试吗？</string>
-    <string name="accessibility_service_description">需要无障碍权限才能启用双击锁屏和主页键显示最近应用。BetterLauncher 通过此服务获取的任何数据都不会离开您的设备。</string>
     <string name="support_olauncher_for_free">使用我们的亚马逊附属链接免费支持 BetterLauncher。</string>
     <string name="support_olauncher_message">每次您使用我们的链接购买商品时，我们都会获得少量佣金。请保存链接并在网上购物时使用它。 谢谢！</string>
     <string name="open">打开链接</string>

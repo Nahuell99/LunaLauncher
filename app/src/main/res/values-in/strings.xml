@@ -69,7 +69,6 @@
         \n\nIni juga merupakan cara terbaik untuk mendukung pengembang BetterLauncher. Cek it out!</string>
     <string name="wallpaper_message">BetterLauncher menawarkan wallpaper baru yang indah setiap hari. Berikan tampilan baru pada layar utama Anda setiap hari, secara gratis!
         \n\nIngin mencobanya?</string>
-    <string name="accessibility_service_description">Izin aksesibilitas diperlukan untuk mengaktifkan ketuk dua kali untuk mengunci dan tombol beranda untuk menampilkan aplikasi terbaru. Data apa pun yang diperoleh BetterLauncher melalui layanan ini tidak akan meninggalkan perangkat Anda.</string>
     <string name="support_olauncher_for_free">Dukung BetterLauncher secara gratis dengan menggunakan tautan afiliasi Amazon kami.</string>
     <string name="support_olauncher_message">Setiap kali Anda membeli sesuatu menggunakan tautan kami, kami mendapat komisi kecil. Harap simpan tautan dan gunakan setiap kali Anda berbelanja online.\nTerima kasih!</string>
     <string name="open">Buka tautan</string>

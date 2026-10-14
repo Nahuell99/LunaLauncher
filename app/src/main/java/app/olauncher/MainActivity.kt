@@ -157,6 +157,7 @@ class MainActivity : AppCompatActivity() {
             }
             registerReceiver(profileReceiver, filter)
         }
+        app.olauncher.helper.AccessibilityConsent.showOnLaunch(this)
         intent?.let { handleIntent(it) }
     }
 

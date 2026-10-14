@@ -27,6 +27,11 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     override fun onServiceConnected() {
+        if (!AccessibilityConsent.hasConsent(this)) {
+            prefs.lockModeOn = false
+            disableSelf()
+            return
+        }
         prefs.lockModeOn = true
         val info = serviceInfo
         info.packageNames = null // Monitor all packages for app limit enforcement
@@ -35,6 +40,10 @@ class MyAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
+        if (!AccessibilityConsent.hasConsent(this)) {
+            disableSelf()
+            return
+        }
         try {
             val eventType = event.eventType
             if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {

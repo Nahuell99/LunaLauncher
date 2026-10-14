@@ -298,7 +298,7 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         when (view.id) {
             R.id.swipeLeftApp -> toggleSwipeLeft()
             R.id.swipeRightApp -> toggleSwipeRight()
-            R.id.toggleLock -> startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            R.id.toggleLock -> app.olauncher.helper.AccessibilityConsent.openSettings(requireContext())
             R.id.widgetChooseRow -> removeWidget()
         }
         return true
@@ -627,7 +627,7 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         // prefs.lockModeOn = true
         populateLockSettings()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            app.olauncher.helper.AccessibilityConsent.openSettings(requireContext())
     }
 
     private fun toggleLockMode() {

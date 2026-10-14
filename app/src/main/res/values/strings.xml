@@ -120,7 +120,6 @@
         \n\nIt\'s also the best way to support the developers of BetterLauncher. Check it out!</string>
     <string name="wallpaper_message">BetterLauncher offers beautiful new wallpapers daily. Give your homescreen a fresh new look every day, for free!
         \n\nWant to try it?</string>
-    <string name="accessibility_service_description">The accessibility permission is required to enable the gesture - double tap to lock . Any data acquired by BetterLauncher via this service will not leave your device.</string>
     <string name="support_olauncher_for_free">Support BetterLauncher for free by using our Amazon affiliate link.</string>
     <string name="support_olauncher_message">Every time you buy something using our link, we get a small commission. Please save the link and use it whenever you shop online.\nThank you!</string>
     <string name="open">Open link</string>
@@ -362,4 +361,9 @@ Hiding pinned shortcuts is not allowed</string>
     <string name="settings_home_only_icons">Don\'t show app names on home screen</string>
         <string name="settings_use_colorful_icons">Use colorful icons</string>
     <string name="settings_icons_title">Icons</string>
+    <string name="accessibility_service_description">BetterLauncher uses the Android AccessibilityService API for optional double-tap screen locking and app limits you configure. It accesses foreground app package names and window-change events to detect when a limited app opens or closes, and clicked view information (view type and accessibility label) to recognise the screen-lock gesture. When a selected app is in cooldown, it returns to the home screen and displays the remaining cooldown. App-limit settings and cooldown timestamps are stored only on your device. Accessibility data is processed on your device and is not sent to servers or shared with third parties. You can decline and continue using the launcher without these features, or disable the service at any time in Android Accessibility settings.</string>
+    <string name="accessibility_disclosure_title">Accessibility service</string>
+    <string name="accessibility_disclosure_message">BetterLauncher uses the Android AccessibilityService API for optional double-tap screen locking and app limits you configure. It accesses foreground app package names and window-change events to detect when a limited app opens or closes, and clicked view information (view type and accessibility label) to recognise the screen-lock gesture. When a selected app is in cooldown, it returns to the home screen and displays the remaining cooldown. App-limit settings and cooldown timestamps are stored only on your device. Accessibility data is processed on your device and is not sent to servers or shared with third parties. You can decline and continue using the launcher without these features, or disable the service at any time in Android Accessibility settings.</string>
+    <string name="accessibility_disclosure_accept">I agree — open settings</string>
+    <string name="accessibility_disclosure_decline">No thanks</string>
 </resources>

@@ -48,6 +48,9 @@ android {
             if (file(keystorePath).exists()) {
                 signingConfig signingConfigs.release
             }
+            // Semantic release builds before its version-bump commit. Omit that
+            // changing Git revision so F-Droid can reproduce the tagged release.
+            vcsInfo.include false
             debuggable false
             minifyEnabled true
             shrinkResources true

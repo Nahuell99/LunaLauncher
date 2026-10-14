@@ -69,7 +69,6 @@
         \n\nDet är också det bästa sättet att stödja utvecklarna av BetterLauncher. Kolla in det!</string>
     <string name="wallpaper_message">BetterLauncher erbjuder vackra nya bakgrundsbilder varje dag. Ge din hemskärm ett fräscht utseende varje dag, gratis!
         \n\nVill du prova?</string>
-    <string name="accessibility_service_description">Tillgänglighetsbehörigheten krävs för att aktivera dubbeltryck för att låsa och hemknappen för att visa senaste appar. Eventuella data förvärvade av BetterLauncher genom denna tjänst kommer inte att lämna din enhet.</string>
     <string name="support_olauncher_for_free">Stöd BetterLauncher utan kostnad genom att använda vår Amazon-affiliatelänk.</string>
     <string name="support_olauncher_message">Varje gång du köper något via vår länk får vi en liten provision. Vänligen spara länken och använd den när du handlar på nätet.\nTack!</string>
     <string name="open">Öppna länk</string>

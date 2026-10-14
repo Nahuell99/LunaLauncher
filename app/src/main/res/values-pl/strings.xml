@@ -101,7 +101,6 @@
         \n\nTo także najlepszy sposób na wsparcie deweloperów BetterLauncher. Sprawdź to!</string>
     <string name="wallpaper_message">BetterLauncher oferuje piękne nowe tapety codziennie. Nadaj swojemu ekranowi głównemu świeży wygląd każdego dnia, za darmo!
         \n\nChcesz spróbować?</string>
-    <string name="accessibility_service_description">Uprawnienia dostępu są wymagane, aby włączyć podwójne dotknięcie do zablokowania i przycisk ekranu głównego do wyświetlania ostatnich aplikacji. Wszelkie dane pozyskane przez BetterLauncher za pośrednictwem tej usługi nie opuszczą Twojego urządzenia.</string>
     <string name="support_olauncher_for_free">Wesprzyj BetterLauncher za darmo, korzystając z naszego linku afiliacyjnego Amazon.</string>
     <string name="support_olauncher_message">Za każdym razem, gdy kupujesz coś za pomocą naszego linku, otrzymujemy niewielką prowizję. Zapisz link i używaj go podczas zakupów online. Dziękuję!</string>
     <string name="open">Otwórz łącze</string>

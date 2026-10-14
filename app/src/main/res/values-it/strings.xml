@@ -93,7 +93,6 @@
         \n\nÈ anche il modo migliore per supportare gli sviluppatori di BetterLauncher. Dai un\'occhiata!</string>
     <string name="wallpaper_message">BetterLauncher offre bellissimi sfondi nuovi ogni giorno. Dai un aspetto fresco alla tua schermata principale ogni giorno, gratuitamente!
         \n\nVuoi provarlo?</string>
-    <string name="accessibility_service_description">L\’autorizzazione di accessibilità è necessaria per abilitare il doppio tocco per il blocco schermo e il tasto Home per mostrare le app recenti. Qualsiasi dato acquisito da BetterLauncher tramite questo servizio rimarrà all\’interno del telefono.</string>
     <string name="support_olauncher_for_free">Supporta BetterLauncher gratuitamente utilizzando il nostro link di affiliazione su Amazon.</string>
     <string name="support_olauncher_message">Ogni volta che acquisti qualcosa utilizzando il nostro link, riceviamo una piccola commissione. Salva il link e usalo ogni volta che fai acquisti online.\n Grazie!</string>
     <string name="open">Link aperto</string>
@@ -347,4 +346,9 @@ Non è possibile nascondere le scorciatoie bloccate</string>
     <string name="settings_home_only_icons">Non mostrare il testo delle app nella home</string>
         <string name="settings_use_colorful_icons">Usa le icone colorate</string>
     <string name="settings_icons_title">Icone</string>
+    <string name="accessibility_service_description">BetterLauncher usa l’API AccessibilityService di Android per il blocco schermo con doppio tocco e i limiti delle app configurati da te, entrambi facoltativi. Accede ai nomi dei pacchetti delle app in primo piano e agli eventi di cambio finestra per rilevare apertura e chiusura delle app limitate, e alle informazioni sulle viste toccate (tipo ed etichetta di accessibilità) per riconoscere il gesto di blocco schermo. Quando un’app scelta è in pausa, torna alla schermata Home e mostra il tempo rimanente. Impostazioni e scadenze dei limiti sono salvate solo sul dispositivo. I dati di accessibilità sono elaborati sul dispositivo, senza inviarli a server o condividerli con terze parti. Puoi rifiutare e usare il launcher senza queste funzioni, oppure disattivare il servizio nelle impostazioni di Accessibilità di Android.</string>
+    <string name="accessibility_disclosure_title">Servizio di accessibilità</string>
+    <string name="accessibility_disclosure_message">BetterLauncher usa l’API AccessibilityService di Android per il blocco schermo con doppio tocco e i limiti delle app configurati da te, entrambi facoltativi. Accede ai nomi dei pacchetti delle app in primo piano e agli eventi di cambio finestra per rilevare apertura e chiusura delle app limitate, e alle informazioni sulle viste toccate (tipo ed etichetta di accessibilità) per riconoscere il gesto di blocco schermo. Quando un’app scelta è in pausa, torna alla schermata Home e mostra il tempo rimanente. Impostazioni e scadenze dei limiti sono salvate solo sul dispositivo. I dati di accessibilità sono elaborati sul dispositivo, senza inviarli a server o condividerli con terze parti. Puoi rifiutare e usare il launcher senza queste funzioni, oppure disattivare il servizio nelle impostazioni di Accessibilità di Android.</string>
+    <string name="accessibility_disclosure_accept">Acconsento — apri impostazioni</string>
+    <string name="accessibility_disclosure_decline">No, grazie</string>
 </resources><!-- Italian -->
