@@ -1,3 +1,9 @@
+## [1.4.2](https://github.com/pierspad/BetterLauncher/compare/v1.4.1...v1.4.2) (2026-10-14)
+
+### Bug Fixes
+
+* disclose accessibility use and make releases reproducible ([d6d59f8](https://github.com/pierspad/BetterLauncher/commit/d6d59f806894679d31340c06f620b7bfc00abf10))
+
 ## [1.4.1](https://github.com/pierspad/BetterLauncher/compare/v1.4.0...v1.4.1) (2026-08-21)
 
 ### Bug Fixes
