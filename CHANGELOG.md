@@ -1,3 +1,9 @@
+## [1.4.3](https://github.com/pierspad/BetterLauncher/compare/v1.4.2...v1.4.3) (2026-10-14)
+
+### Bug Fixes
+
+* omit dependency signing block for F-Droid ([1a83fa6](https://github.com/pierspad/BetterLauncher/commit/1a83fa6efc196dcc1c780cce40b2bb3f09937bb4))
+
 ## [1.4.2](https://github.com/pierspad/BetterLauncher/compare/v1.4.1...v1.4.2) (2026-10-14)
 
 ### Bug Fixes
