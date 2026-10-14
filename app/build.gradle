@@ -63,6 +63,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    // F-Droid rejects the opaque dependency block embedded in signed APKs.
+    dependenciesInfo {
+        includeInApk = false
+    }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
