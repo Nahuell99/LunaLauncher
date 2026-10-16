@@ -44,6 +44,6 @@ Lint currently has inherited resource/translation findings. CI rejects new findi
 
 Explain the problem, resulting behavior and checks performed. Use a conventional commit prefix such as `fix:`, `feat:` or `docs:`. Do not mix unrelated refactors into a bug fix.
 
-A release commit on `main` triggers semantic-release. It updates `gradle.properties` and `CHANGELOG.md`, creates a tag, and publishes the signed APK/AAB. Signing credentials belong in GitHub secrets, never in the repository. Run local checks before pushing; CI verifies the same source before publishing.
+A release commit on `main` triggers a stable GitHub release and Google Play production publication. `dev` produces a GitHub prerelease and publishes to Play open testing (`beta`). Semantic-release updates `gradle.properties` and `CHANGELOG.md`, creates a tag, and publishes the signed APK/AAB. Release workflows are serialized and versionCode advances beyond all stable/dev release tags so both channels share one increasing sequence. Signing credentials belong in GitHub secrets, never in the repository. Run local checks before pushing; CI verifies the same source before publishing.
 
 F-Droid builds the tagged source and checks it against the published signed APK. Keep the build reproducible and update the pending inclusion recipe when a new release needs review; details are in [docs/f-droid.md](docs/f-droid.md).

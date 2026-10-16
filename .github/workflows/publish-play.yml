@@ -4,17 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Stable release already published on GitHub (vX.Y.Z)
+        description: GitHub release tag (vX.Y.Z or vX.Y.Z-dev.N)
         required: true
         type: string
       track:
-        description: Existing testing track API name (beta = open testing)
-        default: beta
+        description: Google Play channel
+        default: production
         required: true
-        type: string
+        type: choice
+        options:
+          - production
+          - beta
       status:
-        description: Save a draft or release to the selected testers
-        default: draft
+        description: Save a draft or submit the release
+        default: completed
         type: choice
         options:
           - draft

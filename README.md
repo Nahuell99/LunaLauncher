@@ -72,7 +72,7 @@ Use JDK 17, Android SDK 36 and the included Gradle wrapper:
 ./gradlew assembleDebug assembleDebugAndroidTest lintDebug
 ```
 
-The debug app has a separate `.debug` package. See [CONTRIBUTING.md](CONTRIBUTING.md) for emulator regression checks and the release workflow. Google Play testing automation is described in [docs/google-play-release.md](docs/google-play-release.md).
+The debug app has a separate `.debug` package. See [CONTRIBUTING.md](CONTRIBUTING.md) for emulator regression checks and the release workflow. Google Play release automation is described in [docs/google-play-release.md](docs/google-play-release.md).
 
 ## Contributing
 

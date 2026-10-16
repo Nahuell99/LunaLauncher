@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Upload a signed AAB to an existing Google Play testing track."""
+"""Publish a signed GitHub AAB, reusing it when already uploaded to Google Play."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -23,8 +24,10 @@ def request(session, method, url, **kwargs):
 
 
 def publish(session, bundle, track, status, version_name):
-    if not track or track == "production" or ":production" in track:
-        raise ValueError("Choose an existing testing track; production is not supported here")
+    if track not in ("production", "beta"):
+        raise ValueError("Choose production or beta (open testing)")
+    if track == "production" and "-" in version_name.removeprefix("v"):
+        raise ValueError("Prereleases can only be published to beta")
     if status not in ("draft", "completed"):
         raise ValueError("Release status must be draft or completed")
     edit_id = request(session, "POST", f"{API}/edits", json={})["id"]
@@ -35,13 +38,21 @@ def publish(session, bundle, track, status, version_name):
         names = [item["track"] for item in tracks]
         if track not in names:
             raise ValueError(f"Track {track!r} does not exist. Available tracks: {', '.join(names)}")
-        with Path(bundle).open("rb") as source:
-            uploaded = request(
-                session, "POST", f"{UPLOAD}/edits/{quote(edit_id, safe='')}/bundles",
-                params={"uploadType": "media"},
-                headers={"Content-Type": "application/octet-stream"}, data=source,
-            )
+        digest = hashlib.sha256(Path(bundle).read_bytes()).hexdigest()
+        existing = request(session, "GET", f"{edit}/bundles").get("bundles", [])
+        uploaded = next((item for item in existing if item.get("sha256", "").lower() == digest), None)
+        if uploaded is None:
+            with Path(bundle).open("rb") as source:
+                uploaded = request(
+                    session, "POST", f"{UPLOAD}/edits/{quote(edit_id, safe='')}/bundles",
+                    params={"uploadType": "media"},
+                    headers={"Content-Type": "application/octet-stream"}, data=source,
+                )
         version_code = str(uploaded["versionCode"])
+        current = next(item for item in tracks if item["track"] == track)
+        releases = current.get("releases", [])
+        if len(releases) == 1 and releases[0].get("versionCodes") == [version_code] and releases[0].get("status") == status:
+            return version_code  # Already published; finally discards the read-only edit.
         release = {"name": version_name, "versionCodes": [version_code], "status": status}
         request(session, "PUT", f"{edit}/tracks/{quote(track, safe='')}",
                 json={"track": track, "releases": [release]})
@@ -61,7 +72,7 @@ def publish(session, bundle, track, status, version_name):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bundle", required=True, type=Path)
-    parser.add_argument("--track", default="beta", help="Existing API track name; beta is open testing")
+    parser.add_argument("--track", default="beta", choices=("production", "beta"), help="production or beta (open testing)")
     parser.add_argument("--status", choices=("draft", "completed"), default="draft")
     parser.add_argument("--version-name", required=True)
     args = parser.parse_args()
@@ -77,7 +88,7 @@ def main():
     )
     with AuthorizedSession(credentials) as session:
         code = publish(session, args.bundle, args.track, args.status, args.version_name)
-    print(f"Committed {PACKAGE} versionCode {code} to {args.track} ({args.status}).")
+    print(f"Published {PACKAGE} versionCode {code} to {args.track} ({args.status}).")
     print("Google Play review and managed publishing settings still apply.")
 
 

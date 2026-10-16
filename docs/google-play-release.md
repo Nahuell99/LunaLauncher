@@ -1,108 +1,87 @@
 # Release automatiche su Google Play
 
-Puoi automatizzare gli aggiornamenti **già nei test aperti**. Non serve una
-release in produzione. L’app deve esistere in Play Console, avere già un primo
-APK/AAB caricato manualmente e aver completato le dichiarazioni richieste da
-Google. L’API non crea l’app e non accetta al tuo posto gli accordi di pubblicazione.
+L’automazione usa questi canali:
 
-## 1. Crea l’accesso Google
+| Branch | Release GitHub | Google Play |
+| --- | --- | --- |
+| `main` | stabile, `vX.Y.Z` | produzione, `production` |
+| `dev` | prerelease, `vX.Y.Z-dev.N` | test aperti, `beta` |
 
-1. Apri [Google Cloud Console](https://console.cloud.google.com/) e seleziona o crea
-   un progetto per BetterLauncher.
-2. Abilita la [Google Play Android Developer API](https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com).
-3. In **IAM e amministrazione → Account di servizio**, crea un account, per esempio
-   `betterlauncher-release`. Non serve assegnargli il ruolo Owner del progetto.
-4. Copia l’indirizzo email dell’account di servizio. In **Google Play Console →
-   Utenti e autorizzazioni → Invita nuovi utenti**, inserisci quell’email e limita
-   l’accesso a BetterLauncher. Assegna **Visualizzare informazioni sull’app
-   (sola lettura)** e **Rilasciare app nei canali di test**. Non occorrono accesso
-   finanziario, gestione degli utenti o pubblicazione in produzione.
-5. In Google Cloud, apri l’account di servizio → **Chiavi → Aggiungi chiave → Crea
-   nuova chiave → JSON** e scarica il file. Se un criterio dell’organizzazione
-   impedisce la creazione di chiavi, si può configurare Workload Identity
-   Federation anziché disattivare quel criterio.
+Un push viene verificato dalla CI. Semantic-release crea una versione quando i
+commit lo richiedono (`fix:`, `feat:`, ecc.); un push di sola documentazione o CI
+non genera automaticamente una nuova versione dell’app. L’invio Play segue la
+pubblicazione del relativo APK/AAB firmato su GitHub.
 
-Non è più necessario collegare l’account sviluppatore a un progetto Cloud.
-La chiave JSON contiene una credenziale privata: va nel secret, mai nel repository
-o in un messaggio. Conservane una copia privata e revocala se viene esposta.
+## Accesso Google
 
-## 2. Salva il secret su GitHub
+L’app deve già esistere in Play Console, con un primo APK/AAB caricato e le
+informazioni richieste da Google completate. L’API non crea l’app e non accetta
+accordi o dichiarazioni al posto del titolare.
 
-Nel repository BetterLauncher apri **Settings → Secrets and variables → Actions →
-Secrets → New repository secret**:
-
-| Secret | Valore |
-| --- | --- |
-| `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` | Il contenuto completo del file JSON scaricato |
-
-Non serve convertirlo in Base64. Con GitHub CLI puoi impostarlo senza stamparlo:
+1. In [Google Cloud Console](https://console.cloud.google.com/), abilita la
+   [Google Play Android Developer API](https://console.cloud.google.com/apis/library/androidpublisher.googleapis.com).
+2. Crea un account di servizio in **IAM e amministrazione → Account di servizio**.
+   Non serve il ruolo Owner del progetto Cloud.
+3. In **Play Console → Utenti e autorizzazioni**, invita l’email dell’account di
+   servizio e concedi accesso a BetterLauncher. Servono visualizzazione delle
+   informazioni dell’app, rilascio sui canali di test e **rilascio in produzione**.
+   Il solo permesso per i test non basta per `main`.
+4. Genera una chiave JSON e salvala nel secret GitHub
+   `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`. Non inserirla nel repository.
 
 ```sh
 gh secret set GOOGLE_PLAY_SERVICE_ACCOUNT_JSON --repo pierspad/BetterLauncher < /percorso/privato/account-di-servizio.json
 ```
 
-Il workflow di release firma già l’AAB usando `KEYSTORE_BASE64`,
-`KEYSTORE_PASSWORD`, `KEY_ALIAS` e `KEY_PASSWORD`. Quella chiave deve essere la
-**chiave di caricamento** accettata da Google Play: controllala in Play Console →
-**Integrità dell’app → Firma dell’app → Certificato della chiave di caricamento**.
-La chiave con cui Google firma gli APK distribuiti può essere diversa.
+La firma usa i secret `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS` e
+`KEY_PASSWORD`. Il certificato deve corrispondere alla chiave di caricamento
+accettata da Play; può essere diverso dalla chiave con cui Google firma gli APK
+consegnati agli utenti.
 
-## 3. Prima prova manuale
+## Attivazione e comportamento
 
-Dopo aver revisionato e pushato questi file:
+La variabile GitHub `GOOGLE_PLAY_AUTO_PUBLISH=true` abilita l’invio automatico.
+Il canale viene scelto dal branch, senza una variabile globale di canale che
+possa mescolare produzione e test. Lo stato richiesto è `completed`.
 
-1. Vai su **Actions → Publish existing release to Google Play → Run workflow**.
-2. Inserisci un tag stabile presente su GitHub, per esempio `v1.4.4`.
-3. Usa `beta` per il canale di **test aperto** e `draft` per salvare una bozza.
-4. Controlla l’esito e la bozza in Play Console. Un’app ancora nello stato bozza
-   deve usare `draft` finché i passaggi iniziali nella Console non sono completati.
-5. Per distribuire ai tester, usa `completed` per una nuova release/versionCode,
-   oppure completa la bozza dalla Console. Non ricaricare un versionCode già usato.
+Per scelta del maintainer, se ci sono modifiche già in revisione, l’automazione
+annulla quella revisione e reinvia l’insieme delle modifiche con la nuova versione
+(`CANCEL_IN_REVIEW_AND_SUBMIT`). Restano applicabili i tempi di revisione e le
+impostazioni di pubblicazione gestita di Google.
 
-Il workflow scarica l’AAB **firmato già pubblicato nella release GitHub**, senza
-ricompilarlo o cambiare versione. Il nome API del canale aperto è `beta`; eventuali
-canali chiusi hanno nomi configurati nella Console. Lo script controlla che il
-canale esista prima dell’upload e rifiuta `production`.
+L’approvazione della prima release pubblica non richiede di cambiare workflow:
+`main` è già configurato per produzione. La prima pubblicazione può comunque
+richiedere di completare passaggi in Console che l’API non può sostituire.
 
-## 4. Attiva gli aggiornamenti automatici
+## Riprova o promozione di una versione esistente
 
-In **Settings → Secrets and variables → Actions → Variables** aggiungi:
+Usa **Actions → Publish existing release to Google Play → Run workflow**:
 
-| Variabile | Valore |
-| --- | --- |
-| `GOOGLE_PLAY_AUTO_PUBLISH` | `true` |
-| `GOOGLE_PLAY_TRACK` | `beta` |
-| `GOOGLE_PLAY_RELEASE_STATUS` | `completed` per i tester, oppure `draft` per preparare bozze |
+- `tag`: un tag GitHub già pubblicato, per esempio `v1.5.0`;
+- `track`: `production` oppure `beta`;
+- `status`: `completed`, oppure `draft` per preparare una bozza.
 
-Finché `GOOGLE_PLAY_AUTO_PUBLISH` manca o è diversa da `true`, il caricamento
-automatico resta disattivato. Senza una scelta di stato esplicita si usa `draft`.
+Il workflow scarica l’AAB firmato dalla release GitHub. Se un bundle con lo stesso
+SHA-256 è già presente su Play, riutilizza il suo versionCode: permette di
+promuovere beta → produzione senza un secondo upload. Se la stessa versione è
+già selezionata sul canale con lo stesso stato, non modifica né reinvia la release.
+Una prerelease `-dev.N` viene rifiutata sul canale di produzione.
 
-Dopo una nuova release stabile creata da semantic-release, il job `publish-play`
-carica il suo AAB nel canale selezionato. Le prerelease di `dev` sono escluse.
-L’upload segue la release nello stesso workflow: una release creata con
-`GITHUB_TOKEN` non avvia normalmente un secondo workflow basato su `release`.
+## Versioni e riproducibilità
 
-Il versionCode deve superare quelli già usati in Play Console. Google può comunque
-richiedere revisione; la pubblicazione gestita e le dichiarazioni dell’app restano
-sotto il controllo della Console. Per scelta del maintainer, se ci sono già
-modifiche in revisione lo script annulla quella revisione e reinvia l’insieme delle
-modifiche con la nuova versione (`CANCEL_IN_REVIEW_AND_SUBMIT`). Un errore Play
-non elimina la release GitHub e può
-essere affrontato con il workflow manuale, verificando prima cosa è già stato
-caricato in Console.
+Google Play usa una sola sequenza di versionCode per tutti i canali. Prima di
+preparare una release, lo script considera i contatori di tutti i tag stabili e
+dev, quindi assegna il successivo. I workflow di release sono serializzati per
+impedire che due branch scelgano lo stesso contatore.
 
-La prima distribuzione pubblica in produzione resta una decisione separata.
-Questa configurazione riguarda i canali di test. L’approvazione della prima
-release pubblica non cambia il canale dell’automazione: rimane `beta`. Per
-pubblicare automaticamente in produzione servirà abilitare esplicitamente
-`production` nello script e selezionarlo nel workflow; è opportuno usare un
-GitHub Environment con approvazione per quel passaggio.
+Il contatore viene scritto e committato in `gradle.properties`: compilare il tag
+non dipende dall’ora o dal numero di esecuzione della CI. F-Droid continua a
+seguire soltanto i tag stabili.
 
-## Riferimenti ufficiali
+## Riferimenti
 
-- [Accesso all’API e account di servizio](https://developers.google.com/android-publisher/getting_started)
-- [Prerequisiti e funzionamento degli edit](https://developers.google.com/android-publisher/edits)
+- [Accesso all’API](https://developers.google.com/android-publisher/getting_started)
 - [Canali e pubblicazione](https://developers.google.com/android-publisher/tracks)
+- [Bundle e SHA-256](https://developers.google.com/android-publisher/api-ref/rest/v3/edits.bundles)
+- [Conferma e gestione delle revisioni](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit)
 - [Permessi Play Console](https://support.google.com/googleplay/android-developer/answer/9844686)
-- [Creazione della chiave JSON](https://cloud.google.com/iam/docs/keys-create-delete)
-- [Eventi generati da GITHUB_TOKEN](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)
