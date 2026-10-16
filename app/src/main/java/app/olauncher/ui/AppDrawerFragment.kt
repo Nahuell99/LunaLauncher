@@ -24,7 +24,8 @@ import android.view.animation.DecelerateInterpolator
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
-import androidx.fragment.app.Fragment
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,6 +53,7 @@ import app.olauncher.helper.getColorFromAttr
 import app.olauncher.helper.dpToPx
 import app.olauncher.helper.hideKeyboard
 import app.olauncher.helper.isEinkDisplay
+import app.olauncher.helper.isSystemAnimationsDisabled
 import app.olauncher.helper.isSystemApp
 import app.olauncher.helper.openAppInfo
 import app.olauncher.helper.openSearch
@@ -62,11 +64,13 @@ import app.olauncher.helper.showToast
 import app.olauncher.helper.uninstall
 import java.util.UUID
 
-class AppDrawerFragment : Fragment() {
+class AppDrawerFragment : BaseFragment() {
 
     private lateinit var prefs: Prefs
     private lateinit var adapter: AppDrawerAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private var searchTextView: TextView? = null
+    private var cachedIsCjkKeyboard: Boolean? = null
 
     private var flag = Constants.FLAG_LAUNCH_APP
     private var canRename = false
@@ -253,8 +257,8 @@ class AppDrawerFragment : Fragment() {
             || flag in Constants.FLAG_SET_SHORTCUT_ICON_1..Constants.FLAG_SET_SHORTCUT_ICON_6)
             binding.search.queryHint = "Please select an app"
         try {
-            val searchTextView = binding.search.findViewById<TextView>(R.id.search_src_text)
-            if (searchTextView != null) searchTextView.gravity = prefs.appLabelAlignment
+            searchTextView = binding.search.findViewById(R.id.search_src_text)
+            searchTextView?.gravity = prefs.appLabelAlignment
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -301,13 +305,32 @@ class AppDrawerFragment : Fragment() {
     // the search field holds a composing region. Don't auto-launch a single match during
     // composition — the typed letters are not a final query (issue #629).
     private fun isSearchComposing(): Boolean {
-        val text = binding.search.findViewById<TextView>(R.id.search_src_text)?.text
-        if (text is Spannable) {
-            val start = BaseInputConnection.getComposingSpanStart(text)
-            val end = BaseInputConnection.getComposingSpanEnd(text)
-            return start in 0 until end
+        val text = searchTextView?.text ?: binding.search.findViewById<TextView>(R.id.search_src_text)?.text
+        if (text !is Spannable) return false
+        val start = BaseInputConnection.getComposingSpanStart(text)
+        val end = BaseInputConnection.getComposingSpanEnd(text)
+        if (start !in 0 until end) return false
+        // SwiftKey and similar keyboards keep a composing span for Latin text too.
+        // Only block auto-launch for CJK, where the letters are not the final query.
+        return isCjkKeyboard()
+    }
+
+    private fun isCjkKeyboard(): Boolean {
+        cachedIsCjkKeyboard?.let { return it }
+        val result = try {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val subtype = imm.currentInputMethodSubtype
+            val language = when {
+                subtype == null -> ""
+                subtype.languageTag.isNotEmpty() -> subtype.languageTag
+                else -> @Suppress("DEPRECATION") subtype.locale
+            }
+            language.startsWith("zh") || language.startsWith("ja") || language.startsWith("ko")
+        } catch (e: Exception) {
+            false
         }
-        return false
+        cachedIsCjkKeyboard = result
+        return result
     }
 
     private fun initAdapter() {
@@ -475,7 +498,7 @@ class AppDrawerFragment : Fragment() {
         // a relayout (lock/unlock or reopen). Triggering it from the commit callback keeps
         // the animation but guarantees the rows are always visible. E-ink keeps no animation.
         adapter.onFirstNonEmptyCommit = {
-            if (requireContext().isEinkDisplay().not()) {
+            if (requireContext().isEinkDisplay().not() && requireContext().isSystemAnimationsDisabled().not()) {
                 _binding?.recyclerView?.let { rv ->
                     rv.layoutAnimation =
                         AnimationUtils.loadLayoutAnimation(rv.context, R.anim.layout_anim_from_bottom)
@@ -926,6 +949,7 @@ class AppDrawerFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        cachedIsCjkKeyboard = null
         binding.search.showKeyboard(prefs.autoShowKeyboard)
     }
 
@@ -980,6 +1004,7 @@ class AppDrawerFragment : Fragment() {
             e.printStackTrace()
         }
         searchOptionsPopup = null
+        searchTextView = null
         super.onDestroyView()
         _binding = null
     }

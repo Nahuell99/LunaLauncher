@@ -137,10 +137,10 @@ object Constants {
 
     const val MIN_ANIM_REFRESH_RATE = 30f
 
-    const val URL_ABOUT_OLAUNCHER = "https://github.com/pierspad/BetterLauncher"
+    const val URL_ABOUT_OLAUNCHER = "https://github.com/pierspad/Nahuel Launcher"
     const val URL_OLAUNCHER_PRIVACY = "https://pierspad.com/en/17.0.0.0/2026-07-05-betterlauncher-privacy-policy/"
-    const val URL_DOUBLE_TAP = "https://github.com/pierspad/BetterLauncher/blob/main/docs/README.md#double-tap-to-lock"
-    const val URL_OLAUNCHER_GITHUB = "https://github.com/pierspad/BetterLauncher"
+    const val URL_DOUBLE_TAP = "https://github.com/pierspad/Nahuel Launcher/blob/main/docs/README.md#double-tap-to-lock"
+    const val URL_OLAUNCHER_GITHUB = "https://github.com/pierspad/Nahuel Launcher"
     const val URL_PIERSPAD = "https://pierspad.com"
     const val URL_OLAUNCHER_PLAY_STORE = "https://play.google.com/store/apps/details?id=app.olauncher"
     const val URL_OLAUNCHER_PRO = "https://play.google.com/store/apps/details?id=app.prolauncher"
@@ -150,7 +150,7 @@ object Constants {
     const val URL_NTS = ""
     const val URL_PENTASTIC = ""
     const val URL_DUCK_SEARCH = "https://duck.co/?q="
-    const val URL_DIGITAL_WELLBEING_LEARN_MORE = "https://github.com/pierspad/BetterLauncher#digital-wellbeing"
+    const val URL_DIGITAL_WELLBEING_LEARN_MORE = "https://github.com/pierspad/Nahuel Launcher#digital-wellbeing"
 
     const val DIGITAL_WELLBEING_PACKAGE_NAME = "com.google.android.apps.wellbeing"
     const val DIGITAL_WELLBEING_ACTIVITY = "com.google.android.apps.wellbeing.settings.TopLevelSettingsActivity"

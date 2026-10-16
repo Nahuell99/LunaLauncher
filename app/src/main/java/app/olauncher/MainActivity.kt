@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
+import android.content.pm.LauncherApps
+import android.content.pm.ShortcutInfo
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
@@ -41,6 +43,7 @@ import app.olauncher.helper.isDaySince
 import app.olauncher.helper.isDefaultLauncher
 import app.olauncher.helper.isDarkThemeOn
 import app.olauncher.helper.isEinkDisplay
+import app.olauncher.helper.isSystemAnimationsDisabled
 import app.olauncher.helper.isOlauncherDefault
 import app.olauncher.helper.isTablet
 import app.olauncher.helper.openUrl
@@ -64,6 +67,7 @@ class MainActivity : AppCompatActivity() {
     private var cooldownDialog: androidx.appcompat.app.AlertDialog? = null
     private var isResumed = false
     private var profileReceiver: BroadcastReceiver? = null
+    private var launcherAppsCallback: LauncherApps.Callback? = null
 
 //    override fun onBackPressed() {
 //        if (navController.currentDestination?.id != R.id.mainFragment)
@@ -100,6 +104,8 @@ class MainActivity : AppCompatActivity() {
         // the LayoutInflater's factory for itself.
         FontHelper.reload(this)
         FontHelper.install(this)
+        if (isEinkDisplay() || isSystemAnimationsDisabled())
+            theme.applyStyle(R.style.NoAnimationOverlay, true)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -142,6 +148,7 @@ class MainActivity : AppCompatActivity() {
         initClickListeners()
         initObservers(viewModel)
         viewModel.getAppList()
+        registerShortcutCallback()
         setupOrientation()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
@@ -161,6 +168,35 @@ class MainActivity : AppCompatActivity() {
         intent?.let { handleIntent(it) }
     }
 
+    private fun registerShortcutCallback() {
+        val launcherApps = getSystemService(LauncherApps::class.java)
+        launcherAppsCallback = object : LauncherApps.Callback() {
+            override fun onPackageRemoved(packageName: String, user: android.os.UserHandle) = Unit
+            override fun onPackageAdded(packageName: String, user: android.os.UserHandle) = Unit
+            override fun onPackageChanged(packageName: String, user: android.os.UserHandle) = Unit
+            override fun onPackagesAvailable(
+                packageNames: Array<out String>,
+                user: android.os.UserHandle,
+                replacing: Boolean,
+            ) = Unit
+
+            override fun onPackagesUnavailable(
+                packageNames: Array<out String>,
+                user: android.os.UserHandle,
+                replacing: Boolean,
+            ) = Unit
+
+            override fun onShortcutsChanged(
+                packageName: String,
+                shortcuts: MutableList<ShortcutInfo>,
+                user: android.os.UserHandle,
+            ) {
+                viewModel.getAppList()
+            }
+        }
+        launcherApps.registerCallback(launcherAppsCallback!!)
+    }
+
     override fun onStart() {
         super.onStart()
         restartLauncherOrCheckTheme()
@@ -170,6 +206,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         isResumed = true
         viewModel.isPrivateSpaceToggling = false
+        viewModel.getAppList()
 
         AppLimiter.decayDaily(prefs, System.currentTimeMillis())
 
@@ -436,6 +473,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        launcherAppsCallback?.let {
+            getSystemService(LauncherApps::class.java).unregisterCallback(it)
+        }
         profileReceiver?.let {
             try {
                 unregisterReceiver(it)
@@ -474,7 +514,7 @@ class MainActivity : AppCompatActivity() {
             R.id.languagePickerFragment -> prefs.opacityDrawer
             else -> 0f
         }
-        android.util.Log.d("BetterLauncher", "updateGlobalOpacityScrim: dest=$destinationId, opacity=$opacity, current=$currentOpacity, animate=$animate")
+        android.util.Log.d("Nahuel Launcher", "updateGlobalOpacityScrim: dest=$destinationId, opacity=$opacity, current=$currentOpacity, animate=$animate")
 
         // Ensure the background is solid (alpha 255) black or white depending on the active theme
         binding.globalOpacityScrim.setBackgroundColor(this.scrimColor(255))
@@ -482,14 +522,14 @@ class MainActivity : AppCompatActivity() {
         if (currentOpacity == opacity) return
 
         if (animate && currentOpacity >= 0f) {
-            android.util.Log.d("BetterLauncher", "updateGlobalOpacityScrim: Animating from $currentOpacity to $opacity")
+            android.util.Log.d("Nahuel Launcher", "updateGlobalOpacityScrim: Animating from $currentOpacity to $opacity")
             binding.globalOpacityScrim.animate().cancel()
             binding.globalOpacityScrim.animate()
                 .alpha(opacity.coerceIn(0f, 1f))
                 .setDuration(220)
                 .start()
         } else {
-            android.util.Log.d("BetterLauncher", "updateGlobalOpacityScrim: Immediately setting to $opacity")
+            android.util.Log.d("Nahuel Launcher", "updateGlobalOpacityScrim: Immediately setting to $opacity")
             binding.globalOpacityScrim.animate().cancel()
             binding.globalOpacityScrim.alpha = opacity.coerceIn(0f, 1f)
         }

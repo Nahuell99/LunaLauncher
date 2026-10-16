@@ -30,7 +30,7 @@
             android:orientation="vertical"
             android:paddingVertical="64dp">
 
-            <!-- ============ BetterLauncher card ============ -->
+            <!-- ============ Nahuel Launcher card ============ -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1029,6 +1029,40 @@
                         android:padding="8dp"
                         tools:text="@string/font_system_default" />
                 </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextSmall"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:drawablePadding="12dp"
+                        android:drawableStart="@drawable/ic_font"
+                        android:paddingVertical="8dp"
+                        android:text="@string/bold_font"
+                        android:textColor="?attr/primaryColor"
+                        app:drawableTint="?attr/primaryColor" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/boldFontSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text=""
+                        android:textOff=""
+                        android:textOn=""
+                        app:thumbTint="@color/switch_thumb"
+                        app:trackTint="@color/switch_track" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

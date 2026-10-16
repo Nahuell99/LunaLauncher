@@ -1,5 +1,6 @@
 package app.olauncher.helper
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AppOpsManager
 import android.app.SearchManager
@@ -17,6 +18,7 @@ import android.os.UserHandle
 import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.view.View
+import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -26,6 +28,22 @@ import app.olauncher.R
 import app.olauncher.data.Constants
 import java.util.Calendar
 import java.util.Locale
+
+fun Window.showStatusBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        insetsController?.show(WindowInsets.Type.statusBars())
+    else
+        @Suppress("DEPRECATION")
+        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+}
+
+fun Window.hideStatusBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        insetsController?.hide(WindowInsets.Type.statusBars())
+    else
+        @Suppress("DEPRECATION")
+        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE or View.SYSTEM_UI_FLAG_FULLSCREEN
+}
 
 fun View.hideKeyboard() {
     this.clearFocus()
@@ -105,15 +123,54 @@ fun Context.openSearch(query: String? = null) {
     startActivity(intent)
 }
 
+private var isEinkDevice: Boolean? = null
+
 fun Context.isEinkDisplay(): Boolean {
+    isEinkDevice?.let { return it }
+    return (hasEinkRefreshRate() || isOnyxDevice() || isKnownEinkModel())
+        .also { isEinkDevice = it }
+}
+
+private fun Context.hasEinkRefreshRate(): Boolean {
     return try {
-        val refreshRate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display?.refreshRate ?: 60f
-        } else {
-            @Suppress("DEPRECATION")
-            (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.refreshRate
-        }
-        refreshRate <= Constants.MIN_ANIM_REFRESH_RATE
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        // Use the maximum supported rate. Adaptive displays can drop to 30 Hz without being e-ink.
+        @Suppress("DEPRECATION")
+        windowManager.defaultDisplay.supportedModes.maxOf { it.refreshRate } <= Constants.MIN_ANIM_REFRESH_RATE
+    } catch (e: Exception) {
+        e.printStackTrace()
+        false
+    }
+}
+
+// Boox devices report 60 Hz or more, so the refresh-rate check misses them.
+@SuppressLint("PrivateApi") // Onyx e-ink firmware exposes this class only on the boot classpath.
+private fun isOnyxDevice(): Boolean {
+    if (Build.MANUFACTURER.equals("ONYX", ignoreCase = true)) return true
+    return try {
+        Class.forName("android.onyx.ViewUpdateHelper")
+        true
+    } catch (ignored: Throwable) {
+        false
+    }
+}
+
+private fun isKnownEinkModel(): Boolean {
+    val brand = Build.BRAND.lowercase()
+    val manufacturer = Build.MANUFACTURER.lowercase()
+    val einkOnlyBrands = listOf("onyx", "boox", "dasung", "bigme", "boyue", "meebook", "mudita")
+    if (einkOnlyBrands.any { brand.contains(it) || manufacturer.contains(it) }) return true
+    // Hisense also sells LCD phones, so match only their e-ink line.
+    if (brand.contains("hisense") || manufacturer.contains("hisense"))
+        return Regex("\\bA[579]\\b|TOUCH|HI READER").containsMatchIn(Build.MODEL.uppercase())
+    return false
+}
+
+fun Context.isSystemAnimationsDisabled(): Boolean {
+    return try {
+        Settings.Global.getFloat(contentResolver, Settings.Global.WINDOW_ANIMATION_SCALE, 1f) == 0f
+                || Settings.Global.getFloat(contentResolver, Settings.Global.TRANSITION_ANIMATION_SCALE, 1f) == 0f
+                || Settings.Global.getFloat(contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
     } catch (e: Exception) {
         e.printStackTrace()
         false

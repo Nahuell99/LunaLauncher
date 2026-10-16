@@ -47,6 +47,16 @@
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <style name="NoWindowAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
+    <!-- Applied on e-ink displays and when the system animation scale is zero. -->
+    <style name="NoAnimationOverlay">
+        <item name="android:windowAnimationStyle">@style/NoWindowAnimation</item>
+    </style>
+
     <style name="AppSearchText" parent="Widget.AppCompat.SearchView">
         <item name="android:maxLength">200</item>
         <item name="android:textSize">@dimen/text_large</item>

@@ -14,14 +14,14 @@ Use JDK 17 and install Android SDK platform 36. Configure `sdk.dir` in your untr
 ./gradlew assembleDebug assembleDebugAndroidTest lintDebug
 ```
 
-The debug package is `com.pierspad.betterlauncher.debug`, separate from the release app. Use an emulator or disposable debug installation when testing launcher defaults, permissions, backups and accessibility.
+The debug package is `app.nahuell.launcher.debug`, separate from the release app. Use an emulator or disposable debug installation when testing launcher defaults, permissions, backups and accessibility.
 
 Run the Android regression checks on a connected emulator:
 
 ```sh
 adb install -r app/build/outputs/apk/debug/betterlauncher-debug.apk
 adb install -r app/build/outputs/apk/androidTest/debug/betterlauncher-debug-androidTest.apk
-adb shell am instrument -w com.pierspad.betterlauncher.debug.test/app.olauncher.FeedbackRegressionInstrumentation
+adb shell am instrument -w app.nahuell.launcher.debug.test/app.olauncher.FeedbackRegressionInstrumentation
 ```
 
 You can also run `bash scripts/run-android-regressions.sh`, which checks the runner output and returns a failing exit code when a regression fails.

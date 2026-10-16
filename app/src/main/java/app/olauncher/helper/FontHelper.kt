@@ -26,18 +26,28 @@ import app.olauncher.data.Prefs
  */
 object FontHelper {
 
+    private fun boldStyle(viewStyle: Int): Int = when (viewStyle) {
+        Typeface.BOLD, Typeface.BOLD_ITALIC -> viewStyle
+        Typeface.ITALIC -> Typeface.BOLD_ITALIC
+        else -> Typeface.BOLD
+    }
+
     // The "custom:" prefix in Prefs.fontFamily marks a user-imported font.
     const val CUSTOM_PREFIX = "custom:"
 
     @Volatile
     private var typeface: Typeface? = null
 
+    @Volatile
+    private var bold: Boolean = false
+
     /** (Re)reads the selected font from prefs and caches the resolved typeface. */
     fun reload(context: Context): Typeface? {
         val prefs = Prefs(context)
         val family = prefs.fontFamily
+        bold = prefs.boldFont
         typeface = when {
-            family.isBlank() -> null
+            family.isBlank() -> if (bold) Typeface.SANS_SERIF else null
             family.startsWith(CUSTOM_PREFIX) -> runCatching {
                 prefs.customFontPath.takeIf { it.isNotBlank() }?.let { Typeface.createFromFile(it) }
             }.getOrNull()
@@ -63,7 +73,8 @@ object FontHelper {
                 val view = delegate.createView(parent, name, context, attrs)
                 val base = typeface
                 if (base != null && view is TextView) {
-                    val style = view.typeface?.style ?: Typeface.NORMAL
+                    val viewStyle = view.typeface?.style ?: Typeface.NORMAL
+                    val style = if (bold) boldStyle(viewStyle) else viewStyle
                     view.typeface = Typeface.create(base, style)
                 }
                 return view

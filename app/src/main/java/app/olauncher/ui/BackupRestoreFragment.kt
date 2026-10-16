@@ -120,7 +120,7 @@ class BackupRestoreFragment : Fragment() {
         binding.btnCopy.setOnClickListener {
             val textToCopy = binding.etSettingsJson.text.toString()
             val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("BetterLauncher Settings", textToCopy)
+            val clip = ClipData.newPlainText("Nahuel Launcher Settings", textToCopy)
             clipboard.setPrimaryClip(clip)
             requireContext().showToast(getString(R.string.copied))
         }

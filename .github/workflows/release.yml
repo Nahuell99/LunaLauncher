@@ -55,17 +55,20 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Decode Keystore File
+        id: keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 --decode > app/release.keystore
-          else
-            echo "::error::Missing release signing keystore."
-            exit 1
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No release keystore configured; skipping publication."
+            exit 0
           fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > app/release.keystore
+          echo "present=true" >> "$GITHUB_OUTPUT"
 
       - name: Run Semantic Release
+        if: steps.keystore.outputs.present == 'true'
         id: semantic_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

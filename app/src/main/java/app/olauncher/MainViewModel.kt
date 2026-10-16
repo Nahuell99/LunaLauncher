@@ -513,7 +513,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var screenTimeJob: Job? = null
 
     fun getTodaysScreenTime() {
-        if (!prefs.screenTimeLastUpdated.hasBeenMinutes(1) || screenTimeJob?.isActive == true) return
+        // After a process restart there is nothing on screen yet, so do not wait out the one-minute cache.
+        if (screenTimeValue.value != null && !prefs.screenTimeLastUpdated.hasBeenMinutes(1)) return
+        if (screenTimeJob?.isActive == true) return
         screenTimeJob = viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 runCatching { calculateScreenTime() }.getOrNull()

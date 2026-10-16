@@ -13,10 +13,10 @@
     <string name="app">Aplicació</string>
     <string name="set_as_default_launcher">Defineix com a llançador predeterminat</string>
     <string name="set_as_default_launcher_u"><u>Defineix com a llançador predeterminat</u></string>
-    <string name="set_as_default_launcher_first">Primer defineix BetterLauncher com a predeterminat</string>
+    <string name="set_as_default_launcher_first">Primer defineix Nahuel Launcher com a predeterminat</string>
     <string name="app_text_color">Color del text</string>
     <string name="double_tap_to_lock_screen">Toca dues vegades per bloquejar</string>
-    <string name="admin_permission_message">BetterLauncher es compromet a utilitzar el permís d\'accessibilitat de manera responsable. BetterLauncher no recull ni comparteix cap dada.</string>
+    <string name="admin_permission_message">Nahuel Launcher es compromet a utilitzar el permís d\'accessibilitat de manera responsable. Nahuel Launcher no recull ni comparteix cap dada.</string>
     <string name="about">Quant a</string>
     <string name="off">Desactivat</string>
     <string name="on">Activat</string>
@@ -80,39 +80,39 @@
     <string name="welcome_to_olauncher_settings">Et donem la benvinguda a la configuració!
         \n\nRecorda que, si tens cap pregunta, trobaràs la resposta a la pàgina Quant a.</string>
     <string name="rate_us_message">Hola, no tornaràs a veure aquest missatge.
-        \n\nSi BetterLauncher et resulta útil, podries deixar una ressenya de 5 estrelles? Significaria molt per a nosaltres. Gràcies!</string>
-    <string name="share_message">Necessitem la teva ajuda! Creiem que tothom hauria de conèixer BetterLauncher i els seus avantatges, però no ho podem fer sols.
-        \n\nPodries compartir BetterLauncher amb els teus amics, familiars i seguidors? Gràcies pel teu suport! ❤</string>
-    <string name="keyboard_message">Hola, el teclat és la manera més ràpida de cercar i obrir aplicacions a BetterLauncher. Et podem demanar que el mantinguis activat uns dies més abans de decidir?
+        \n\nSi Nahuel Launcher et resulta útil, podries deixar una ressenya de 5 estrelles? Significaria molt per a nosaltres. Gràcies!</string>
+    <string name="share_message">Necessitem la teva ajuda! Creiem que tothom hauria de conèixer Nahuel Launcher i els seus avantatges, però no ho podem fer sols.
+        \n\nPodries compartir Nahuel Launcher amb els teus amics, familiars i seguidors? Gràcies pel teu suport! ❤</string>
+    <string name="keyboard_message">Hola, el teclat és la manera més ràpida de cercar i obrir aplicacions a Nahuel Launcher. Et podem demanar que el mantinguis activat uns dies més abans de decidir?
         \n\nLa decisió sempre és teva.</string>
     <string name="digital_wellbeing_message">Si vols establir límits de temps per a determinades aplicacions, la funció Benestar digital d\'Android et pot ajudar. Cerca Benestar digital a la configuració del telèfon i activa-la.</string>
     <string name="app_usage_message">Per mostrar o amagar el temps de pantalla a la pantalla d\'inici, permet o denega el permís d\'ús d\'aplicacions.
         \n\nNota: no es recull cap dada d\'ús de les aplicacions. Tot es processa al teu dispositiu.</string>
-    <string name="pro_message">BetterLauncher també té una versió pro anomenada Pro Launcher. Inclou funcions addicionals com el temps, ginys, tipus de lletra, carpetes, fons de pantalla AMOLED i més.
-        \n\nTambé és la millor manera de donar suport als desenvolupadors de BetterLauncher. Dona-hi una ullada!</string>
-    <string name="wallpaper_message">BetterLauncher ofereix fons de pantalla nous i bonics cada dia. Dona un aspecte renovat a la pantalla d\'inici diàriament i de franc!
+    <string name="pro_message">Nahuel Launcher també té una versió pro anomenada Pro Launcher. Inclou funcions addicionals com el temps, ginys, tipus de lletra, carpetes, fons de pantalla AMOLED i més.
+        \n\nTambé és la millor manera de donar suport als desenvolupadors de Nahuel Launcher. Dona-hi una ullada!</string>
+    <string name="wallpaper_message">Nahuel Launcher ofereix fons de pantalla nous i bonics cada dia. Dona un aspecte renovat a la pantalla d\'inici diàriament i de franc!
         \n\nVols provar-ho?</string>
-    <string name="accessibility_service_description">El permís d\'accessibilitat és necessari per activar el gest de tocar dues vegades per bloquejar. Les dades que BetterLauncher obtingui mitjançant aquest servei no sortiran del dispositiu.</string>
-    <string name="support_olauncher_for_free">Dona suport a BetterLauncher de franc mitjançant el nostre enllaç d\'afiliació d\'Amazon.</string>
+    <string name="accessibility_service_description">El permís d\'accessibilitat és necessari per activar el gest de tocar dues vegades per bloquejar. Les dades que Nahuel Launcher obtingui mitjançant aquest servei no sortiran del dispositiu.</string>
+    <string name="support_olauncher_for_free">Dona suport a Nahuel Launcher de franc mitjançant el nostre enllaç d\'afiliació d\'Amazon.</string>
     <string name="support_olauncher_message">Cada vegada que compris alguna cosa mitjançant el nostre enllaç, rebrem una petita comissió. Desa l\'enllaç i utilitza\'l quan compris per internet.\nGràcies!</string>
     <string name="open">Obre l\'enllaç</string>
     <string name="copy">Copia</string>
     <string name="close">Tanca</string>
     <string name="not_now">Ara no</string>
-    <string name="public_roadmap">Full de ruta públic de BetterLauncher</string>
+    <string name="public_roadmap">Full de ruta públic de Nahuel Launcher</string>
     <string name="roadmap">Full de ruta</string>
     <string name="date">Data</string>
     <string name="date_only">Només la data</string>
     <string name="bottom_on">Part inferior: activada</string>
     <string name="bottom_off">Part inferior: desactivada</string>
-    <string name="please_set_olauncher_as_default_first">Primer defineix BetterLauncher com a predeterminat</string>
+    <string name="please_set_olauncher_as_default_first">Primer defineix Nahuel Launcher com a predeterminat</string>
     <string name="affiliate">Afiliació</string>
     <string name="tip_start_typing_for_rename">Consell: comença a escriure per veure l\'opció CANVIA EL NOM</string>
-    <string name="hidden_apps_message">Nota: toca «BetterLauncher» a la part superior d\'aquesta pàgina de configuració per trobar les aplicacions amagades.\n\nTrobaràs més informació a la pàgina Quant a.</string>
+    <string name="hidden_apps_message">Nota: toca «Nahuel Launcher» a la part superior d\'aquesta pàgina de configuració per trobar les aplicacions amagades.\n\nTrobaràs més informació a la pàgina Quant a.</string>
     <string name="swipe_down_for">Llisca cap avall per</string>
     <string name="search">Cerca</string>
     <string name="notifications">Notificacions</string>
-    <string name="accessibility_disclosure">Activa el servei d\'accessibilitat de BetterLauncher a la configuració del dispositiu per habilitar el gest de tocar dues vegades per bloquejar.
+    <string name="accessibility_disclosure">Activa el servei d\'accessibilitat de Nahuel Launcher a la configuració del dispositiu per habilitar el gest de tocar dues vegades per bloquejar.
     \n\nTingues en compte que aquest servei només s\'utilitza per a aquesta funció. El nostre servei d\'accessibilitat no recull ni comparteix cap dada.</string>
     <string name="accept">Accepta</string>
     <string name="permission">Permís</string>
@@ -126,7 +126,7 @@
     <string name="enabled">Activat</string>
     <string name="disabled">Desactivat</string>
     <string name="please_turn_on_double_tap_to_unlock">Activa el bloqueig amb doble toc</string>
-    <string name="launcher_failed_to_lock_device">BetterLauncher no ha pogut bloquejar el dispositiu.\nComprova la configuració de l\'aplicació.</string>
+    <string name="launcher_failed_to_lock_device">Nahuel Launcher no ha pogut bloquejar el dispositiu.\nComprova la configuració de l\'aplicació.</string>
     <string name="long_press_to_select_app">Mantén premut per seleccionar una aplicació</string>
     <string name="unable_to_open_app">No s\'ha pogut obrir l\'aplicació</string>
     <string name="unable_to_open_app_info">No s\'ha pogut obrir la informació de l\'aplicació</string>
@@ -143,7 +143,7 @@ Primer escriu un nom nou</string>
     <string name="swipe_left_app_disabled">S\'ha desactivat l\'aplicació en lliscar cap a l\'esquerra</string>
     <string name="swipe_right_app_disabled">S\'ha desactivat l\'aplicació en lliscar cap a la dreta</string>
     <string name="your_wallpaper_will_update_shortly">El fons de pantalla s\'actualitzarà aviat</string>
-    <string name="olauncher_is_not_default_launcher">BetterLauncher no és el llançador predeterminat. L\'actualització del fons de pantalla fallarà.</string>
+    <string name="olauncher_is_not_default_launcher">Nahuel Launcher no és el llançador predeterminat. L\'actualització del fons de pantalla fallarà.</string>
     <string name="long_press_to_enable">Mantén premut per activar</string>
     <string name="no_hidden_apps">No hi ha aplicacions amagades</string>
     <string name="hidden_apps">Aplicacions amagades</string>
@@ -155,7 +155,7 @@ Primer escriu un nom nou</string>
     <string name="learn_more">Més informació</string>
     <string name="did_you_know">Ho sabies?</string>
     <string name="leave_a_review">Deixa una ressenya</string>
-    <string name="review_message">BetterLauncher és gratuït i sempre ho serà. No té anuncis, no recull dades i redueix el teu temps de pantalla, cosa que contribueix a una vida més saludable.
+    <string name="review_message">Nahuel Launcher és gratuït i sempre ho serà. No té anuncis, no recull dades i redueix el teu temps de pantalla, cosa que contribueix a una vida més saludable.
         \n\nEsperem que t\'agradi. Explica\'ns què en penses.</string>
     <string name="alignment_changed">S\'ha canviat l\'alineació ✅</string>
     <string name="home_screen">Pantalla d\'inici</string>
@@ -184,7 +184,7 @@ Primer escriu un nom nou</string>
     <string name="long_press_to_remove_widget">Mantén premut per eliminar el giny</string>
     <string name="no_widgets_available">No hi ha ginys disponibles</string>
     <string name="widget_bind_failed">No s\'ha pogut afegir el giny</string>
-    <string name="widget_requires_default_launcher">Defineix BetterLauncher com a llançador predeterminat per afegir ginys</string>
+    <string name="widget_requires_default_launcher">Defineix Nahuel Launcher com a llançador predeterminat per afegir ginys</string>
 
     <!-- Carpetes / grups -->
     <string name="home_icons_count">Icones d\'aplicacions preferides</string>
@@ -330,11 +330,11 @@ No es permet amagar dreceres fixades</string>
     <string name="settings_use_colorful_icons">Utilitza icones de colors</string>
     <string name="settings_icons_title">Icones</string>
     <string name="accessibility_disclosure_title">Servei d’accessibilitat</string>
-    <string name="accessibility_disclosure_message">BetterLauncher utilitza l’API AccessibilityService d’Android per al bloqueig de pantalla amb doble toc i els límits d’aplicacions que configuris. Ambdues funcions són opcionals.\n\nAccedeix als noms de paquet de les aplicacions en primer pla i als esdeveniments de canvi de finestra per detectar quan s’obre o es tanca una aplicació limitada. També accedeix a informació de les vistes premudes (tipus de vista i etiqueta d’accessibilitat) per reconèixer el gest de bloqueig. Quan una aplicació seleccionada està en període d’espera, torna a la pantalla d’inici i mostra el temps restant. La configuració dels límits i les marques de temps es desen només al dispositiu.\n\nLes dades d’accessibilitat es processen al dispositiu i no s’envien a servidors ni es comparteixen amb tercers. Pots rebutjar el permís i continuar utilitzant el llançador sense aquestes funcions, o desactivar el servei en qualsevol moment a la configuració d’accessibilitat d’Android.</string>
+    <string name="accessibility_disclosure_message">Nahuel Launcher utilitza l’API AccessibilityService d’Android per al bloqueig de pantalla amb doble toc i els límits d’aplicacions que configuris. Ambdues funcions són opcionals.\n\nAccedeix als noms de paquet de les aplicacions en primer pla i als esdeveniments de canvi de finestra per detectar quan s’obre o es tanca una aplicació limitada. També accedeix a informació de les vistes premudes (tipus de vista i etiqueta d’accessibilitat) per reconèixer el gest de bloqueig. Quan una aplicació seleccionada està en període d’espera, torna a la pantalla d’inici i mostra el temps restant. La configuració dels límits i les marques de temps es desen només al dispositiu.\n\nLes dades d’accessibilitat es processen al dispositiu i no s’envien a servidors ni es comparteixen amb tercers. Pots rebutjar el permís i continuar utilitzant el llançador sense aquestes funcions, o desactivar el servei en qualsevol moment a la configuració d’accessibilitat d’Android.</string>
     <string name="accessibility_disclosure_accept">Hi estic d’acord — obre la configuració</string>
     <string name="accessibility_disclosure_decline">No, gràcies</string>
-    <string name="gestures_accessibility_message">El bloqueig amb doble toc utilitza el servei d’accessibilitat d’Android. Activar-lo també permet a BetterLauncher aplicar els períodes d’espera de les aplicacions que triïs.\n\nAmbdues funcions són opcionals. Pots continuar utilitzant el llançador sense activar-les. Abans d’activar el servei, BetterLauncher explica a quina informació accedeix i et demana el consentiment.</string>
+    <string name="gestures_accessibility_message">El bloqueig amb doble toc utilitza el servei d’accessibilitat d’Android. Activar-lo també permet a Nahuel Launcher aplicar els períodes d’espera de les aplicacions que triïs.\n\nAmbdues funcions són opcionals. Pots continuar utilitzant el llançador sense activar-les. Abans d’activar el servei, Nahuel Launcher explica a quina informació accedeix i et demana el consentiment.</string>
     <string name="open_accessibility_settings">Obre la configuració d’accessibilitat</string>
     <string name="gesture_help_title">Ajuda amb el bloqueig amb doble toc</string>
-    <string name="gesture_help_message">1. A Configuració d’Android → Accessibilitat → Aplicacions baixades, selecciona BetterLauncher i activa el servei. Els noms poden variar segons el dispositiu.\n\n2. Torna a BetterLauncher i activa el bloqueig amb doble toc a Gestos. Toca dues vegades una zona buida de la pantalla d’inici.\n\n3. Si Android indica una configuració restringida per a una instal·lació des d’un APK, obre Configuració → Aplicacions → BetterLauncher → Més opcions → Permet la configuració restringida i torna-ho a provar. Fes-ho només si confies en la instal·lació.\n\n4. Si el servei s’atura després de reiniciar, comprova que continuï activat i revisa les restriccions de bateria del dispositiu. Les funcions habituals del llançador continuen disponibles si desactives el servei.</string>
+    <string name="gesture_help_message">1. A Configuració d’Android → Accessibilitat → Aplicacions baixades, selecciona Nahuel Launcher i activa el servei. Els noms poden variar segons el dispositiu.\n\n2. Torna a Nahuel Launcher i activa el bloqueig amb doble toc a Gestos. Toca dues vegades una zona buida de la pantalla d’inici.\n\n3. Si Android indica una configuració restringida per a una instal·lació des d’un APK, obre Configuració → Aplicacions → Nahuel Launcher → Més opcions → Permet la configuració restringida i torna-ho a provar. Fes-ho només si confies en la instal·lació.\n\n4. Si el servei s’atura després de reiniciar, comprova que continuï activat i revisa les restriccions de bateria del dispositiu. Les funcions habituals del llançador continuen disponibles si desactives el servei.</string>
 </resources>

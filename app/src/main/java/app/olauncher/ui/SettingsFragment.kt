@@ -34,7 +34,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import app.olauncher.BuildConfig
@@ -62,7 +61,7 @@ import app.olauncher.helper.shareApp
 import app.olauncher.helper.showToast
 import app.olauncher.listener.DeviceAdmin
 
-class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListener {
+class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListener {
 
     private lateinit var prefs: Prefs
     private lateinit var viewModel: MainViewModel
@@ -180,6 +179,7 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         // populateHomeButtonRecents()
         populateTheme()
         populateFont()
+        populateBoldFont()
         populateTextSize()
         populateAlignment()
         populateStatusBar()
@@ -243,6 +243,7 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
             R.id.clockAppRow -> showAppListIfEnabled(Constants.FLAG_SET_CLOCK_APP)
             R.id.calendarAppRow -> showAppListIfEnabled(Constants.FLAG_SET_CALENDAR_APP)
             R.id.fontText -> findNavController().navigate(R.id.action_settingsFragment_to_fontPickerFragment)
+            R.id.boldFontSwitch -> toggleBoldFont()
             R.id.themeChooseRow -> cycleTheme()
             R.id.actionAccessibility -> openAccessibilityService()
             R.id.closeAccessibility -> toggleAccessibilityVisibility(false)
@@ -335,6 +336,7 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         binding.search.setOnClickListener(this)
         binding.notifications.setOnClickListener(this)
         binding.fontText.setOnClickListener(this)
+        binding.boldFontSwitch.setOnClickListener(this)
         binding.themeChooseRow.setOnClickListener(this)
         binding.actionAccessibility.setOnClickListener(this)
         binding.closeAccessibility.setOnClickListener(this)
@@ -911,6 +913,15 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         FontOption(R.string.font_serif, "serif"),
         FontOption(R.string.font_monospace, "monospace"),
     )
+
+    private fun populateBoldFont() {
+        binding.boldFontSwitch.isChecked = prefs.boldFont
+    }
+
+    private fun toggleBoldFont() {
+        prefs.boldFont = !prefs.boldFont
+        recreateSettingsWithScroll()
+    }
 
     private fun populateFont() {
         val current = prefs.fontFamily

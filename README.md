@@ -1,15 +1,11 @@
-# <img src="docs/images/icon.png" alt="" height="36"> BetterLauncher
+# <img src="docs/images/icon.png" alt="" height="36"> Olauncher fork
 
-[![Release](https://img.shields.io/github/v/release/pierspad/BetterLauncher)](https://github.com/pierspad/BetterLauncher/releases/latest)
-[![CI](https://github.com/pierspad/BetterLauncher/actions/workflows/release.yml/badge.svg)](https://github.com/pierspad/BetterLauncher/actions/workflows/release.yml)
-[![License](https://img.shields.io/github/license/pierspad/BetterLauncher)](LICENSE)
-[![Android](https://img.shields.io/badge/Android-7.0%2B-3ddc84?logo=android&logoColor=white)](https://github.com/pierspad/BetterLauncher/releases/latest)
-
-[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=github&style=flat)](https://github.com/sponsors/pierspad) [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-yellow?logo=buymeacoffee)](https://buymeacoffee.com/pierspad) [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-ff5e5b?logo=ko-fi)](https://ko-fi.com/pierspad)
+[![License](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
+[![Android](https://img.shields.io/badge/Android-7.0%2B-3ddc84?logo=android&logoColor=white)](https://github.com/tanujnotes/Olauncher)
 
 [Features](#features) · [Screenshots](#screenshots) · [Install](#install) · [Search](#search) · [Gestures](#gestures-and-accessibility) · [Development](#development) · [Contributing](CONTRIBUTING.md)
 
-An Android launcher based on [Olauncher](https://github.com/tanujnotes/olauncher), with customizable shortcuts, widgets, folders and optional tools to reduce distracting app use. Free software, without ads or premium reminders.
+Fork personal de [Olauncher](https://github.com/tanujnotes/olauncher) v6.9.17, con las funciones añadidas en [BetterLauncher](https://github.com/pierspad/BetterLauncher): accesos directos, widgets, carpetas, bloqueo biométrico, límites de uso, fuentes propias y copia de seguridad de ajustes. Software libre, sin anuncios.
 
 ## Features
 
@@ -42,9 +38,7 @@ Click a preview to see the full image.
 
 ## Install
 
-Download `betterlauncher-release.apk` from the [latest GitHub release](https://github.com/pierspad/BetterLauncher/releases/latest). Updates must use the same signing key as your existing installation.
-
-F-Droid inclusion is being reviewed in [fdroiddata !44511](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/44511). See [how F-Droid updates work](docs/f-droid.md).
+Abrí el proyecto en Android Studio y ejecutá la variante debug. El paquete es `app.nahuell.launcher.debug`, así que no pisa ni Olauncher ni BetterLauncher si ya los tenés instalados.
 
 ## Search
 
@@ -80,7 +74,7 @@ Bug reports, translations and focused pull requests are welcome. Please discuss 
 
 ## Acknowledgements
 
-Based on [Olauncher](https://github.com/tanujnotes/olauncher), with monochrome icons from [Lawnicons](https://github.com/LawnchairLauncher/lawnicons). Their respective licenses and attribution remain in the source.
+Basado en [Olauncher](https://github.com/tanujnotes/olauncher) (GPL-3.0, Tanuj Notes) y en las funciones de [BetterLauncher](https://github.com/pierspad/BetterLauncher) (GPL-3.0). Los iconos monocromos vienen de [Lawnicons](https://github.com/LawnchairLauncher/lawnicons). Las licencias y la atribución se mantienen en el código.
 
 ## AI disclosure
 
