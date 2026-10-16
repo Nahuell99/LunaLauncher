@@ -324,6 +324,35 @@
 
     </LinearLayout>
 
+    <!-- Free-form icon / widget grid (Settings → Home grid & widgets). Above the text
+         apps so its items win touches; empty cells let touches through. -->
+    <app.olauncher.ui.grid.HomeGridView
+        android:id="@+id/homeGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!-- Grid edit mode: tap to finish -->
+    <TextView
+        android:id="@+id/gridEditDone"
+        style="@style/TextMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_reorder_done"
+        app:drawableStartCompat="@drawable/ic_check"
+        android:drawablePadding="8dp"
+        android:elevation="8dp"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="11dp"
+        android:shadowColor="@android:color/transparent"
+        android:text="@string/grid_edit_done"
+        android:textColor="?attr/primaryInverseColor"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:drawableTint="?attr/primaryInverseColor" />
+
     <TextView
         android:id="@+id/firstRunTips"
         style="@style/TextSmall"

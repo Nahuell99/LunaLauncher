@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.AbsListView
@@ -64,6 +65,8 @@ import app.olauncher.helper.openSearch
 import app.olauncher.helper.showToast
 import app.olauncher.listener.OnSwipeTouchListener
 import app.olauncher.listener.ViewSwipeTouchListener
+import app.olauncher.ui.grid.HomeGridController
+import app.olauncher.ui.grid.HomeGridView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -76,6 +79,27 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
 
     private var appWidgetManager: AppWidgetManager? = null
     private var appWidgetHost: AppWidgetHost? = null
+
+    // ---- Free-form home grid ----
+    private var gridController: HomeGridController? = null
+    private var gridBackCallback: OnBackPressedCallback? = null
+
+    private fun gridResultLauncher(request: Int) =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            gridController?.onWidgetResult(request, result.resultCode, result.data)
+        }
+
+    private val gridWidgetLaunchers = mapOf(
+        HomeGridController.REQUEST_PICK to gridResultLauncher(HomeGridController.REQUEST_PICK),
+        HomeGridController.REQUEST_BIND to gridResultLauncher(HomeGridController.REQUEST_BIND),
+        HomeGridController.REQUEST_CONFIGURE to gridResultLauncher(HomeGridController.REQUEST_CONFIGURE),
+        HomeGridController.REQUEST_RECONFIGURE to gridResultLauncher(HomeGridController.REQUEST_RECONFIGURE),
+    )
+
+    private val calendarPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            gridController?.onCalendarPermissionResult()
+        }
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -111,6 +135,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         initClickListeners()
         initShortcutIcons()
         initReorder()
+        initGrid()
 
 
     }
@@ -125,6 +150,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         populateHomeScreen(false)
         finalizePendingWidget()
         renderWidget()
+        gridController?.startTicking()
         viewModel.isOlauncherDefault()
         if (prefs.showStatusBar) showStatusBar()
         else hideStatusBar()
@@ -142,6 +168,8 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
     override fun onPause() {
         super.onPause()
         if (reorderMode) exitReorderMode(announce = false)
+        gridController?.exitEditMode()
+        gridController?.stopTicking()
         try {
             appWidgetHost?.stopListening()
         } catch (e: Exception) {
@@ -259,10 +287,19 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
             populateDateTime()
         }
         viewModel.screenTimeValue.observe(viewLifecycleOwner) {
-            it?.let { binding.tvScreenTime.text = it }
+            it?.let {
+                binding.tvScreenTime.text = it
+                gridController?.setScreenTime(it)
+            }
         }
         viewModel.enterReorderMode.observe(viewLifecycleOwner) {
             enterReorderMode()
+        }
+        viewModel.enterGridEditMode.observe(viewLifecycleOwner) {
+            binding.mainLayout.post { gridController?.enterEditMode() }
+        }
+        viewModel.clearGrid.observe(viewLifecycleOwner) {
+            gridController?.clearAll()
         }
         // Home button for recents feature disabled
         // viewModel.showRecentApps.observe(viewLifecycleOwner) {
@@ -399,7 +436,8 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
     private fun calculateRowHeight(context: Context): Int {
         val paddingVertical = context.resources.getDimensionPixelSize(R.dimen.home_app_padding_vertical)
         val textSize = binding.homeApp1.textSize
-        val iconSize = (textSize * 1.2).toInt()
+        val textHeight = (textSize * 1.2).toInt()
+        val iconSize = if (prefs.showHomeIcons) maxOf(textHeight, IconManager.listIconSize(context, textSize)) else textHeight
         return iconSize + 2 * paddingVertical
     }
 
@@ -439,6 +477,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
                 textView.visibility = View.GONE
             }
         }
+        gridController?.render()
     }
 
     // Binds a single home slot, which may be a folder, a pinned shortcut or a plain app.
@@ -453,7 +492,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
                 if (showIcons) {
                     val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_sc_folder)
                     icon?.let {
-                        val iconSize = (textView.textSize * 1.2).toInt()
+                        val iconSize = IconManager.listIconSize(requireContext(), textView.textSize)
                         it.setBounds(0, 0, iconSize, iconSize)
                         it.mutate().setTint(textView.currentTextColor)
                         textView.setCompoundDrawables(it, null, null, null)
@@ -490,8 +529,10 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
     }
 
     // Opens a folder placed on a home slot as a simple picker of its (installed) apps.
-    private fun openHomeFolder(location: Int) {
-        val folder = prefs.getFolder(prefs.getFolderIdAt(location)) ?: return
+    private fun openHomeFolder(location: Int) = openFolder(prefs.getFolderIdAt(location))
+
+    private fun openFolder(folderId: String) {
+        val folder = prefs.getFolder(folderId) ?: return
         val ctx = requireContext()
         val launcherApps = ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
 
@@ -586,7 +627,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
                     icon = IconManager.getAppIcon(requireContext(), packageName, userHandle, textView.currentTextColor)
                 }
                 if (icon != null) {
-                    val iconSize = (textView.textSize * 1.2).toInt()
+                    val iconSize = IconManager.listIconSize(requireContext(), textView.textSize)
                     icon.setBounds(0, 0, iconSize, iconSize)
                     textView.setCompoundDrawables(icon, null, null, null)
                     textView.compoundDrawablePadding = (8 * requireContext().resources.displayMetrics.density).toInt()
@@ -1154,7 +1195,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
                     val iconSlot = location - topGap - 1
                     val iconIndex = prefs.getShortcutIconIndex(iconSlot)
                         .coerceIn(0, Constants.SHORTCUT_ICONS.size - 1)
-                    imageView.setImageResource(Constants.SHORTCUT_ICONS[iconIndex])
+                    bindShortcutSlotIcon(imageView, iconSlot, iconIndex)
                     imageView.setPadding(targetPadding, targetPadding, targetPadding, targetPadding)
                     imageView.setOnClickListener { launchShortcutSlot(iconSlot) }
                     imageView.setOnLongClickListener {
@@ -1167,6 +1208,29 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
             }
         }
         positionWidget()
+    }
+
+    // With "real app icons" on, a slot bound to an app shows that app's icon (from the
+    // selected icon source); otherwise, or for default actions, the chosen glyph.
+    private fun bindShortcutSlotIcon(imageView: ImageView, slot: Int, iconIndex: Int) {
+        val pkg = prefs.getShortcutTargetPackage(slot)
+        if (prefs.shortcutIconsUseAppIcon && pkg.isNotEmpty()) {
+            val ctx = requireContext()
+            val tint = ctx.getColorFromAttr(R.attr.primaryColor)
+            val icon = IconManager.getAppIcon(
+                ctx, pkg, getUserHandleFromString(ctx, prefs.getShortcutTargetUser(slot)), tint,
+                prefs.getShortcutTargetClassName(slot).ifEmpty { null },
+            )
+            if (icon != null) {
+                imageView.imageTintList = null
+                imageView.setImageDrawable(icon)
+                return
+            }
+        }
+        imageView.imageTintList = android.content.res.ColorStateList.valueOf(
+            requireContext().getColorFromAttr(R.attr.primaryColor)
+        )
+        imageView.setImageResource(Constants.SHORTCUT_ICONS[iconIndex])
     }
 
     /**
@@ -1442,8 +1506,72 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Free-form grid (icons + Android and custom widgets). Logic lives in HomeGridController.
+    // ---------------------------------------------------------------------------------------------
+
+    private fun initGrid() {
+        val manager = appWidgetManager ?: return
+        val host = appWidgetHost ?: return
+        gridController = HomeGridController(
+            grid = binding.homeGrid,
+            doneButton = binding.gridEditDone,
+            prefs = prefs,
+            widgetManager = manager,
+            widgetHost = host,
+            actions = object : HomeGridController.Actions {
+                override fun launchApp(label: String, pkg: String, cls: String?, user: String) =
+                    this@HomeFragment.launchApp(label.ifEmpty { getString(R.string.app) }, pkg, cls, user)
+
+                override fun launchShortcut(label: String, pkg: String, shortcutId: String, user: String) =
+                    this@HomeFragment.launchShortcut(shortcutId, pkg, label, user)
+
+                override fun openFolder(folderId: String) = this@HomeFragment.openFolder(folderId)
+                override fun openClock() = openClockApp()
+                override fun openCalendar() = openCalendarApp()
+
+                override fun onSwipe(direction: Int) {
+                    if (reorderMode) return
+                    when (direction) {
+                        HomeGridView.SWIPE_LEFT -> openSwipeLeftApp()
+                        HomeGridView.SWIPE_RIGHT -> openSwipeRightApp()
+                        HomeGridView.SWIPE_UP -> showAppList(Constants.FLAG_LAUNCH_APP)
+                        HomeGridView.SWIPE_DOWN -> swipeDownAction()
+                    }
+                }
+
+                override fun pickAppForGrid() = showAppList(Constants.FLAG_SET_GRID_ITEM)
+
+                override fun launchWidgetIntent(request: Int, intent: Intent) {
+                    gridWidgetLaunchers.getValue(request).launch(intent)
+                }
+
+                override fun requestCalendarPermission() =
+                    calendarPermissionLauncher.launch(android.Manifest.permission.READ_CALENDAR)
+
+                override fun requestScreenTime() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && requireContext().appUsagePermissionGranted())
+                        viewModel.getTodaysScreenTime()
+                }
+
+                override fun onEditModeChanged(editing: Boolean) {
+                    if (editing && reorderMode) exitReorderMode(announce = false)
+                    gridBackCallback?.isEnabled = editing
+                }
+            },
+        )
+        gridBackCallback = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                gridController?.exitEditMode()
+            }
+        }.also { requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, it) }
+        gridController?.finalizeStalePending()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        gridController?.onDestroy()
+        gridController = null
         clearWiggle()
         reorderMode = false
         appsReorder = null

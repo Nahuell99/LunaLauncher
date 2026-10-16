@@ -1410,12 +1410,15 @@
                     android:layout_marginVertical="4dp"
                     android:background="@drawable/divider_light" />
 
-                <!-- Use colorful icons (switch) -->
+                <!-- Icon pack, shape, size… (opens IconSettingsFragment) -->
                 <LinearLayout
-                    android:id="@+id/layoutColorfulIcons"
+                    android:id="@+id/iconSettingsRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -1426,24 +1429,63 @@
                         style="@style/TextSmall"
                         android:layout_marginStart="8dp"
                         android:paddingVertical="8dp"
-                        android:drawableStart="@drawable/ic_sc_folder"
+                        app:drawableStartCompat="@drawable/ic_sc_folder"
                         android:drawablePadding="12dp"
-                        android:text="@string/settings_use_colorful_icons"
-                        android:textColor="?attr/primaryColor" 
+                        android:text="@string/icon_settings_row"
+                        android:textColor="?attr/primaryColor"
                         app:drawableTint="?attr/primaryColor" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchColorfulIcons"
+                    <TextView
+                        android:id="@+id/iconSourceValue"
+                        style="@style/TextSmallBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:text=""
-                        android:textOff=""
-                        android:textOn=""
-                        app:thumbTint="@color/switch_thumb"
-                        app:trackTint="@color/switch_track" />
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:maxWidth="140dp"
+                        android:padding="8dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginVertical="4dp"
+                    android:background="@drawable/divider_light" />
+
+                <!-- Free-form grid & widgets (opens HomeGridSettingsFragment) -->
+                <LinearLayout
+                    android:id="@+id/gridSettingsRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/TextSmall"
+                        android:layout_marginStart="8dp"
+                        android:paddingVertical="8dp"
+                        app:drawableStartCompat="@drawable/ic_widget"
+                        android:drawablePadding="12dp"
+                        android:text="@string/grid_settings_row"
+                        android:textColor="?attr/primaryColor"
+                        app:drawableTint="?attr/primaryColor" />
+
+                    <TextView
+                        android:id="@+id/gridSettingsValue"
+                        style="@style/TextSmallBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:padding="8dp" />
                 </LinearLayout>
 
             </LinearLayout>

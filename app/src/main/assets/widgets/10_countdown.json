@@ -1,0 +1,15 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.countdown",
+  "name": "Countdown",
+  "name_es": "Cuenta regresiva",
+  "spanX": 3,
+  "spanY": 2,
+  "gravity": "center",
+  "tap": "edit",
+  "lines": [
+    { "text": "{days_until|?}", "size": 48, "font": "sans-serif-light" },
+    { "text": "{data_rest|days · tap to set YYYY-MM-DD Name}", "text_es": "{data_rest|días · tocá y escribí AAAA-MM-DD Nombre}", "size": 13, "alpha": 0.7 }
+  ]
+}

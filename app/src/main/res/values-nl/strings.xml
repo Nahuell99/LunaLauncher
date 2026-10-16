@@ -295,7 +295,6 @@ Om te verwijderen moet dit ≤ 2 zijn</string>
     <string name="settings_drawer_icons">Pictogrammen in lade weergeven</string>
     <string name="settings_home_icons">Pictogrammen op startscherm weergeven</string>
     <string name="settings_home_only_icons">App-namen verbergen op het startscherm</string>
-        <string name="settings_use_colorful_icons">Kleurrijke pictogrammen gebruiken</string>
     <string name="settings_icons_title">Pictogrammen</string>
     <string name="accessibility_service_description">De toegankelijkheidstoestemming is vereist om het gebaar dubbel tikken om te vergrendelen mogelijk te maken. Gegevens die Olauncher via deze service verkrijgt, verlaten je apparaat niet.</string>
     <string name="pin_action_not_supported">Deze vastzetactie wordt niet ondersteund</string>

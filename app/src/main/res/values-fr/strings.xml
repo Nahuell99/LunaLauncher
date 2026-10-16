@@ -296,7 +296,6 @@ Pour la supprimer, il doit être ≤ 2</string>
     <string name="settings_drawer_icons">Afficher les icônes dans le tiroir</string>
     <string name="settings_home_icons">Afficher les icônes sur l\'écran d\'accueil</string>
     <string name="settings_home_only_icons">Ne pas afficher le nom des applications sur l\'écran d\'accueil</string>
-        <string name="settings_use_colorful_icons">Utiliser des icônes colorées</string>
     <string name="settings_icons_title">Icônes</string>
     <string name="accessibility_service_description">L\'autorisation d\'accessibilité est requise pour activer le geste Double appui pour verrouiller. Les données obtenues par Olauncher via ce service ne quitteront pas votre appareil.</string>
     <string name="pin_action_not_supported">Cette action d\'épinglage n\'est pas prise en charge</string>

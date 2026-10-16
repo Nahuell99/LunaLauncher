@@ -327,7 +327,6 @@ No es permet amagar dreceres fixades</string>
     <string name="settings_drawer_icons">Mostra les icones al calaix</string>
     <string name="settings_home_icons">Mostra les icones a la pantalla d\'inici</string>
     <string name="settings_home_only_icons">No mostris els noms de les aplicacions a la pantalla d\'inici</string>
-    <string name="settings_use_colorful_icons">Utilitza icones de colors</string>
     <string name="settings_icons_title">Icones</string>
     <string name="accessibility_disclosure_title">Servei d’accessibilitat</string>
     <string name="accessibility_disclosure_message">Nahuel Launcher utilitza l’API AccessibilityService d’Android per al bloqueig de pantalla amb doble toc i els límits d’aplicacions que configuris. Ambdues funcions són opcionals.\n\nAccedeix als noms de paquet de les aplicacions en primer pla i als esdeveniments de canvi de finestra per detectar quan s’obre o es tanca una aplicació limitada. També accedeix a informació de les vistes premudes (tipus de vista i etiqueta d’accessibilitat) per reconèixer el gest de bloqueig. Quan una aplicació seleccionada està en període d’espera, torna a la pantalla d’inici i mostra el temps restant. La configuració dels límits i les marques de temps es desen només al dispositiu.\n\nLes dades d’accessibilitat es processen al dispositiu i no s’envien a servidors ni es comparteixen amb tercers. Pots rebutjar el permís i continuar utilitzant el llançador sense aquestes funcions, o desactivar el servei en qualsevol moment a la configuració d’accessibilitat d’Android.</string>

@@ -1,0 +1,14 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.next_event",
+  "name": "Next event",
+  "name_es": "Próximo evento",
+  "spanX": 5,
+  "spanY": 2,
+  "tap": "calendar",
+  "lines": [
+    { "text": "{event|Nothing scheduled}", "text_es": "{event|Sin eventos}", "size": 18, "bold": true },
+    { "text": "{event_time}", "size": 14, "alpha": 0.7, "hideIfEmpty": true }
+  ]
+}

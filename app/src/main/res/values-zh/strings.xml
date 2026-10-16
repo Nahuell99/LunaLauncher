@@ -297,7 +297,6 @@
     <string name="settings_drawer_icons">在抽屉中显示图标</string>
     <string name="settings_home_icons">在主屏幕上显示图标</string>
     <string name="settings_home_only_icons">在主屏幕上隐藏应用名称</string>
-        <string name="settings_use_colorful_icons">使用彩色图标</string>
     <string name="settings_icons_title">图标</string>
     <string name="accessibility_service_description">需要无障碍权限才能启用双击锁屏手势。Olauncher 通过此服务获取的任何数据都不会离开您的设备。</string>
     <string name="pin_action_not_supported">不支持此固定操作</string>

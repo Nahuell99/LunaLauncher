@@ -295,7 +295,6 @@ Za uklanjanje mora biti ≤ 2</string>
     <string name="settings_drawer_icons">Prikaži ikone u izborniku</string>
     <string name="settings_home_icons">Prikaži ikone na početnom zaslonu</string>
     <string name="settings_home_only_icons">Sakrij nazive aplikacija na početnom zaslonu</string>
-        <string name="settings_use_colorful_icons">Koristi šarene ikone</string>
     <string name="settings_icons_title">Ikone</string>
     <string name="accessibility_service_description">Dozvola pristupačnosti potrebna je za omogućavanje geste dvostrukog dodira za zaključavanje. Nikakvi podaci koje Olauncher prikupi putem ove usluge neće napustiti vaš uređaj.</string>
     <string name="pin_action_not_supported">Ova radnja prikvačivanja nije podržana</string>

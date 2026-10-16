@@ -1,0 +1,14 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.greeting",
+  "name": "Greeting",
+  "name_es": "Saludo",
+  "spanX": 5,
+  "spanY": 2,
+  "tap": "calendar",
+  "lines": [
+    { "text": "{greeting}", "size": 30, "font": "sans-serif-light" },
+    { "text": "{date:EEEE d MMMM} · {battery}%", "size": 14, "alpha": 0.7 }
+  ]
+}

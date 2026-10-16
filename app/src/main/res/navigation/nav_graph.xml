@@ -68,6 +68,20 @@
             app:popEnterAnim="@anim/fade_enter"
             app:popExitAnim="@anim/fade_exit" />
         <action
+            android:id="@+id/action_settingsFragment_to_iconSettingsFragment"
+            app:destination="@id/iconSettingsFragment"
+            app:enterAnim="@anim/fade_enter"
+            app:exitAnim="@anim/fade_exit"
+            app:popEnterAnim="@anim/fade_enter"
+            app:popExitAnim="@anim/fade_exit" />
+        <action
+            android:id="@+id/action_settingsFragment_to_homeGridSettingsFragment"
+            app:destination="@id/homeGridSettingsFragment"
+            app:enterAnim="@anim/fade_enter"
+            app:exitAnim="@anim/fade_exit"
+            app:popEnterAnim="@anim/fade_enter"
+            app:popExitAnim="@anim/fade_exit" />
+        <action
             android:id="@+id/action_settingsFragment_to_languagePickerFragment"
             app:destination="@id/languagePickerFragment"
             app:enterAnim="@anim/fade_enter"
@@ -87,6 +101,18 @@
         android:name="app.olauncher.ui.FontPickerFragment"
         android:label="FontPickerFragment"
         tools:layout="@layout/fragment_font_picker" />
+
+    <fragment
+        android:id="@+id/iconSettingsFragment"
+        android:name="app.olauncher.ui.settings.IconSettingsFragment"
+        android:label="IconSettingsFragment"
+        tools:layout="@layout/fragment_sub_settings" />
+
+    <fragment
+        android:id="@+id/homeGridSettingsFragment"
+        android:name="app.olauncher.ui.settings.HomeGridSettingsFragment"
+        android:label="HomeGridSettingsFragment"
+        tools:layout="@layout/fragment_sub_settings" />
 
     <fragment
         android:id="@+id/languagePickerFragment"

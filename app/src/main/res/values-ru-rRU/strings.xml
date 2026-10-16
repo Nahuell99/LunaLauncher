@@ -296,7 +296,6 @@
     <string name="settings_drawer_icons">Показывать значки в меню приложений</string>
     <string name="settings_home_icons">Показывать значки на главном экране</string>
     <string name="settings_home_only_icons">Скрыть названия приложений на главном экране</string>
-        <string name="settings_use_colorful_icons">Использовать цветные значки</string>
     <string name="settings_icons_title">Значки</string>
     <string name="accessibility_service_description">Разрешение специальных возможностей требуется для включения жеста двойного касания для блокировки. Любые данные, полученные Olauncher через этот сервис, не покинут ваше устройство.</string>
     <string name="pin_action_not_supported">Это действие закрепления не поддерживается</string>

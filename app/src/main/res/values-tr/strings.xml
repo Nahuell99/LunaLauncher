@@ -295,7 +295,6 @@ Kaldırmak için ≤ 2 olmalıdır</string>
     <string name="settings_drawer_icons">Uygulama çekmecesinde simgeleri göster</string>
     <string name="settings_home_icons">Ana ekranda simgeleri göster</string>
     <string name="settings_home_only_icons">Ana ekranda uygulama adlarını gizle</string>
-        <string name="settings_use_colorful_icons">Renkli simgeleri kullan</string>
     <string name="settings_icons_title">Simgeler</string>
     <string name="accessibility_service_description">Kilitlemek için çift dokunma hareketini etkinleştirmek için erişilebilirlik izni gereklidir. Olauncher tarafından bu hizmet aracılığıyla elde edilen hiçbir veri cihazınızdan ayrılmaz.</string>
     <string name="pin_action_not_supported">Bu sabitleme işlemi desteklenmiyor</string>

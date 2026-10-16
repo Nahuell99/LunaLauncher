@@ -40,6 +40,7 @@ import app.olauncher.BuildConfig
 import app.olauncher.MainViewModel
 import app.olauncher.R
 import app.olauncher.data.Constants
+import app.olauncher.data.IconSources
 import app.olauncher.data.Prefs
 import app.olauncher.databinding.FragmentSettingsBinding
 import app.olauncher.helper.IconManager
@@ -150,6 +151,7 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
         }
         populateAlignment()
         populateClockCalendarApps()
+        populateIconsSettings()
         (activity as? app.olauncher.MainActivity)?.updateGlobalOpacityScrim(animate = true)
     }
 
@@ -237,7 +239,8 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
             R.id.switchDrawerIcons -> toggleDrawerIcons()
             R.id.switchHomeIcons -> toggleHomeIcons()
             R.id.switchHomeOnlyIcons -> toggleHomeOnlyIcons()
-            R.id.switchColorfulIcons -> toggleColorfulIcons()
+            R.id.iconSettingsRow -> findNavController().navigate(R.id.action_settingsFragment_to_iconSettingsFragment)
+            R.id.gridSettingsRow -> findNavController().navigate(R.id.action_settingsFragment_to_homeGridSettingsFragment)
             R.id.dateTimeSwitch -> toggleDateTimeEnabled()
             R.id.dateOnlySwitch -> toggleDateOnly()
             R.id.clockAppRow -> showAppListIfEnabled(Constants.FLAG_SET_CLOCK_APP)
@@ -327,7 +330,8 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
         binding.switchDrawerIcons.setOnClickListener(this)
         binding.switchHomeIcons.setOnClickListener(this)
         binding.switchHomeOnlyIcons.setOnClickListener(this)
-        binding.switchColorfulIcons.setOnClickListener(this)
+        binding.iconSettingsRow.setOnClickListener(this)
+        binding.gridSettingsRow.setOnClickListener(this)
         binding.dateTimeSwitch.setOnClickListener(this)
         binding.dateOnlySwitch.setOnClickListener(this)
         binding.swipeLeftApp.setOnClickListener(this)
@@ -458,17 +462,18 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
         populateIconsSettings()
     }
 
-    private fun toggleColorfulIcons() {
-        prefs.useColorfulIcons = !prefs.useColorfulIcons
-        IconManager.clearCache()
-        populateIconsSettings()
-    }
-
     private fun populateIconsSettings() {
         binding.switchDrawerIcons.isChecked = prefs.showDrawerIcons
         binding.switchHomeIcons.isChecked = prefs.showHomeIcons
         binding.switchHomeOnlyIcons.isChecked = prefs.showHomeOnlyIcons
-        binding.switchColorfulIcons.isChecked = prefs.useColorfulIcons
+        val source = prefs.iconSource
+        binding.iconSourceValue.text = when {
+            source == IconSources.SYSTEM -> getString(R.string.icon_source_system)
+            source == IconSources.THEMED -> getString(R.string.icon_source_themed)
+            source == IconSources.LAWNICONS -> getString(R.string.icon_source_lawnicons)
+            else -> IconSources.packPackage(source)?.let { requireContext().getAppLabel(it) }.orEmpty()
+        }
+        binding.gridSettingsValue.text = getString(if (prefs.gridEnabled) R.string.on else R.string.off)
 
         val homeIconsOn = prefs.showHomeIcons
         binding.layoutHomeOnlyIcons.alpha = if (homeIconsOn) 1.0f else 0.4f

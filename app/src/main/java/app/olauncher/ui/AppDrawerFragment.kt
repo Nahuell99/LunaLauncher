@@ -458,6 +458,12 @@ class AppDrawerFragment : BaseFragment() {
             },
             appFolderListener = { appModel -> showFolderAssignDialog(appModel) },
             appAddToHomeListener = { _ -> viewModel.refreshHome(false) },
+            appIconListener = { appModel ->
+                IconPickerDialog.show(requireContext(), appModel.appPackage, appModel.user.toString(), appModel.appLabel) {
+                    adapter.notifyItemRangeChanged(0, adapter.itemCount)
+                    viewModel.refreshHome(false)
+                }
+            },
             folderManageListener = { folderId -> showFolderManageDialog(folderId) },
             privateSpaceToggleListener = {
                 viewModel.togglePrivateSpaceLock()

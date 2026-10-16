@@ -295,7 +295,6 @@
     <string name="settings_drawer_icons">Показувати значки в меню додатків</string>
     <string name="settings_home_icons">Показувати значки на головному екрані</string>
     <string name="settings_home_only_icons">Приховати назви додатків на головному екрані</string>
-        <string name="settings_use_colorful_icons">Використовувати кольорові значки</string>
     <string name="settings_icons_title">Значки</string>
     <string name="accessibility_service_description">Дозвіл спеціальних можливостей потрібен, щоб увімкнути жест подвійного торкання для блокування. Будь-які дані, отримані Olauncher через цей сервіс, не залишать ваш пристрій.</string>
     <string name="pin_action_not_supported">Ця дія закріплення не підтримується</string>

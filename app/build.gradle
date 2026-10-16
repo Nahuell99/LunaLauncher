@@ -109,4 +109,6 @@ dependencies {
     implementation libs.androidsvg
 
     testImplementation libs.junit
+    // Real org.json for JVM unit tests (android.jar only ships stubs).
+    testImplementation libs.org.json
 }

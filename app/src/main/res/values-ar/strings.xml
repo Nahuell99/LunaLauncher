@@ -294,7 +294,6 @@
     <string name="settings_drawer_icons">عرض الأيقونات في درج التطبيقات</string>
     <string name="settings_home_icons">عرض الأيقونات على الشاشة الرئيسية</string>
     <string name="settings_home_only_icons">إخفاء أسماء التطبيقات على الشاشة الرئيسية</string>
-        <string name="settings_use_colorful_icons">استخدام الأيقونات الملونة</string>
     <string name="settings_icons_title">الأيقونات</string>
     <string name="accessibility_service_description">إذن إمكانية الوصول مطلوب لتفعيل إيماءة النقر المزدوج للقفل. أي بيانات يحصل عليها Olauncher عبر هذه الخدمة لن تغادر جهازك.</string>
     <string name="pin_action_not_supported">إجراء التثبيت هذا غير مدعوم</string>

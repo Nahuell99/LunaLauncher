@@ -1,0 +1,13 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.battery",
+  "name": "Battery",
+  "name_es": "Batería",
+  "spanX": 3,
+  "spanY": 1,
+  "lines": [
+    { "text": "{battery}% {charging}", "size": 18, "bold": true },
+    { "type": "bar", "value": "{battery}", "max": 100, "height": 4 }
+  ]
+}

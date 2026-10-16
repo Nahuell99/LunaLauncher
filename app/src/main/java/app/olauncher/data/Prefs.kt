@@ -40,6 +40,8 @@ class Prefs(private val context: Context) {
         const val SCREEN_TIME_APP_CLASS_NAME = "SCREEN_TIME_APP_CLASS_NAME"
         const val CUSTOM_FONT_EXPORT_KEY = "CUSTOM_FONT_BASE64"
         const val CUSTOM_FONT_FILENAME = "custom_font"
+        const val ICON_OVERRIDE_PREFIX = "ICON_OVERRIDE_"
+        const val GRID_ITEMS = "GRID_ITEMS"
     }
 
     // ---- First-run flags ----
@@ -84,6 +86,53 @@ class Prefs(private val context: Context) {
     var showDrawerIcons by bool("SHOW_DRAWER_ICONS")
     var showHomeOnlyIcons by bool("SHOW_HOME_ONLY_ICONS")
     var useColorfulIcons by bool("USE_COLORFUL_ICONS")
+
+    // ---- Icon engine ----
+    // "system" | "themed" | "lawnicons" | "pack:<package>". Empty = never chosen, in which
+    // case the historical colorful switch decides (colorful → system, else Lawnicons).
+    var iconSourceRaw by string("ICON_SOURCE")
+    val iconSource: String
+        get() = iconSourceRaw.ifEmpty {
+            if (useColorfulIcons) IconSources.SYSTEM else IconSources.LAWNICONS
+        }
+    var iconShape by int("ICON_SHAPE")
+    var iconSizeScale by float("ICON_SIZE_SCALE", 1.0f)
+    var iconTintMono by bool("ICON_TINT_MONO")
+    var shortcutIconsUseAppIcon by bool("SHORTCUT_ICONS_APP_ICON")
+
+    // Per-app manual icon: "<icon pack package>/<drawable name>", empty = automatic.
+    fun getIconOverride(packageName: String, user: String): String =
+        prefs.getString("$ICON_OVERRIDE_PREFIX$packageName|$user", "").orEmpty()
+
+    fun setIconOverride(packageName: String, user: String, value: String) = prefs.edit {
+        if (value.isEmpty()) remove("$ICON_OVERRIDE_PREFIX$packageName|$user")
+        else putString("$ICON_OVERRIDE_PREFIX$packageName|$user", value)
+    }
+
+    fun clearIconOverrides() = prefs.edit {
+        prefs.all.keys.filter { it.startsWith(ICON_OVERRIDE_PREFIX) }.forEach(::remove)
+    }
+
+    // ---- Free-form home grid ----
+    var gridEnabled by bool("GRID_ENABLED")
+    var gridColumns by int("GRID_COLUMNS", 5)
+    var gridRows by int("GRID_ROWS", 8)
+    var gridIconScale by float("GRID_ICON_SCALE", 1.0f)
+    var gridShowLabels by bool("GRID_SHOW_LABELS", true)
+
+    // JSON array of HomeGrid items; see [HomeGrid].
+    var gridItems: List<GridItem>
+        get() = HomeGrid.fromJson(prefs.getString(GRID_ITEMS, "").orEmpty())
+        set(value) = prefs.edit { putString(GRID_ITEMS, HomeGrid.toJson(value)) }
+
+    // Cell the user is filling while the app drawer is open as a picker ("col,row").
+    var gridPendingCell by string("GRID_PENDING_CELL")
+
+    // AppWidget id allocated for the grid while the system picker is open ("id,col,row").
+    var gridPendingWidget by string("GRID_PENDING_WIDGET")
+
+    // JSON array of imported / bundled declarative widget definitions.
+    var customWidgetDefs by string("CUSTOM_WIDGET_DEFS")
 
     // Scrim intensity (0f..1f) for the home screen and the app drawer respectively.
     // A value of 0 means no scrim.
@@ -483,6 +532,13 @@ class Prefs(private val context: Context) {
                 put("LAST_OPENED_LIMITED_APP", "")
                 put("WIDGET_ID", -1)
                 put("PENDING_WIDGET_ID", -1)
+                put("GRID_PENDING_CELL", "")
+                put("GRID_PENDING_WIDGET", "")
+                // AppWidget ids are device-local: keep the provider so the grid can
+                // re-bind it, but drop the stale id.
+                (get(GRID_ITEMS) as? String)?.let { json ->
+                    put(GRID_ITEMS, HomeGrid.toJson(HomeGrid.fromJson(json).map { it.copy(appWidgetId = -1) }))
+                }
             }
             if (backup.fontBase64.isNotEmpty()) {
                 val bytes = Base64.decode(backup.fontBase64, Base64.NO_WRAP)

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Íconos -->
+    <string name="icon_settings_row">Pack de íconos y estilo</string>
+    <string name="icon_settings_title">Íconos</string>
+    <string name="icon_source">Origen de los íconos</string>
+    <string name="icon_source_system">Íconos del sistema</string>
+    <string name="icon_source_themed">Íconos temáticos (Android 13+)</string>
+    <string name="icon_source_lawnicons">Lawnicons (integrado)</string>
+    <string name="icon_packs_installed">Packs de íconos instalados</string>
+    <string name="icon_pack_none_installed">No hay packs de íconos instalados. Cualquier pack compatible con ADW / Nova (Arcticons, Lawnicons, Delta…) aparece aquí al instalarlo.</string>
+    <string name="icon_shape">Forma de los íconos</string>
+    <string name="icon_shape_hint">Se aplica a los íconos adaptativos del sistema.</string>
+    <string name="icon_shape_system">Sistema</string>
+    <string name="icon_shape_circle">Círculo</string>
+    <string name="icon_shape_squircle">Squircle</string>
+    <string name="icon_shape_rounded">Cuadrado redondeado</string>
+    <string name="icon_shape_square">Cuadrado</string>
+    <string name="icon_shape_teardrop">Gota</string>
+    <string name="icon_size">Tamaño de íconos en listas</string>
+    <string name="icon_tint_mono">Teñir todos los íconos con el color del texto</string>
+    <string name="icon_shortcut_column_real">Íconos reales en la columna de atajos</string>
+    <string name="icon_overrides_reset">Restablecer íconos personalizados</string>
+    <string name="icon_overrides_reset_done">Íconos personalizados borrados</string>
+    <string name="icon_override_hint">Para cambiar un ícono puntual, mantené presionada la app en el cajón y toca Ícono.</string>
+    <string name="icon_button">Ícono</string>
+    <string name="icon_choose_for">Ícono para %1$s</string>
+    <string name="icon_auto">Automático (origen actual)</string>
+    <string name="icon_search_hint">Buscar íconos</string>
+    <string name="icon_none_found">No se encontraron íconos</string>
+    <string name="icon_loading">Cargando…</string>
+    <string name="icon_where">Mostrar íconos en</string>
+
+    <!-- Cuadrícula -->
+    <string name="grid_settings_row">Cuadrícula de inicio y widgets</string>
+    <string name="grid_settings_title">Cuadrícula de inicio</string>
+    <string name="grid_enabled">Cuadrícula libre de íconos</string>
+    <string name="grid_columns">Columnas</string>
+    <string name="grid_rows">Filas</string>
+    <string name="grid_icon_size">Tamaño de íconos</string>
+    <string name="grid_show_labels">Mostrar nombres</string>
+    <string name="grid_edit">Editar la cuadrícula en la pantalla de inicio</string>
+    <string name="grid_clear">Quitar todo de la cuadrícula</string>
+    <string name="grid_clear_confirm">¿Quitar todos los íconos y widgets de la cuadrícula?</string>
+    <string name="grid_cleared">Cuadrícula vacía</string>
+    <string name="grid_hint">Modo edición: arrastra para mover, toca un elemento para ver opciones y toca una celda vacía para agregar apps, carpetas o widgets. Mantén pulsado cualquier elemento de la cuadrícula en el inicio para empezar a editar.</string>
+    <string name="grid_edit_done">Listo</string>
+    <string name="grid_edit_hint">Arrastra para mover · toca un elemento para opciones · toca una celda vacía para agregar</string>
+    <string name="grid_add_title">Agregar a la cuadrícula</string>
+    <string name="grid_add_app">App o acceso directo</string>
+    <string name="grid_add_folder">Carpeta</string>
+    <string name="grid_add_android_widget">Widget de Android</string>
+    <string name="grid_add_custom_widget">Widget personalizado</string>
+    <string name="grid_no_folders">Primero crea una carpeta desde el cajón de apps</string>
+    <string name="grid_resize">Cambiar tamaño</string>
+    <string name="grid_width">Ancho</string>
+    <string name="grid_height">Alto</string>
+    <string name="grid_remove">Quitar de la cuadrícula</string>
+    <string name="grid_change_icon">Cambiar ícono</string>
+    <string name="grid_edit_text">Editar texto</string>
+    <string name="grid_reconfigure">Reconfigurar widget</string>
+    <string name="grid_no_space">No hay espacio libre para ese tamaño</string>
+    <string name="grid_full">La cuadrícula está llena</string>
+    <string name="grid_added">Agregado a la cuadrícula</string>
+    <string name="grid_disabled_hint">Activa la cuadrícula en Ajustes → Cuadrícula de inicio y widgets</string>
+    <string name="add_to_grid">Cuadrícula</string>
+    <string name="add_to_home_list">Lista de inicio</string>
+
+    <!-- Widgets -->
+    <string name="widget_rebind">Toca para volver a configurar este widget</string>
+    <string name="widget_custom_title">Widgets personalizados</string>
+    <string name="widget_custom_hint">Los widgets son archivos JSON: sin código y sin descargas. Exporta uno integrado, edítalo y vuelve a importarlo para diseñar el tuyo (formato en docs/widgets.md).</string>
+    <string name="widget_import">Importar widget (.json)</string>
+    <string name="widget_import_ok">Widget importado: %1$s</string>
+    <string name="widget_import_failed">No es un archivo de widget válido</string>
+    <string name="widget_export">Exportar</string>
+    <string name="widget_delete">Eliminar</string>
+    <string name="widget_exported">Widget exportado</string>
+    <string name="widget_built_in">Integrado</string>
+    <string name="widget_imported">Importado</string>
+    <string name="widget_media_permission">Permite el acceso a notificaciones para ver la música</string>
+    <string name="widget_media_permission_toast">Activa Nahuel Launcher para que el widget de música vea qué se está reproduciendo</string>
+    <string name="widget_text_title">Texto del widget</string>
+    <string name="greeting_morning">Buenos días</string>
+    <string name="greeting_afternoon">Buenas tardes</string>
+    <string name="greeting_evening">Buenas noches</string>
+    <string name="greeting_night">Buenas noches</string>
+</resources>

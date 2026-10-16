@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -24,6 +25,7 @@ import app.olauncher.R
 import app.olauncher.data.AppModel
 import app.olauncher.data.Constants
 import app.olauncher.data.Folder
+import app.olauncher.data.GridOps
 import app.olauncher.databinding.AdapterAppDrawerBinding
 import app.olauncher.databinding.AdapterFolderHeaderBinding
 import app.olauncher.databinding.AdapterPrivateSpaceHeaderBinding
@@ -50,6 +52,7 @@ class AppDrawerAdapter(
     private val appRenameListener: (AppModel, String) -> Unit,
     private val appFolderListener: (AppModel) -> Unit = {},
     private val appAddToHomeListener: (AppModel) -> Unit = {},
+    private val appIconListener: (AppModel) -> Unit = {},
     private val folderManageListener: (String) -> Unit = {},
     private val privateSpaceToggleListener: () -> Unit = {},
     private val privateSpaceSettingsListener: () -> Unit = {},
@@ -62,6 +65,8 @@ class AppDrawerAdapter(
         const val VIEW_TYPE_APP = 0
         const val VIEW_TYPE_PRIVATE_HEADER = 1
         const val VIEW_TYPE_FOLDER_HEADER = 2
+        private const val MENU_GRID = 1
+        private const val MENU_LIST = 2
 
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<AppModel>() {
             override fun areItemsTheSame(oldItem: AppModel, newItem: AppModel): Boolean = when {
@@ -338,7 +343,7 @@ class AppDrawerAdapter(
             if (prefs.showDrawerIcons) {
                 val icon = ContextCompat.getDrawable(folderTitle.context, R.drawable.ic_sc_folder)
                 icon?.let {
-                    val iconSize = (folderTitle.textSize * 1.2).toInt()
+                    val iconSize = IconManager.listIconSize(folderTitle.context, folderTitle.textSize)
                     it.setBounds(0, 0, iconSize, iconSize)
                     it.mutate().setTint(folderTitle.currentTextColor)
                     folderTitle.setCompoundDrawables(it, null, null, null)
@@ -471,7 +476,7 @@ class AppDrawerAdapter(
             if (prefs.showDrawerIcons) {
                 val icon = IconManager.getModelIcon(appTitle.context, appModel, appTitle.currentTextColor)
                 if (icon != null) {
-                    val iconSize = (appTitle.textSize * 1.2).toInt()
+                    val iconSize = IconManager.listIconSize(appTitle.context, appTitle.textSize)
                     icon.setBounds(0, 0, iconSize, iconSize)
                     appTitle.setCompoundDrawables(icon, null, null, null)
                     appTitle.compoundDrawablePadding = (8 * appTitle.context.resources.displayMetrics.density).toInt()
@@ -513,6 +518,9 @@ class AppDrawerAdapter(
                     appFolder.isVisible = flag == Constants.FLAG_LAUNCH_APP && appModel is AppModel.App
                     appAddToHome.isVisible = flag == Constants.FLAG_LAUNCH_APP && appModel.appPackage.isNotEmpty()
                     val p = Prefs(root.context)
+                    // Per-app icon only makes sense while icons are shown somewhere.
+                    appIcon.isVisible = flag == Constants.FLAG_LAUNCH_APP && appModel is AppModel.App &&
+                        (p.showDrawerIcons || p.showHomeIcons || p.gridEnabled || p.shortcutIconsUseAppIcon)
                     val maxC = p.homeAppsNum.coerceIn(1, 8)
                     val freeS = (1..maxC).firstOrNull { p.getAppName(it).isEmpty() && !p.getIsFolder(it) }
                         ?: if (p.homeAppsNum < 8) p.homeAppsNum + 1 else 0
@@ -525,11 +533,13 @@ class AppDrawerAdapter(
                 true
             }
 
-            appAddToHome.setOnClickListener {
+            appIcon.setOnClickListener {
                 appHideLayout.visibility = View.GONE
                 appTitle.visibility = View.VISIBLE
-                val ctx = root.context
-                val currentPrefs = Prefs(ctx)
+                appIconListener(appModel)
+            }
+
+            fun addToHomeList(ctx: Context, currentPrefs: Prefs) {
                 val currentMax = currentPrefs.homeAppsNum.coerceIn(1, 8)
                 val targetSlot = (1..currentMax).firstOrNull { currentPrefs.getAppName(it).isEmpty() && !currentPrefs.getIsFolder(it) }
                     ?: if (currentPrefs.homeAppsNum < 8) {
@@ -547,6 +557,32 @@ class AppDrawerAdapter(
                     ctx.showToast(ctx.getString(R.string.added_to_home, targetSlot))
                 }
                 appAddToHomeListener(appModel)
+            }
+
+            appAddToHome.setOnClickListener {
+                appHideLayout.visibility = View.GONE
+                appTitle.visibility = View.VISIBLE
+                val ctx = root.context
+                val currentPrefs = Prefs(ctx)
+                if (!currentPrefs.gridEnabled) {
+                    addToHomeList(ctx, currentPrefs)
+                    return@setOnClickListener
+                }
+                // With the grid on, ask where the app should go.
+                val menu = PopupMenu(ctx, appAddToHome)
+                menu.menu.add(0, MENU_GRID, 0, ctx.getString(R.string.add_to_grid))
+                menu.menu.add(0, MENU_LIST, 1, ctx.getString(R.string.add_to_home_list))
+                menu.setOnMenuItemClickListener { choice ->
+                    if (choice.itemId == MENU_GRID) {
+                        val added = GridOps.addAnywhere(currentPrefs, appModel)
+                        ctx.showToast(ctx.getString(if (added) R.string.grid_added else R.string.grid_full))
+                        appAddToHomeListener(appModel)
+                    } else {
+                        addToHomeList(ctx, currentPrefs)
+                    }
+                    true
+                }
+                menu.show()
             }
 
             appFolder.setOnClickListener {

@@ -294,7 +294,6 @@ Aby go usunąć, musi wynosić ≤ 2</string>
     <string name="settings_drawer_icons">Pokaż ikony w szufladzie aplikacji</string>
     <string name="settings_home_icons">Pokaż ikony na ekranie głównym</string>
     <string name="settings_home_only_icons">Ukryj nazwy aplikacji na ekranie głównym</string>
-        <string name="settings_use_colorful_icons">Użyj kolorowych ikon</string>
     <string name="settings_icons_title">Ikony</string>
     <string name="accessibility_service_description">Uprawnienie ułatwień dostępu jest wymagane, aby włączyć gest podwójnego dotknięcia do zablokowania. Żadne dane pozyskane przez Olauncher za pośrednictwem tej usługi nie opuszczą Twojego urządzenia.</string>
     <string name="pin_action_not_supported">Ta czynność przypinania nie jest obsługiwana</string>

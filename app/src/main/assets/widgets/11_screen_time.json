@@ -1,0 +1,15 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.screen_time",
+  "name": "Screen time",
+  "name_es": "Tiempo de pantalla",
+  "spanX": 3,
+  "spanY": 1,
+  "lines": [
+    { "type": "row", "items": [
+      { "text": "{screentime|—}", "size": 18, "bold": true },
+      { "text": "today", "text_es": "hoy", "size": 13, "alpha": 0.7 }
+    ] }
+  ]
+}

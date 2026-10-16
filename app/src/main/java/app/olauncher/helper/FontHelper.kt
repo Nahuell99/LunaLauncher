@@ -57,6 +57,9 @@ object FontHelper {
         return typeface
     }
 
+    /** The launcher typeface for views built in code (null = system default). */
+    fun current(context: Context): Typeface? = typeface ?: reload(context)
+
     /** Installs the typeface-rewriting factory on the activity's LayoutInflater. */
     fun install(activity: AppCompatActivity) {
         val inflater = activity.layoutInflater

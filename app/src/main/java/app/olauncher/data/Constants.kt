@@ -76,6 +76,9 @@ object Constants {
     const val FLAG_SET_SHORTCUT_ICON_7 = 37
     const val FLAG_SET_SHORTCUT_ICON_8 = 38
 
+    // Pick an app / shortcut for the home-grid cell stored in Prefs.gridPendingCell
+    const val FLAG_SET_GRID_ITEM = 50
+
     const val REQUEST_CODE_ENABLE_ADMIN = 666
     const val REQUEST_CODE_LAUNCHER_SELECTOR = 678
 

@@ -1,0 +1,13 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.next_alarm",
+  "name": "Next alarm",
+  "name_es": "Próxima alarma",
+  "spanX": 4,
+  "spanY": 1,
+  "tap": "clock",
+  "lines": [
+    { "text": "⏰ {alarm|No alarm}", "text_es": "⏰ {alarm|Sin alarma}", "size": 16 }
+  ]
+}

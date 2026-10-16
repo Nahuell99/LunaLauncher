@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import app.olauncher.data.AppModel
 import app.olauncher.data.Constants
+import app.olauncher.data.GridOps
 import app.olauncher.data.Prefs
 import app.olauncher.helper.AppLimiter
 import app.olauncher.helper.ContactsHelper
@@ -72,6 +73,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val resetLauncherLiveData = SingleLiveEvent<Unit?>()
     // Fired from Settings to ask the Home screen to enter drag-to-reorder mode.
     val enterReorderMode = SingleLiveEvent<Unit?>()
+
+    // Home grid: open its edit mode / empty it (Android widget ids are freed by HomeFragment).
+    val enterGridEditMode = SingleLiveEvent<Unit?>()
+    val clearGrid = SingleLiveEvent<Unit?>()
 
     // A locked app was selected: the Activity must authenticate before launching it.
     val launchAppWithAuth = SingleLiveEvent<AppModel>()
@@ -159,6 +164,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             Constants.FLAG_SET_SHORTCUT_ICON_6 -> saveShortcutIconApp(appModel, 5)
             Constants.FLAG_SET_SHORTCUT_ICON_7 -> saveShortcutIconApp(appModel, 6)
             Constants.FLAG_SET_SHORTCUT_ICON_8 -> saveShortcutIconApp(appModel, 7)
+
+            Constants.FLAG_SET_GRID_ITEM -> {
+                if (!GridOps.placeAtPendingCell(prefs, appModel)) appContext.showToast(appContext.getString(R.string.grid_full))
+                refreshHome(false)
+            }
         }
     }
 

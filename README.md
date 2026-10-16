@@ -12,6 +12,9 @@ Fork personal de [Olauncher](https://github.com/tanujnotes/olauncher) v6.9.17, c
 - Text-based home screen with adjustable font, size, alignment and background opacity.
 - Up to eight home apps and eight customizable shortcut icons; drag to reorder.
 - A home-screen widget, app folders, hidden apps and optional monochrome Lawnicons.
+- Icon packs: system, themed (Android 13+), built-in Lawnicons or any installed ADW/Nova pack, with icon shape, size, tint and per-app icon picks. Icons can show in the drawer, the home list and the shortcut column.
+- Optional free-form home grid: place apps, shortcuts, folders and widgets on any cell, resize them and drag them around, like a classic launcher.
+- Several Android widgets on the grid, plus custom JSON widgets (clocks, date, battery, alarm, calendar, music, notes, countdowns) that you can export, edit and import. See [docs/widgets.md](docs/widgets.md).
 - App opening protected by device credentials or biometrics within the launcher.
 - Optional app limits with progressive cooldowns.
 - App search with three matching modes; optional contact and Android settings search.

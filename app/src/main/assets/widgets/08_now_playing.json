@@ -1,0 +1,15 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.now_playing",
+  "name": "Music controls",
+  "name_es": "Controles de música",
+  "spanX": 5,
+  "spanY": 2,
+  "tap": "media",
+  "lines": [
+    { "text": "{media_title|Nothing playing}", "text_es": "{media_title|Nada en reproducción}", "size": 18, "bold": true, "maxLines": 1 },
+    { "text": "{media_artist}", "size": 14, "alpha": 0.7, "maxLines": 1, "hideIfEmpty": true },
+    { "type": "media_controls", "size": 40 }
+  ]
+}

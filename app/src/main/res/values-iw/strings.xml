@@ -288,6 +288,5 @@
     <string name="settings_drawer_icons">הצג סמלים במגירת האפליקציות</string>
     <string name="settings_home_icons">הצג סמלים במסך הבית</string>
     <string name="settings_home_only_icons">הסתר שמות אפליקציות במסך הבית</string>
-        <string name="settings_use_colorful_icons">השתמש בסמלים צבעוניים</string>
     <string name="settings_icons_title">סמלים</string>
 </resources>

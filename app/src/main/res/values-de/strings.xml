@@ -296,7 +296,6 @@ Zum Entfernen muss er ≤ 2 sein</string>
     <string name="settings_drawer_icons">Symbole im Drawer anzeigen</string>
     <string name="settings_home_icons">Symbole auf dem Startbildschirm anzeigen</string>
     <string name="settings_home_only_icons">App-Namen auf dem Startbildschirm ausblenden</string>
-        <string name="settings_use_colorful_icons">Farbige Symbole verwenden</string>
     <string name="settings_icons_title">Symbole</string>
     <string name="accessibility_service_description">Die Berechtigung für Bedienungshilfen ist erforderlich, um die Geste „Doppeltippen zum Sperren“ zu aktivieren. Daten, die Olauncher über diesen Dienst erhält, verlassen Ihr Gerät nicht.</string>
     <string name="pin_action_not_supported">Diese Anheftaktion wird nicht unterstützt</string>

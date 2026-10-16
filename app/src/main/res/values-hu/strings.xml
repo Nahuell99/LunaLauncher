@@ -298,7 +298,6 @@ Az eltávolításhoz ≤ 2-nek kell lennie</string>
     <string name="settings_drawer_icons">Ikonok megjelenítése az alkalmazásmenüben</string>
     <string name="settings_home_icons">Ikonok megjelenítése a kezdőképernyőn</string>
     <string name="settings_home_only_icons">Alkalmazásnevek elrejtése a kezdőképernyőn</string>
-        <string name="settings_use_colorful_icons">Színes ikonok használata</string>
     <string name="settings_icons_title">Ikonok</string>
     <string name="accessibility_service_description">A kisegítő lehetőségek engedélye szükséges a dupla koppintás a lezáráshoz mozdulat engedélyezéséhez. Az Olauncher által ezen a szolgáltatáson keresztül megszerzett adatok nem hagyják el a készüléket.</string>
     <string name="pin_action_not_supported">Ez a rögzítési művelet nem támogatott</string>

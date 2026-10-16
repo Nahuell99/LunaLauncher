@@ -10,6 +10,7 @@ navigationFragmentKtx = "2.9.0"
 recyclerview = "1.4.0"
 androidsvg = "1.4"
 junit = "4.13.2"
+orgJson = "20240303"
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
@@ -23,3 +24,4 @@ navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-kt
 recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidsvg = { module = "com.caverock:androidsvg-aar", version.ref = "androidsvg" }
 junit = { module = "junit:junit", version.ref = "junit" }
+org-json = { module = "org.json:json", version.ref = "orgJson" }

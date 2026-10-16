@@ -1,0 +1,15 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.clock_big",
+  "name": "Big clock",
+  "name_es": "Reloj grande",
+  "spanX": 5,
+  "spanY": 2,
+  "gravity": "start",
+  "tap": "clock",
+  "lines": [
+    { "text": "{time}", "size": 72, "font": "sans-serif-thin" },
+    { "text": "{date:EEEE, d MMMM}", "size": 16, "alpha": 0.8, "marginTop": 2 }
+  ]
+}

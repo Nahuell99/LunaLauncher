@@ -1,0 +1,15 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.note",
+  "name": "Note",
+  "name_es": "Nota",
+  "spanX": 4,
+  "spanY": 2,
+  "tap": "edit",
+  "padding": 12,
+  "background": { "color": "primary", "alpha": 0.08, "radius": 18 },
+  "lines": [
+    { "text": "{data|Tap to write a note}", "text_es": "{data|Tocá para escribir una nota}", "size": 16, "maxLines": 6 }
+  ]
+}

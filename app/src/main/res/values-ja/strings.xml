@@ -294,7 +294,6 @@
     <string name="settings_drawer_icons">ドロワー内にアイコンを表示</string>
     <string name="settings_home_icons">ホーム画面にアイコンを表示</string>
     <string name="settings_home_only_icons">ホーム画面でアプリ名を非表示にする</string>
-        <string name="settings_use_colorful_icons">カラフルなアイコンを使用</string>
     <string name="settings_icons_title">アイコン</string>
     <string name="accessibility_service_description">ダブルタップでロックのジェスチャーを有効にするには、ユーザー補助の権限が必要です。このサービスを通じて Olauncher が取得したデータがデバイスの外に出ることはありません。</string>
     <string name="pin_action_not_supported">この固定操作はサポートされていません</string>

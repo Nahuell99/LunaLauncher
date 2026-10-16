@@ -1,0 +1,14 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.date_line",
+  "name": "Date line",
+  "name_es": "Fecha en línea",
+  "spanX": 5,
+  "spanY": 1,
+  "gravity": "center",
+  "tap": "calendar",
+  "lines": [
+    { "text": "{date:EEEE · d MMMM}", "size": 14, "uppercase": true, "letterSpacing": 0.25 }
+  ]
+}

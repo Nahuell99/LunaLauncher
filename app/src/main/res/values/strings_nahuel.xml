@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings for the fork's icon packs, home grid and widgets. Translated to Spanish only;
+     other languages fall back to English. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <!-- Icons -->
+    <string name="icon_settings_row">Icon pack &amp; style</string>
+    <string name="icon_settings_title">Icons</string>
+    <string name="icon_source">Icon source</string>
+    <string name="icon_source_system">System icons</string>
+    <string name="icon_source_themed">Themed icons (Android 13+)</string>
+    <string name="icon_source_lawnicons">Lawnicons (built in)</string>
+    <string name="icon_packs_installed">Installed icon packs</string>
+    <string name="icon_pack_none_installed">No icon packs installed. Any ADW / Nova compatible pack (Arcticons, Lawnicons, Delta…) shows up here once installed.</string>
+    <string name="icon_shape">Icon shape</string>
+    <string name="icon_shape_hint">Applies to adaptive system icons.</string>
+    <string name="icon_shape_system">System</string>
+    <string name="icon_shape_circle">Circle</string>
+    <string name="icon_shape_squircle">Squircle</string>
+    <string name="icon_shape_rounded">Rounded square</string>
+    <string name="icon_shape_square">Square</string>
+    <string name="icon_shape_teardrop">Teardrop</string>
+    <string name="icon_size">Icon size in lists</string>
+    <string name="icon_tint_mono">Tint every icon with the text colour</string>
+    <string name="icon_shortcut_column_real">Real app icons in the shortcut column</string>
+    <string name="icon_overrides_reset">Reset custom icons</string>
+    <string name="icon_overrides_reset_done">Custom icons cleared</string>
+    <string name="icon_override_hint">To change a single icon, long-press the app in the drawer and tap Icon.</string>
+    <string name="icon_button">Icon</string>
+    <string name="icon_choose_for">Icon for %1$s</string>
+    <string name="icon_auto">Automatic (current icon source)</string>
+    <string name="icon_search_hint">Search icons</string>
+    <string name="icon_none_found">No icons found</string>
+    <string name="icon_loading">Loading…</string>
+    <string name="icon_where">Show icons in</string>
+
+    <!-- Home grid -->
+    <string name="grid_settings_row">Home grid &amp; widgets</string>
+    <string name="grid_settings_title">Home grid</string>
+    <string name="grid_enabled">Free-form icon grid</string>
+    <string name="grid_columns">Columns</string>
+    <string name="grid_rows">Rows</string>
+    <string name="grid_icon_size">Icon size</string>
+    <string name="grid_show_labels">Show labels</string>
+    <string name="grid_edit">Edit grid on the home screen</string>
+    <string name="grid_clear">Remove everything from the grid</string>
+    <string name="grid_clear_confirm">Remove every icon and widget from the grid?</string>
+    <string name="grid_cleared">Grid cleared</string>
+    <string name="grid_hint">Edit mode: drag items to move them, tap an item for options and tap an empty cell to add apps, folders or widgets. Long-press any grid item on the home screen to start editing.</string>
+    <string name="grid_edit_done">Done</string>
+    <string name="grid_edit_hint">Drag to move · tap an item for options · tap an empty cell to add</string>
+    <string name="grid_add_title">Add to grid</string>
+    <string name="grid_add_app">App or shortcut</string>
+    <string name="grid_add_folder">Folder</string>
+    <string name="grid_add_android_widget">Android widget</string>
+    <string name="grid_add_custom_widget">Custom widget</string>
+    <string name="grid_no_folders">Create a folder from the app drawer first</string>
+    <string name="grid_resize">Resize</string>
+    <string name="grid_width">Width</string>
+    <string name="grid_height">Height</string>
+    <string name="grid_remove">Remove from grid</string>
+    <string name="grid_change_icon">Change icon</string>
+    <string name="grid_edit_text">Edit text</string>
+    <string name="grid_reconfigure">Reconfigure widget</string>
+    <string name="grid_no_space">There is no free space for that size</string>
+    <string name="grid_full">The grid is full</string>
+    <string name="grid_added">Added to the grid</string>
+    <string name="grid_disabled_hint">Turn on the grid in Settings → Home grid &amp; widgets</string>
+    <string name="add_to_grid">Grid</string>
+    <string name="add_to_home_list">Home list</string>
+
+    <!-- Widgets -->
+    <string name="widget_rebind">Tap to set up this widget again</string>
+    <string name="widget_custom_title">Custom widgets</string>
+    <string name="widget_custom_hint">Widgets are plain JSON files: no code, nothing downloaded. Export a built-in one, edit it and import it back to design your own (format in docs/widgets.md).</string>
+    <string name="widget_import">Import widget (.json)</string>
+    <string name="widget_import_ok">Widget imported: %1$s</string>
+    <string name="widget_import_failed">Not a valid widget file</string>
+    <string name="widget_export">Export</string>
+    <string name="widget_delete">Delete</string>
+    <string name="widget_exported">Widget exported</string>
+    <string name="widget_built_in">Built in</string>
+    <string name="widget_imported">Imported</string>
+    <string name="widget_media_permission">Allow notification access to show music</string>
+    <string name="widget_media_permission_toast">Enable Nahuel Launcher so the music widget can see what is playing</string>
+    <string name="widget_text_title">Widget text</string>
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">Good night</string>
+</resources>

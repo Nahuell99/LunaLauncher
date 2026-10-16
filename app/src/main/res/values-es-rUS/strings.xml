@@ -294,7 +294,6 @@ Para eliminarlo debe ser ≤ 2</string>
     <string name="settings_drawer_icons">Mostrar iconos en el cajón</string>
     <string name="settings_home_icons">Mostrar iconos en la pantalla de inicio</string>
     <string name="settings_home_only_icons">No mostrar los nombres de las aplicaciones en la pantalla de inicio</string>
-        <string name="settings_use_colorful_icons">Usar iconos coloridos</string>
     <string name="settings_icons_title">Iconos</string>
     <string name="accessibility_service_description">El permiso de accesibilidad es necesario para habilitar el gesto de doble toque para bloquear. Ningún dato obtenido por Olauncher a través de este servicio saldrá de su dispositivo.</string>
     <string name="pin_action_not_supported">Esta acción de anclaje no es compatible</string>

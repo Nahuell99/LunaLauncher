@@ -295,7 +295,6 @@ Para remover, deve ser ≤ 2</string>
     <string name="settings_drawer_icons">Mostrar ícones no menu de aplicativos</string>
     <string name="settings_home_icons">Mostrar ícones na tela inicial</string>
     <string name="settings_home_only_icons">Não mostrar o nome dos aplicativos na tela inicial</string>
-        <string name="settings_use_colorful_icons">Usar ícones coloridos</string>
     <string name="settings_icons_title">Ícones</string>
     <string name="accessibility_service_description">A permissão de acessibilidade é necessária para ativar o gesto de toque duplo para bloquear. Nenhum dado obtido pelo Olauncher por meio deste serviço sairá do seu dispositivo.</string>
     <string name="pin_action_not_supported">Esta ação de fixação não é compatível</string>

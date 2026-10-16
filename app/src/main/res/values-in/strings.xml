@@ -294,7 +294,6 @@ Untuk menghapus harus ≤ 2</string>
     <string name="settings_drawer_icons">Tampilkan ikon di laci aplikasi</string>
     <string name="settings_home_icons">Tampilkan ikon di layar utama</string>
     <string name="settings_home_only_icons">Sembunyikan nama aplikasi di layar utama</string>
-        <string name="settings_use_colorful_icons">Gunakan ikon berwarna</string>
     <string name="settings_icons_title">Ikon</string>
     <string name="accessibility_service_description">Izin aksesibilitas diperlukan untuk mengaktifkan gerakan ketuk dua kali untuk mengunci. Data apa pun yang diperoleh Olauncher melalui layanan ini tidak akan meninggalkan perangkat Anda.</string>
     <string name="pin_action_not_supported">Tindakan penyematan ini tidak didukung</string>

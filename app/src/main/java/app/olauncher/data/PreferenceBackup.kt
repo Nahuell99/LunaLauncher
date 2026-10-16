@@ -73,6 +73,10 @@ internal data class PreferenceBackup(
                     key == "HOME_SHORTCUT_ICONS_NUM" -> require(value as Int in 0..Constants.SHORTCUT_COUNT)
                     iconIndex.matches(key) -> require(value as Int in Constants.SHORTCUT_ICONS.indices)
                     key == "SEARCH_MODE" -> require(value as Int in 0..2)
+                    key == "GRID_COLUMNS" -> require(value as Int in HomeGrid.MIN_COLUMNS..HomeGrid.MAX_COLUMNS)
+                    key == "GRID_ROWS" -> require(value as Int in HomeGrid.MIN_ROWS..HomeGrid.MAX_ROWS)
+                    key == "ICON_SHAPE" -> require(value as Int in 0..5)
+                    key == "ICON_SIZE_SCALE" || key == "GRID_ICON_SCALE" -> require(value as Float in 0.2f..3f)
                     key.startsWith("LIMIT_") || key.startsWith("USAGE_") -> require((value as Number).toLong() >= 0)
                 }
                 if (key == "CUSTOM_FONT_BASE64") font = value as String

@@ -1,0 +1,15 @@
+{
+  "format": "olauncher-widget",
+  "version": 1,
+  "id": "builtin.clock_stacked",
+  "name": "Stacked clock",
+  "name_es": "Reloj apilado",
+  "spanX": 3,
+  "spanY": 3,
+  "gravity": "center",
+  "tap": "clock",
+  "lines": [
+    { "text": "{time:HH}", "size": 80, "bold": true },
+    { "text": "{time:mm}", "size": 80, "bold": true, "color": "accent", "marginTop": -16 }
+  ]
+}
