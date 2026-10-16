@@ -1,3 +1,17 @@
+## [1.5.0](https://github.com/pierspad/BetterLauncher/compare/v1.4.4...v1.5.0) (2026-10-16)
+
+### Features
+
+* add Catalan app translation ([24a412d](https://github.com/pierspad/BetterLauncher/commit/24a412dec8cfa4ff3c2c6392ac154f712c3d8998))
+* add Catalan Play Store metadata ([595fce2](https://github.com/pierspad/BetterLauncher/commit/595fce2ed7bf1e6b45cb38e6895b484cb6f397d5))
+* add Catalan translation and Spanish store metadata ([#2](https://github.com/pierspad/BetterLauncher/issues/2)) ([8a66d1a](https://github.com/pierspad/BetterLauncher/commit/8a66d1a7e33ecbbed0d2b390528907ffa6340ff0))
+* add Spanish Play Store metadata ([3de658d](https://github.com/pierspad/BetterLauncher/commit/3de658d1cc613db3b79b9b21447194d2e8dcac00))
+
+### Bug Fixes
+
+* **ci:** install explicit supported Android SDK packages ([7d01404](https://github.com/pierspad/BetterLauncher/commit/7d0140491faab97ab8d7bec734401b23be47218e))
+* harden launcher state and streamline release workflows ([3083820](https://github.com/pierspad/BetterLauncher/commit/3083820f432ee724b4d5f4730d62173c3867515f))
+
 ## [1.4.4](https://github.com/pierspad/BetterLauncher/compare/v1.4.3...v1.4.4) (2026-10-16)
 
 ### Bug Fixes
