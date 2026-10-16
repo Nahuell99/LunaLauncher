@@ -442,7 +442,10 @@ class Prefs(private val context: Context) {
      */
     fun importFromJson(json: String): Boolean = runCatching {
         val root = JSONObject(json)
-        prefs.edit {
+        // Stage changes without applying them: a malformed entry must leave all
+        // existing preferences intact, including values parsed before that entry.
+        val editor = prefs.edit()
+        editor.apply {
             clear()
             for (key in root.keys()) {
                 when (key) {
@@ -452,23 +455,31 @@ class Prefs(private val context: Context) {
                         putString(key, "")
                     "APP_LIST_CACHE" -> putString(key, "")
 
-                    else -> runCatching {
+                    else -> {
                         val entry = root.getJSONObject(key)
                         when (entry.getString("t")) {
                             "b" -> putBoolean(key, entry.getBoolean("v"))
                             "i" -> putInt(key, entry.getInt("v"))
                             "l" -> putLong(key, entry.getLong("v"))
-                            "f" -> putFloat(key, entry.getDouble("v").toFloat())
+                            "f" -> {
+                                val value = entry.getDouble("v").toFloat()
+                                require(value.isFinite())
+                                if (key == "TEXT_SIZE_SCALE") require(value in 0.5f..1.5f)
+                                putFloat(key, value)
+                            }
                             "s" -> putString(key, entry.getString("v"))
                             "set" -> {
                                 val arr = entry.getJSONArray("v")
                                 putStringSet(key, (0 until arr.length()).mapTo(mutableSetOf()) { arr.getString(it) })
                             }
+                            else -> error("Unknown preference type")
                         }
                     }
                 }
             }
         }
+
+        editor.apply()
 
         // Restore (or remove) the custom font file shipped inside the backup.
         val fontFile = File(context.filesDir, CUSTOM_FONT_FILENAME)

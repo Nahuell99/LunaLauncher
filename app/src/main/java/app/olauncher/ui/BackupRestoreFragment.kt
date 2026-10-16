@@ -37,9 +37,9 @@ class BackupRestoreFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
             if (uri == null) return@registerForActivityResult
             try {
-                requireContext().contentResolver.openOutputStream(uri)?.use { out ->
+                requireContext().contentResolver.openOutputStream(uri, "wt")?.use { out ->
                     out.write(binding.etSettingsJson.text.toString().toByteArray())
-                }
+                } ?: error("Cannot open backup output")
                 requireContext().showToast(getString(R.string.backup_saved))
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -52,11 +52,9 @@ class BackupRestoreFragment : Fragment() {
             if (uri == null) return@registerForActivityResult
             try {
                 val json = requireContext().contentResolver.openInputStream(uri)
-                    ?.use { it.readBytes().decodeToString() }
-                if (json != null) {
-                    binding.etSettingsJson.setText(json)
-                    requireContext().showToast("JSON loaded from file. Click 'Apply changes' to restore.")
-                }
+                    ?.use { it.readBytes().decodeToString() } ?: error("Cannot open backup input")
+                binding.etSettingsJson.setText(json)
+                requireContext().showToast("JSON loaded from file. Click 'Apply changes' to restore.")
             } catch (e: Exception) {
                 e.printStackTrace()
                 requireContext().showToast(getString(R.string.restore_failed))

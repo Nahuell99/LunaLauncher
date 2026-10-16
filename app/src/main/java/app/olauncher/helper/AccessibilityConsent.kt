@@ -3,6 +3,8 @@ package app.olauncher.helper
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
+import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import app.olauncher.R
 
@@ -29,18 +31,22 @@ object AccessibilityConsent {
     }
 
     private fun show(context: Context) {
-        AlertDialog.Builder(context)
-            .setTitle(R.string.accessibility_disclosure_title)
-            .setMessage(R.string.accessibility_disclosure_message)
-            .setPositiveButton(R.string.accessibility_disclosure_accept) { _, _ ->
-                preferences(context).edit().putInt("accepted_version", VERSION)
-                    .putInt("shown_version", VERSION).commit()
-                context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            }
-            .setNegativeButton(R.string.accessibility_disclosure_decline) { _, _ ->
-                preferences(context).edit().putInt("shown_version", VERSION).apply()
-            }
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_accessibility_consent, null)
+        val dialog = AlertDialog.Builder(context)
+            .setView(view)
             .setCancelable(false)
-            .show()
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        view.findViewById<TextView>(R.id.consentAccept).setOnClickListener {
+            preferences(context).edit().putInt("accepted_version", VERSION)
+                .putInt("shown_version", VERSION).commit()
+            dialog.dismiss()
+            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        }
+        view.findViewById<TextView>(R.id.consentDecline).setOnClickListener {
+            preferences(context).edit().putInt("shown_version", VERSION).apply()
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 }

@@ -75,6 +75,11 @@ class AppDrawerFragment : Fragment() {
     private val requestContactsPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) viewModel.loadDrawerContacts()
+            else {
+                prefs.searchContactsEnabled = false
+                contactItems = emptyList()
+                updateSearchSources()
+            }
         }
     private var currentAppList: List<AppModel>? = null
     private var currentPrivateSpaceApps: List<AppModel>? = null

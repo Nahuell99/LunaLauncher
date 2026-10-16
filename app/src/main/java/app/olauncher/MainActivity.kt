@@ -191,28 +191,17 @@ class MainActivity : AppCompatActivity() {
             prefs.lastDecayDay = today
         }
 
-        val lastOpened = prefs.lastOpenedLimitedApp
-        if (lastOpened.isNotEmpty()) {
-            val currentLevel = prefs.limitLevel(lastOpened)
-            if (currentLevel > 0) {
-                val duration = AppLimiter.durationForStep(currentLevel)
-                prefs.setLimitUntil(lastOpened, now + duration)
-                prefs.setLimitRetryCount(lastOpened, 0)
-            }
-            prefs.lastOpenedLimitedApp = ""
-        }
+        // The accessibility service starts cooldown on an observed app exit.
+        // Activity resume can precede the final window event of the departing app.
+
     }
 
     override fun onStop() {
         isResumed = false
-        backToHomeScreen()
+        // External permission dialogs and document pickers must keep their fragment.
         super.onStop()
     }
 
-    override fun onUserLeaveHint() {
-        backToHomeScreen()
-        super.onUserLeaveHint()
-    }
 
     override fun onNewIntent(intent: Intent?) {
         // Home button for recents feature disabled

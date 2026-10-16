@@ -15,6 +15,7 @@ class MyAccessibilityService : AccessibilityService() {
     // A single app open fires several TYPE_WINDOW_STATE_CHANGED events (splash →
     // main activity, dialogs…). Without this guard each event would escalate the
     // penalty again, stacking +15/+30/+60 within milliseconds for one violation.
+    private var foregroundPackage: String? = null
     private var lastEscalatedKey: String? = null
     private var lastEscalatedAt: Long = 0L
 
@@ -49,6 +50,11 @@ class MyAccessibilityService : AccessibilityService() {
             if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                 val pkgName = event.packageName?.toString()
                 if (pkgName != null) {
+                    // Ignore stale window events and additional windows within the
+                    // same app; neither represents a new attempt to enter it.
+                    val activePackage = rootInActiveWindow?.packageName?.toString() ?: return
+                    if (activePackage != pkgName || foregroundPackage == pkgName) return
+                    foregroundPackage = pkgName
                     val now = System.currentTimeMillis()
 
                     // 1. Check if the user just exited the last opened limited app
