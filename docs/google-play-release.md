@@ -84,13 +84,19 @@ L’upload segue la release nello stesso workflow: una release creata con
 
 Il versionCode deve superare quelli già usati in Play Console. Google può comunque
 richiedere revisione; la pubblicazione gestita e le dichiarazioni dell’app restano
-sotto il controllo della Console. Se ci sono già modifiche in revisione, lo script
-si ferma invece di annullarle. Un errore Play non elimina la release GitHub e può
+sotto il controllo della Console. Per scelta del maintainer, se ci sono già
+modifiche in revisione lo script annulla quella revisione e reinvia l’insieme delle
+modifiche con la nuova versione (`CANCEL_IN_REVIEW_AND_SUBMIT`). Un errore Play
+non elimina la release GitHub e può
 essere affrontato con il workflow manuale, verificando prima cosa è già stato
 caricato in Console.
 
 La prima distribuzione pubblica in produzione resta una decisione separata.
-Questa configurazione riguarda i canali di test.
+Questa configurazione riguarda i canali di test. L’approvazione della prima
+release pubblica non cambia il canale dell’automazione: rimane `beta`. Per
+pubblicare automaticamente in produzione servirà abilitare esplicitamente
+`production` nello script e selezionarlo nel workflow; è opportuno usare un
+GitHub Environment con approvazione per quel passaggio.
 
 ## Riferimenti ufficiali
 

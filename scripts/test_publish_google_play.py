@@ -19,13 +19,13 @@ class PublishTest(unittest.TestCase):
             Mock(ok=True, content=b"json", json=Mock(return_value=value)) for value in responses
         ]
 
-    def test_publish_uses_uploaded_code_and_review_guard(self):
+    def test_publish_uses_uploaded_code_and_replaces_pending_review(self):
         self.respond({"id": "edit"}, {"tracks": [{"track": "beta"}]},
                      {"versionCode": 132}, {}, {})
         self.assertEqual(publish(self.session, self.bundle, "beta", "completed", "v1.4.4"), "132")
         calls = self.session.request.call_args_list
         self.assertEqual(calls[3].kwargs["json"]["releases"][0]["versionCodes"], ["132"])
-        self.assertEqual(calls[4].kwargs["params"], {"changesInReviewBehavior": "ERROR_IF_IN_REVIEW"})
+        self.assertEqual(calls[4].kwargs["params"], {"changesInReviewBehavior": "CANCEL_IN_REVIEW_AND_SUBMIT"})
         self.assertFalse(any(call.args[0] == "DELETE" for call in calls))
 
     def test_production_never_contacts_google(self):

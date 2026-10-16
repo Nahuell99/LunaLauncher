@@ -45,9 +45,9 @@ def publish(session, bundle, track, status, version_name):
         release = {"name": version_name, "versionCodes": [version_code], "status": status}
         request(session, "PUT", f"{edit}/tracks/{quote(track, safe='')}",
                 json={"track": track, "releases": [release]})
-        # Do not cancel another review that may already be in progress.
+        # The maintainer's policy: replace an older pending review with the latest release.
         request(session, "POST", f"{edit}:commit",
-                params={"changesInReviewBehavior": "ERROR_IF_IN_REVIEW"})
+                params={"changesInReviewBehavior": "CANCEL_IN_REVIEW_AND_SUBMIT"})
         committed = True
         return version_code
     finally:
