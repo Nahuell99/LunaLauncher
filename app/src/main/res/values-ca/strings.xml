@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Catalan -->
+<resources>
+    <string name="layout_positioning">Disseny i posicionament</string>
+    <string name="reorder_items">Reordena elements i icones</string>
+    <string name="reorder_mode_hint">Mantén premut i arrossega amunt o avall per reordenar. Toca ✓ quan hagis acabat.</string>
+    <string name="reorder_done">Fet</string>
+    <string name="reorder_save">Desa</string>
+    <string name="save">Desa</string>
+    <string name="done">Fet</string>
+    <string name="reorder_completed">Ordre desat</string>
+    <string name="privacy_policy">Política de privadesa</string>
+
+    <string name="app">Aplicació</string>
+    <string name="set_as_default_launcher">Defineix com a llançador predeterminat</string>
+    <string name="set_as_default_launcher_u"><u>Defineix com a llançador predeterminat</u></string>
+    <string name="set_as_default_launcher_first">Primer defineix BetterLauncher com a predeterminat</string>
+    <string name="app_text_color">Color del text</string>
+    <string name="double_tap_to_lock_screen">Toca dues vegades per bloquejar</string>
+    <string name="admin_permission_message">BetterLauncher es compromet a utilitzar el permís d\'accessibilitat de manera responsable. BetterLauncher no recull ni comparteix cap dada.</string>
+    <string name="about">Quant a</string>
+    <string name="off">Desactivat</string>
+    <string name="on">Activat</string>
+    <string name="black">Negre</string>
+    <string name="white">Blanc</string>
+    <string name="change_default_launcher">Canvia el llançador predeterminat</string>
+    <string name="privacy">Privadesa</string>
+    <string name="share">Comparteix</string>
+    <string name="share_now">Comparteix ara</string>
+    <string name="rate">Valora</string>
+    <string name="rate_now">Valora ara</string>
+    <string name="follow">Segueix</string>
+    <string name="email">Correu electrònic</string>
+    <string name="donate">Fes una donació</string>
+    <string name="swipe_up_for_apps">1. Llisca cap amunt per veure totes les aplicacions\n2. Mantén premut qualsevol punt per obrir la configuració</string>
+    <string name="apps_on_home_screen">Aplicacions a la pantalla d\'inici</string>
+    <string name="daily_wallpaper_update">Fons de pantalla nou cada dia</string>
+    <string name="left">Esquerra</string>
+    <string name="right">Dreta</string>
+    <string name="center">Centre</string>
+    <string name="home_layout_alignment">Alineació horitzontal de les aplicacions</string>
+    <string name="clock_alignment">Alineació horitzontal del rellotge</string>
+    <string name="clock_app_setting">Aplicació del rellotge</string>
+    <string name="calendar_app_setting">Aplicació de data/calendari</string>
+    <string name="default_app_setting">Predeterminada</string>
+    <string name="default_clock_app_option">Predeterminada (rellotge/alarma del sistema)</string>
+    <string name="default_calendar_app_option">Predeterminada (calendari del sistema)</string>
+    <string name="default_screentime_app_option">Predeterminada (Benestar digital)</string>
+    <string name="default_swipe_left_option">Predeterminada (càmera)</string>
+    <string name="default_swipe_right_option">Predeterminada (calaix d\'aplicacions)</string>
+    <string name="default_app_restored">S\'ha restaurat l\'aplicació predeterminada</string>
+    <string name="add_to_home_slot">Inici (posició %d)</string>
+    <string name="added_to_home">S\'ha afegit a Inici (posició %d)</string>
+    <string name="icons_alignment">Alineació horitzontal de les icones</string>
+    <string name="down">Avall</string>
+    <string name="swipe_left_app">Aplicació en lliscar cap a l\'esquerra</string>
+    <string name="swipe_right_app">Aplicació en lliscar cap a la dreta</string>
+    <string name="_0">0</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="app_drawer_tips">Consell: comença a escriure el nom d\'una aplicació per obrir-la automàticament</string>
+    <string name="okay">D\'acord</string>
+    <string name="cool">Genial!</string>
+    <string name="auto_show_keyboard">Mostra el teclat automàticament</string>
+    <string name="hide">Amaga</string>
+    <string name="status_bar">Barra d\'estat a la part superior</string>
+    <string name="rename">Canvia el nom</string>
+    <string name="show_date_time">Mostra la data i l\'hora</string>
+    <string name="appearance">Aparença</string>
+    <string name="gestures">Gestos</string>
+    <string name="theme_mode">Mode del tema</string>
+    <string name="system_default">Sistema</string>
+    <string name="dark">Fosc</string>
+    <string name="light">Clar</string>
+    <string name="welcome_to_olauncher_settings">Et donem la benvinguda a la configuració!
+        \n\nRecorda que, si tens cap pregunta, trobaràs la resposta a la pàgina Quant a.</string>
+    <string name="rate_us_message">Hola, no tornaràs a veure aquest missatge.
+        \n\nSi BetterLauncher et resulta útil, podries deixar una ressenya de 5 estrelles? Significaria molt per a nosaltres. Gràcies!</string>
+    <string name="share_message">Necessitem la teva ajuda! Creiem que tothom hauria de conèixer BetterLauncher i els seus avantatges, però no ho podem fer sols.
+        \n\nPodries compartir BetterLauncher amb els teus amics, familiars i seguidors? Gràcies pel teu suport! ❤</string>
+    <string name="keyboard_message">Hola, el teclat és la manera més ràpida de cercar i obrir aplicacions a BetterLauncher. Et podem demanar que el mantinguis activat uns dies més abans de decidir?
+        \n\nLa decisió sempre és teva.</string>
+    <string name="digital_wellbeing_message">Si vols establir límits de temps per a determinades aplicacions, la funció Benestar digital d\'Android et pot ajudar. Cerca Benestar digital a la configuració del telèfon i activa-la.</string>
+    <string name="app_usage_message">Per mostrar o amagar el temps de pantalla a la pantalla d\'inici, permet o denega el permís d\'ús d\'aplicacions.
+        \n\nNota: no es recull cap dada d\'ús de les aplicacions. Tot es processa al teu dispositiu.</string>
+    <string name="pro_message">BetterLauncher també té una versió pro anomenada Pro Launcher. Inclou funcions addicionals com el temps, ginys, tipus de lletra, carpetes, fons de pantalla AMOLED i més.
+        \n\nTambé és la millor manera de donar suport als desenvolupadors de BetterLauncher. Dona-hi una ullada!</string>
+    <string name="wallpaper_message">BetterLauncher ofereix fons de pantalla nous i bonics cada dia. Dona un aspecte renovat a la pantalla d\'inici diàriament i de franc!
+        \n\nVols provar-ho?</string>
+    <string name="accessibility_service_description">El permís d\'accessibilitat és necessari per activar el gest de tocar dues vegades per bloquejar. Les dades que BetterLauncher obtingui mitjançant aquest servei no sortiran del dispositiu.</string>
+    <string name="support_olauncher_for_free">Dona suport a BetterLauncher de franc mitjançant el nostre enllaç d\'afiliació d\'Amazon.</string>
+    <string name="support_olauncher_message">Cada vegada que compris alguna cosa mitjançant el nostre enllaç, rebrem una petita comissió. Desa l\'enllaç i utilitza\'l quan compris per internet.\nGràcies!</string>
+    <string name="open">Obre l\'enllaç</string>
+    <string name="copy">Copia</string>
+    <string name="close">Tanca</string>
+    <string name="not_now">Ara no</string>
+    <string name="public_roadmap">Full de ruta públic de BetterLauncher</string>
+    <string name="roadmap">Full de ruta</string>
+    <string name="date">Data</string>
+    <string name="date_only">Només la data</string>
+    <string name="bottom_on">Part inferior: activada</string>
+    <string name="bottom_off">Part inferior: desactivada</string>
+    <string name="please_set_olauncher_as_default_first">Primer defineix BetterLauncher com a predeterminat</string>
+    <string name="affiliate">Afiliació</string>
+    <string name="tip_start_typing_for_rename">Consell: comença a escriure per veure l\'opció CANVIA EL NOM</string>
+    <string name="hidden_apps_message">Nota: toca «BetterLauncher» a la part superior d\'aquesta pàgina de configuració per trobar les aplicacions amagades.\n\nTrobaràs més informació a la pàgina Quant a.</string>
+    <string name="swipe_down_for">Llisca cap avall per</string>
+    <string name="search">Cerca</string>
+    <string name="notifications">Notificacions</string>
+    <string name="accessibility_disclosure">Activa el servei d\'accessibilitat de BetterLauncher a la configuració del dispositiu per habilitar el gest de tocar dues vegades per bloquejar.
+    \n\nTingues en compte que aquest servei només s\'utilitza per a aquesta funció. El nostre servei d\'accessibilitat no recull ni comparteix cap dada.</string>
+    <string name="accept">Accepta</string>
+    <string name="permission">Permís</string>
+    <string name="double_tap_lock">Toca dues vegades per bloquejar</string>
+    <string name="enable">Activa</string>
+    <string name="disable">Desactiva</string>
+    <string name="not_working"><u>No funciona?</u></string>
+    <string name="info">Informació</string>
+    <string name="delete">Desinstal·la</string>
+    <string name="text_size">Mida del text</string>
+    <string name="enabled">Activat</string>
+    <string name="disabled">Desactivat</string>
+    <string name="please_turn_on_double_tap_to_unlock">Activa el bloqueig amb doble toc</string>
+    <string name="launcher_failed_to_lock_device">BetterLauncher no ha pogut bloquejar el dispositiu.\nComprova la configuració de l\'aplicació.</string>
+    <string name="long_press_to_select_app">Mantén premut per seleccionar una aplicació</string>
+    <string name="unable_to_open_app">No s\'ha pogut obrir l\'aplicació</string>
+    <string name="unable_to_open_app_info">No s\'ha pogut obrir la informació de l\'aplicació</string>
+    <string name="copied">S\'ha copiat</string>
+    <string name="system_app_cannot_delete">Aplicació del sistema!
+No es pot suprimir</string>
+    <string name="type_a_new_app_name_first">Falta el nom!
+Primer escriu un nom nou</string>
+    <string name="app_not_found">No s\'ha trobat l\'aplicació</string>
+    <string name="unable_to_launch_app">No s\'ha pogut obrir l\'aplicació</string>
+    <string name="search_for_Launcher_or_home_app">Cerca l\'aplicació Llançador o Inici</string>
+    <string name="swipe_left_app_enabled">S\'ha activat l\'aplicació en lliscar cap a l\'esquerra</string>
+    <string name="swipe_right_app_enabled">S\'ha activat l\'aplicació en lliscar cap a la dreta</string>
+    <string name="swipe_left_app_disabled">S\'ha desactivat l\'aplicació en lliscar cap a l\'esquerra</string>
+    <string name="swipe_right_app_disabled">S\'ha desactivat l\'aplicació en lliscar cap a la dreta</string>
+    <string name="your_wallpaper_will_update_shortly">El fons de pantalla s\'actualitzarà aviat</string>
+    <string name="olauncher_is_not_default_launcher">BetterLauncher no és el llançador predeterminat. L\'actualització del fons de pantalla fallarà.</string>
+    <string name="long_press_to_enable">Mantén premut per activar</string>
+    <string name="no_hidden_apps">No hi ha aplicacions amagades</string>
+    <string name="hidden_apps">Aplicacions amagades</string>
+    <string name="adapter_show">Mostra</string>
+    <string name="adapter_hide">Amaga</string>
+    <string name="are_you_using_your_phone_or_is_your_phone_using_you">Fas servir el telèfon o el telèfon et fa servir a tu?</string>
+    <string name="about_olauncher">Quant a i preguntes freqüents</string>
+    <string name="screen_time">Temps de pantalla</string>
+    <string name="learn_more">Més informació</string>
+    <string name="did_you_know">Ho sabies?</string>
+    <string name="leave_a_review">Deixa una ressenya</string>
+    <string name="review_message">BetterLauncher és gratuït i sempre ho serà. No té anuncis, no recull dades i redueix el teu temps de pantalla, cosa que contribueix a una vida més saludable.
+        \n\nEsperem que t\'agradi. Explica\'ns què en penses.</string>
+    <string name="alignment_changed">S\'ha canviat l\'alineació ✅</string>
+    <string name="home_screen">Pantalla d\'inici</string>
+    <string name="hey">Hola</string>
+    <string name="new_year_wish">Per un any millor que tots els anteriors. Bon any nou!</string>
+    <string name="new_year_wish_1">No importa com hagi anat el gener. Encara tens la resta de l\'any per fer-ho millor que mai.</string>
+    <string name="cheers">Salut!</string>
+    <string name="notification_bar">Barra de notificacions</string>
+    <string name="private_space">Espai privat</string>
+
+    <!-- Icones de drecera -->
+    <string name="shortcut_icons">Aplicacions preferides</string>
+    <string name="change_app">Canvia l\'aplicació</string>
+    <string name="change_icon">Canvia la icona</string>
+    <string name="reset_to_default">Restableix els valors predeterminats</string>
+    <string name="choose_icon">Tria una icona</string>
+    <string name="long_press_shortcut_icon_hint">Mantén premuda una icona de drecera a la pantalla d\'inici per canviar-ne l\'aplicació o la icona</string>
+
+    <!-- Giny d'inici -->
+    <string name="widget">Giny</string>
+    <string name="widget_choose">Tria un giny</string>
+    <string name="none">Cap</string>
+    <string name="active">Actiu</string>
+    <string name="widget_added">S\'ha afegit el giny</string>
+    <string name="widget_removed">S\'ha eliminat el giny</string>
+    <string name="long_press_to_remove_widget">Mantén premut per eliminar el giny</string>
+    <string name="no_widgets_available">No hi ha ginys disponibles</string>
+    <string name="widget_bind_failed">No s\'ha pogut afegir el giny</string>
+    <string name="widget_requires_default_launcher">Defineix BetterLauncher com a llançador predeterminat per afegir ginys</string>
+
+    <!-- Carpetes / grups -->
+    <string name="home_icons_count">Icones d\'aplicacions preferides</string>
+    <string name="group">Grup</string>
+    <string name="add_to_group">Afegeix al grup</string>
+    <string name="new_folder">Grup nou…</string>
+    <string name="folder_name">Nom del grup</string>
+    <string name="create">Crea</string>
+    <string name="rename_folder">Canvia el nom del grup</string>
+    <string name="delete_folder">Suprimeix el grup</string>
+    <string name="add_to_home">Afegeix a Inici</string>
+    <string name="choose_home_position">Tria la posició a Inici</string>
+    <string name="folder_deleted">S\'ha suprimit el grup</string>
+    <string name="folder_is_empty">Aquest grup és buit</string>
+    <string name="manage_group">Gestiona el grup</string>
+
+    <!-- Bloqueig d'aplicacions -->
+    <string name="set_up_screen_lock_for_app_lock">Configura un bloqueig de pantalla (PIN, patró o contrasenya) als ajustos del dispositiu per bloquejar aplicacions.</string>
+    <string name="unlock_app">Desbloqueja l\'aplicació</string>
+    <string name="lock_apps">Protegeix aplicacions</string>
+    <string name="app_locked_toast">Aplicació bloquejada</string>
+    <string name="app_unlocked_toast">Aplicació desbloquejada</string>
+
+    <!-- Límit suau d'aplicacions -->
+    <string name="limit_apps">Utilitza menys (temps d\'espera)</string>
+    <string name="app_limited_toast">Temps d\'espera activat</string>
+    <string name="app_unlimited_toast">Temps d\'espera eliminat</string>
+    <string name="cannot_remove_limit_banned">No es pot eliminar el límit!
+L\'aplicació està en temps d\'espera o bloquejada!</string>
+    <string name="cannot_remove_limit_compulsiveness">No es pot eliminar el límit!
+El teu nivell de compulsivitat és %1$d
+Per eliminar-lo, ha de ser ≤ 2</string>
+    <string name="app_limit_cooldown_over">Ja la pots obrir.</string>
+    <string name="screen_time_alignment">Alineació horitzontal del temps de pantalla</string>
+    <string name="app_limit_cooldown_title_new">%1$s - ves més a poc a poc</string>
+    <string name="app_limit_cooldown_message_new">No pots obrir aquesta aplicació mentre duri el temps d\'espera</string>
+    <string name="app_limit_cooldown_reason_severe">Penalització greu!\nHas obert l\'aplicació durant un bloqueig:\nS\'han afegit %1$d minuts al temporitzador</string>
+    <string name="app_limit_cooldown_reason_compulsiveness">Penalització per compulsivitat!\nObertura núm. %1$d d\'avui:\ntemps d\'espera de %2$d minuts</string>
+
+    <!-- Selector d'idioma i previsualització d'opacitat -->
+    <string name="change_language">Canvia l\'idioma</string>
+    <string name="language_automatic">Automàtic (valor predeterminat del sistema)</string>
+    <string name="preview_app_phone">Telèfon</string>
+    <string name="preview_app_camera">Càmera</string>
+
+    <!-- Exportació, importació i restabliment -->
+    <string name="backup_saved">La configuració s\'ha exportat correctament</string>
+    <string name="backup_failed">Ha fallat l\'exportació</string>
+    <string name="restore_done">La configuració s\'ha importat correctament</string>
+    <string name="restore_failed">Ha fallat la importació</string>
+    <string name="backup_settings">Exporta la configuració</string>
+    <string name="restore_settings">Importa la configuració</string>
+    <string name="reset_settings">Restableix la configuració</string>
+    <string name="reset_settings_title">Restableix la configuració</string>
+    <string name="reset_settings_confirm">Segur que vols restablir tota la configuració als valors predeterminats?</string>
+    <string name="reset">Restableix</string>
+    <string name="reset_done">La configuració s\'ha restablert correctament</string>
+    <string name="backup_restore">Importació/exportació</string>
+
+    <!-- Tipus de lletra -->
+    <string name="font">Tipus de lletra</string>
+    <string name="font_system_default">Predeterminat del sistema</string>
+    <string name="font_sans_serif">Sans serif</string>
+    <string name="font_sans_serif_light">Sans serif lleugera</string>
+    <string name="font_sans_serif_medium">Sans serif mitjana</string>
+    <string name="font_sans_serif_condensed">Condensada</string>
+    <string name="font_serif">Serif</string>
+    <string name="font_monospace">Monoespai</string>
+    <string name="font_custom">Personalitzada…</string>
+    <string name="font_import_failed">No s\'ha pogut carregar el tipus de lletra seleccionat</string>
+    <string name="font_imported">S\'ha aplicat el tipus de lletra personalitzat</string>
+    <string name="add_custom_font">Afegeix un tipus de lletra</string>
+    <string name="remove_font">Elimina el tipus de lletra</string>
+
+    <!-- Opacitat del fons -->
+    <string name="background_opacity">Opacitat del fons</string>
+    <string name="opacity_home">Opacitat d\'Inici</string>
+    <string name="opacity_drawer">Opacitat del calaix d\'aplicacions</string>
+
+    <!-- Cerca al calaix -->
+    <string name="search_drawer_title">Cerca al calaix</string>
+    <string name="search_settings_category">Cerca a la configuració d\'Android</string>
+    <string name="search_contacts_category">Cerca contactes</string>
+    <string name="search_contacts_permission_needed">Cal el permís de contactes</string>
+    <string name="search_mode_title">Mode de cerca</string>
+    <string name="search_mode_smart">Intel·ligent</string>
+    <string name="search_mode_smart_desc">Prefixos de paraules per a consultes amb espais i cerca aproximada per a paraules soles</string>
+    <string name="search_mode_strict">Prefix de paraula</string>
+    <string name="search_mode_strict_desc">Tots els termes de la consulta han de coincidir amb prefixos de paraules</string>
+    <string name="search_mode_loose">Cerca aproximada flexible</string>
+    <string name="search_mode_loose_desc">Cerca els caràcters a qualsevol part de l\'etiqueta de l\'aplicació</string>
+
+    <!-- Dreceres de configuració -->
+    <string name="settings">Configuració</string>
+    <string name="setting_wifi">Wi-Fi</string>
+    <string name="setting_bluetooth">Bluetooth</string>
+    <string name="setting_airplane">Mode d\'avió</string>
+    <string name="setting_data">Xarxa i internet</string>
+    <string name="setting_nfc">NFC</string>
+    <string name="setting_display">Pantalla</string>
+    <string name="setting_sound">So</string>
+    <string name="setting_battery">Bateria</string>
+    <string name="setting_apps">Aplicacions</string>
+    <string name="setting_storage">Emmagatzematge</string>
+    <string name="setting_location">Ubicació</string>
+    <string name="setting_security">Seguretat</string>
+    <string name="setting_privacy">Privadesa</string>
+    <string name="setting_accessibility">Accessibilitat</string>
+    <string name="setting_language">Idiomes i introducció de text</string>
+    <string name="setting_datetime">Data i hora</string>
+    <string name="setting_developer">Opcions per a desenvolupadors</string>
+    <string name="setting_about">Informació del telèfon</string>
+
+    <string name="hidden_apps_instructions">Per amagar una aplicació, mantén premut el seu nom al calaix d\'aplicacions i selecciona «Amaga». Per restaurar una aplicació amagada, obre aquesta pantalla, mantén premuda l\'aplicació i selecciona «Mostra».</string>
+    <string name="invalid_pin_request">Sol·licitud de fixació no vàlida</string>
+    <string name="widgets_not_supported">Els ginys no són compatibles</string>
+    <string name="unknown_action_not_supported">L\'acció desconeguda no és compatible</string>
+    <string name="invalid_shortcut_info">La informació de la drecera no és vàlida</string>
+    <string name="hiding_pinned_shortcuts_not_supported">No és compatible!
+No es permet amagar dreceres fixades</string>
+    <string name="shortcut_pinned_successfully">La drecera s\'ha fixat correctament</string>
+    <string name="failed_to_pin_shortcut">No s\'ha pogut fixar la drecera</string>
+
+    <!-- Interfície d'importació i exportació -->
+    <string name="backup_restore_title">Importa/exporta la configuració</string>
+    <string name="copy_text">Copia el text</string>
+    <string name="clear_text">Esborra el text</string>
+    <string name="import_file">Importa un fitxer</string>
+    <string name="save_file">Desa el fitxer</string>
+    <string name="apply_changes">Aplica els canvis</string>
+    <string name="discard_changes_title">Vols descartar els canvis?</string>
+    <string name="discard_changes_message">Tens canvis sense desar. Els vols descartar?</string>
+    <string name="discard">Descarta els canvis</string>
+    <string name="font_sans_serif_thin">Sans serif fina</string>
+    <string name="font_sans_serif_black">Sans serif negra</string>
+    <string name="font_sans_serif_smallcaps">Versaletes</string>
+    <string name="font_casual">Informal</string>
+    <string name="font_cursive">Cursiva</string>
+    <string name="dialog_back">Enrere</string>
+    <string name="settings_drawer_icons">Mostra les icones al calaix</string>
+    <string name="settings_home_icons">Mostra les icones a la pantalla d\'inici</string>
+    <string name="settings_home_only_icons">No mostris els noms de les aplicacions a la pantalla d\'inici</string>
+    <string name="settings_use_colorful_icons">Utilitza icones de colors</string>
+    <string name="settings_icons_title">Icones</string>
+    <string name="accessibility_disclosure_title">Servei d’accessibilitat</string>
+    <string name="accessibility_disclosure_message">BetterLauncher utilitza l’API AccessibilityService d’Android per al bloqueig de pantalla amb doble toc i els límits d’aplicacions que configuris. Ambdues funcions són opcionals.\n\nAccedeix als noms de paquet de les aplicacions en primer pla i als esdeveniments de canvi de finestra per detectar quan s’obre o es tanca una aplicació limitada. També accedeix a informació de les vistes premudes (tipus de vista i etiqueta d’accessibilitat) per reconèixer el gest de bloqueig. Quan una aplicació seleccionada està en període d’espera, torna a la pantalla d’inici i mostra el temps restant. La configuració dels límits i les marques de temps es desen només al dispositiu.\n\nLes dades d’accessibilitat es processen al dispositiu i no s’envien a servidors ni es comparteixen amb tercers. Pots rebutjar el permís i continuar utilitzant el llançador sense aquestes funcions, o desactivar el servei en qualsevol moment a la configuració d’accessibilitat d’Android.</string>
+    <string name="accessibility_disclosure_accept">Hi estic d’acord — obre la configuració</string>
+    <string name="accessibility_disclosure_decline">No, gràcies</string>
+    <string name="gestures_accessibility_message">El bloqueig amb doble toc utilitza el servei d’accessibilitat d’Android. Activar-lo també permet a BetterLauncher aplicar els períodes d’espera de les aplicacions que triïs.\n\nAmbdues funcions són opcionals. Pots continuar utilitzant el llançador sense activar-les. Abans d’activar el servei, BetterLauncher explica a quina informació accedeix i et demana el consentiment.</string>
+    <string name="open_accessibility_settings">Obre la configuració d’accessibilitat</string>
+    <string name="gesture_help_title">Ajuda amb el bloqueig amb doble toc</string>
+    <string name="gesture_help_message">1. A Configuració d’Android → Accessibilitat → Aplicacions baixades, selecciona BetterLauncher i activa el servei. Els noms poden variar segons el dispositiu.\n\n2. Torna a BetterLauncher i activa el bloqueig amb doble toc a Gestos. Toca dues vegades una zona buida de la pantalla d’inici.\n\n3. Si Android indica una configuració restringida per a una instal·lació des d’un APK, obre Configuració → Aplicacions → BetterLauncher → Més opcions → Permet la configuració restringida i torna-ho a provar. Fes-ho només si confies en la instal·lació.\n\n4. Si el servei s’atura després de reiniciar, comprova que continuï activat i revisa les restriccions de bateria del dispositiu. Les funcions habituals del llançador continuen disponibles si desactives el servei.</string>
+</resources>
