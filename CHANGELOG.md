@@ -1,3 +1,9 @@
+## [1.4.4](https://github.com/pierspad/BetterLauncher/compare/v1.4.3...v1.4.4) (2026-10-16)
+
+### Bug Fixes
+
+* preserve Android workflows and style accessibility consent ([527e72d](https://github.com/pierspad/BetterLauncher/commit/527e72d6b4616a6afab076cd29f3dc3206e7a1d5))
+
 ## [1.4.3](https://github.com/pierspad/BetterLauncher/compare/v1.4.2...v1.4.3) (2026-10-14)
 
 ### Bug Fixes
