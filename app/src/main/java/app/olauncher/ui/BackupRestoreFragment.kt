@@ -14,10 +14,17 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CancellationException
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.olauncher.R
 import app.olauncher.data.Prefs
+import app.olauncher.data.PreferenceBackup
+import app.olauncher.helper.readBoundedBytes
 import app.olauncher.databinding.FragmentBackupRestoreBinding
 import app.olauncher.helper.showToast
 import androidx.core.view.ViewCompat
@@ -36,28 +43,31 @@ class BackupRestoreFragment : Fragment() {
     private val createBackupLauncher =
         registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
             if (uri == null) return@registerForActivityResult
-            try {
-                requireContext().contentResolver.openOutputStream(uri, "wt")?.use { out ->
-                    out.write(binding.etSettingsJson.text.toString().toByteArray())
-                } ?: error("Cannot open backup output")
-                requireContext().showToast(getString(R.string.backup_saved))
-            } catch (e: Exception) {
-                e.printStackTrace()
-                requireContext().showToast(getString(R.string.backup_failed))
+            if (_binding == null) return@registerForActivityResult
+            val context = requireContext().applicationContext
+            val json = binding.etSettingsJson.text.toString()
+            runOperation(R.string.backup_failed) {
+                withContext(Dispatchers.IO) {
+                    context.contentResolver.openOutputStream(uri, "wt")?.use { out ->
+                        out.write(json.toByteArray())
+                    } ?: error("Cannot open backup output")
+                }
+                context.showToast(getString(R.string.backup_saved))
             }
         }
 
     private val openRestoreLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             if (uri == null) return@registerForActivityResult
-            try {
-                val json = requireContext().contentResolver.openInputStream(uri)
-                    ?.use { it.readBytes().decodeToString() } ?: error("Cannot open backup input")
+            if (_binding == null) return@registerForActivityResult
+            val context = requireContext().applicationContext
+            runOperation(R.string.restore_failed) {
+                val json = withContext(Dispatchers.IO) {
+                    context.contentResolver.openInputStream(uri)?.use {
+                        it.readBoundedBytes(PreferenceBackup.MAX_BACKUP_BYTES).decodeToString()
+                    } ?: error("Cannot open backup input")
+                }
                 binding.etSettingsJson.setText(json)
-                requireContext().showToast("JSON loaded from file. Click 'Apply changes' to restore.")
-            } catch (e: Exception) {
-                e.printStackTrace()
-                requireContext().showToast(getString(R.string.restore_failed))
             }
         }
 
@@ -92,9 +102,14 @@ class BackupRestoreFragment : Fragment() {
             insets
         }
 
-        // Load current settings
-        originalJson = prefs.exportToJson()
-        binding.etSettingsJson.setText(originalJson)
+        // Export can include a font; keep disk/base64 work off the UI thread.
+        runOperation(R.string.backup_failed) {
+            originalJson = withContext(Dispatchers.IO) { prefs.exportToJson() }
+            // Android restores the editor's view state during recreation.
+            if (savedInstanceState == null) binding.etSettingsJson.setText(originalJson)
+            isModified = binding.etSettingsJson.text.toString() != originalJson
+            updateApplyButtonState()
+        }
 
         // Back action
         binding.btnBack.setOnClickListener {
@@ -130,17 +145,19 @@ class BackupRestoreFragment : Fragment() {
         binding.btnApplyChanges.setOnClickListener {
             if (isModified) {
                 val jsonToApply = binding.etSettingsJson.text.toString()
-                if (prefs.importFromJson(jsonToApply)) {
-                    val lang = prefs.appLanguageTag
-                    val localeList = if (lang.isEmpty()) androidx.core.os.LocaleListCompat.getEmptyLocaleList() else androidx.core.os.LocaleListCompat.forLanguageTags(lang)
-                    AppCompatDelegate.setApplicationLocales(localeList)
-                    requireContext().showToast(getString(R.string.restore_done))
-                    isModified = false
-                    originalJson = jsonToApply
-                    updateApplyButtonState()
-                    restartLauncher()
-                } else {
-                    requireContext().showToast(getString(R.string.restore_failed))
+                runOperation(R.string.restore_failed) {
+                    if (withContext(Dispatchers.IO) { prefs.importFromJson(jsonToApply) }) {
+                        val lang = prefs.appLanguageTag
+                        val localeList = if (lang.isEmpty()) androidx.core.os.LocaleListCompat.getEmptyLocaleList() else androidx.core.os.LocaleListCompat.forLanguageTags(lang)
+                        AppCompatDelegate.setApplicationLocales(localeList)
+                        requireContext().showToast(getString(R.string.restore_done))
+                        isModified = false
+                        originalJson = jsonToApply
+                        updateApplyButtonState()
+                        restartLauncher()
+                    } else {
+                        requireContext().showToast(getString(R.string.restore_failed))
+                    }
                 }
             }
         }
@@ -167,8 +184,36 @@ class BackupRestoreFragment : Fragment() {
         updateApplyButtonState()
     }
 
+    private var busy = false
+
+    private fun runOperation(errorMessage: Int, operation: suspend () -> Unit) {
+        if (busy) return
+        busy = true
+        updateOperationState()
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                operation()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                context?.showToast(getString(errorMessage))
+            } finally {
+                busy = false
+                if (_binding != null) updateOperationState()
+            }
+        }
+    }
+
+    private fun updateOperationState() {
+        binding.etSettingsJson.isEnabled = !busy
+        binding.btnImportFile.isEnabled = !busy
+        binding.btnExportFile.isEnabled = !busy
+        binding.btnClear.isEnabled = !busy
+        updateApplyButtonState()
+    }
+
     private fun updateApplyButtonState() {
-        if (isModified) {
+        if (isModified && !busy) {
             binding.btnApplyChanges.isClickable = true
             binding.btnApplyChanges.isFocusable = true
             binding.btnApplyChanges.alpha = 1.0f

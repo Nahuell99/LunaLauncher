@@ -234,6 +234,10 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
     }
 
     private fun initObservers() {
+        IconManager.ready.observe(viewLifecycleOwner) { ready ->
+            if (ready) viewModel.refreshHome(false)
+        }
+
         if (prefs.firstSettingsOpen) {
             binding.firstRunTips.visibility = View.VISIBLE
             binding.setDefaultLauncher.visibility = View.GONE
@@ -615,6 +619,11 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
 
         // If it's a shortcut, verify it still exists
         if (isShortcut) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                textView.text = ""
+                textView.setCompoundDrawables(null, null, null, null)
+                return false
+            }
             val launcherApps = requireContext().getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
 
             // Query for the specific shortcut

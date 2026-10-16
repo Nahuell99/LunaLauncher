@@ -139,7 +139,7 @@ object Constants {
 
     const val URL_ABOUT_OLAUNCHER = "https://github.com/pierspad/BetterLauncher"
     const val URL_OLAUNCHER_PRIVACY = "https://pierspad.com/en/17.0.0.0/2026-07-05-betterlauncher-privacy-policy/"
-    const val URL_DOUBLE_TAP = "https://github.com/pierspad/BetterLauncher#double-tap-to-lock"
+    const val URL_DOUBLE_TAP = "https://github.com/pierspad/BetterLauncher/blob/main/docs/README.md#double-tap-to-lock"
     const val URL_OLAUNCHER_GITHUB = "https://github.com/pierspad/BetterLauncher"
     const val URL_PIERSPAD = "https://pierspad.com"
     const val URL_OLAUNCHER_PLAY_STORE = "https://play.google.com/store/apps/details?id=app.olauncher"

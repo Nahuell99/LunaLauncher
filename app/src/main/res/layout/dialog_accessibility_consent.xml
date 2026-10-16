@@ -42,32 +42,26 @@
 
         <TextView
             android:id="@+id/consentAccept"
-            style="@style/TextSmallBold"
+            style="@style/DialogPrimaryAction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:minHeight="48dp"
-            android:padding="12dp"
-            android:text="@string/accessibility_disclosure_accept"
-            android:textColor="?attr/primaryColor" />
+            android:text="@string/accessibility_disclosure_accept" />
 
         <TextView
             android:id="@+id/consentDecline"
-            style="@style/TextSmall"
+            style="@style/DialogSecondaryAction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:minHeight="48dp"
-            android:padding="12dp"
-            android:text="@string/accessibility_disclosure_decline"
-            android:textColor="?attr/primaryColorTrans80" />
+            android:text="@string/accessibility_disclosure_decline" />
     </LinearLayout>
 </ScrollView>

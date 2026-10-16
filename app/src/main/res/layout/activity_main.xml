@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/rounded_rectangle_dark"
+            android:background="@drawable/rounded_dialog_surface"
             android:elevation="8dp"
             android:orientation="vertical"
             android:outlineAmbientShadowColor="@color/colorPrimaryDark"
@@ -65,7 +65,7 @@
 
                 <TextView
                     android:id="@+id/tvTitle"
-                    style="@style/TextLarge"
+                    style="@style/TextSectionTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -88,13 +88,11 @@
 
             <TextView
                 android:id="@+id/tvAction"
-                style="@style/TextSmallBold"
-                android:layout_width="wrap_content"
+                style="@style/DialogPrimaryAction"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="20dp"
-                android:background="?attr/selectableItemBackground"
-                android:padding="8dp"
                 android:text="@string/okay"
                 android:textAllCaps="false"
                 android:textSize="18sp" />

@@ -2,14 +2,12 @@ package app.olauncher.helper
 
 import android.content.Context
 import android.graphics.Typeface
-import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import app.olauncher.data.Prefs
-import java.io.File
 
 /**
  * Applies a user-selected font across the whole UI.
@@ -30,7 +28,6 @@ object FontHelper {
 
     // The "custom:" prefix in Prefs.fontFamily marks a user-imported font.
     const val CUSTOM_PREFIX = "custom:"
-    private const val CUSTOM_FONT_FILENAME = "custom_font"
 
     @Volatile
     private var typeface: Typeface? = null
@@ -77,23 +74,4 @@ object FontHelper {
         }
     }
 
-    /**
-     * Copies a picked font file into private storage and validates it.
-     * Returns the absolute path on success, or null if the file is not a usable font.
-     */
-    fun importCustomFont(context: Context, uri: Uri): String? {
-        return runCatching {
-            val dest = File(context.filesDir, CUSTOM_FONT_FILENAME)
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                dest.outputStream().use { output -> input.copyTo(output) }
-            } ?: return null
-            // Validate: createFromFile throws (or returns the default) on a bad file.
-            val tf = Typeface.createFromFile(dest)
-            if (tf == null || tf == Typeface.DEFAULT) {
-                dest.delete()
-                return null
-            }
-            dest.absolutePath
-        }.getOrNull()
-    }
 }

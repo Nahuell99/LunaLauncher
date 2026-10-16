@@ -29,6 +29,7 @@ import app.olauncher.helper.isPackageInstalled
 import app.olauncher.helper.isPrivateSpaceLocked
 import app.olauncher.helper.showToast
 import app.olauncher.helper.usageStats.EventLogWrapper
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -73,7 +74,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val enterReorderMode = SingleLiveEvent<Unit?>()
 
     // A locked app was selected: the Activity must authenticate before launching it.
-    val launchAppWithAuth = SingleLiveEvent<AppModel.App>()
+    val launchAppWithAuth = SingleLiveEvent<AppModel>()
 
     // A soft-limited app is in cooldown: the Activity shows a countdown instead of launching.
     val cooldownBlocked = SingleLiveEvent<CooldownBlock>()
@@ -103,10 +104,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         when (flag) {
             Constants.FLAG_LAUNCH_APP -> {
                 when (appModel) {
-                    is AppModel.PinnedShortcut -> launchShortcut(appModel)
+                    is AppModel.PinnedShortcut -> requestLaunch(appModel)
                     is AppModel.App ->
-                        if (isAppLocked(appModel)) launchAppWithAuth.postValue(appModel)
-                        else launchApp(appModel.appPackage, appModel.activityClassName, appModel.user)
+                        requestLaunch(appModel)
 
                     else -> {}
                 }
@@ -114,8 +114,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
             Constants.FLAG_HIDDEN_APPS -> {
                 if (appModel is AppModel.App) {
-                    if (isAppLocked(appModel)) launchAppWithAuth.postValue(appModel)
-                    else launchApp(appModel.appPackage, appModel.activityClassName, appModel.user)
+                    requestLaunch(appModel)
                 }
             }
 
@@ -177,14 +176,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun launchShortcut(appModel: AppModel.PinnedShortcut) {
-        val launcher = appContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
-        val query = LauncherApps.ShortcutQuery().apply {
-            setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED)
-        }
-        launcher.getShortcuts(query, appModel.user)?.find { it.id == appModel.shortcutId }
-            ?.let { shortcut ->
-                launcher.startShortcut(shortcut, null, null)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        try {
+            val launcher = appContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+            val query = LauncherApps.ShortcutQuery().apply {
+                setPackage(appModel.appPackage)
+                setShortcutIds(listOf(appModel.shortcutId))
+                setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED)
             }
+            val shortcut = launcher.getShortcuts(query, appModel.user)?.firstOrNull()
+            if (shortcut == null) {
+                appContext.showToast(appContext.getString(R.string.app_not_found))
+                return
+            }
+            if (!canLaunch(appModel.appPackage, appModel.user)) return
+            launcher.startShortcut(shortcut, null, null)
+            prefs.incrementUsage(appKey(appModel))
+        } catch (_: Exception) {
+            appContext.showToast(appContext.getString(R.string.unable_to_open_app))
+        }
     }
 
     private fun saveHomeApp(appModel: AppModel, position: Int) {
@@ -308,7 +318,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         appModel.appPackage + "|" + appModel.user.toString()
 
     fun isAppLocked(appModel: AppModel): Boolean =
-        appModel is AppModel.App && prefs.isAppLocked(appKey(appModel))
+        (appModel is AppModel.App || appModel is AppModel.PinnedShortcut) && prefs.isAppLocked(appKey(appModel))
 
     // Toggles the locked state of an app and returns the new state (true = locked).
     fun toggleAppLock(appModel: AppModel): Boolean {
@@ -383,24 +393,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Called by the Activity after a successful unlock.
-    fun launchAppDirectly(appModel: AppModel.App) {
-        launchApp(appModel.appPackage, appModel.activityClassName, appModel.user)
+    private fun requestLaunch(appModel: AppModel) {
+        if (isAppLocked(appModel)) launchAppWithAuth.value = appModel
+        else launchAppDirectly(appModel)
     }
 
-    private fun launchApp(packageName: String, activityClassName: String?, userHandle: UserHandle) {
+    // Called only after authorization, or for targets without an app lock.
+    fun launchAppDirectly(appModel: AppModel) {
+        when (appModel) {
+            is AppModel.App -> launchApp(appModel.appPackage, appModel.activityClassName, appModel.user)
+            is AppModel.PinnedShortcut -> launchShortcut(appModel)
+            else -> Unit
+        }
+    }
+
+    private fun canLaunch(packageName: String, userHandle: UserHandle): Boolean {
         val key = "$packageName|$userHandle"
 
         val lastOpened = prefs.lastOpenedLimitedApp
         if (lastOpened.isNotEmpty() && lastOpened != key) {
-            val now = System.currentTimeMillis()
-            val currentLevel = prefs.limitLevel(lastOpened)
-            if (currentLevel > 0) {
-                val duration = AppLimiter.durationForStep(currentLevel)
-                prefs.setLimitUntil(lastOpened, now + duration)
-                prefs.setLimitRetryCount(lastOpened, 0)
-            }
-            prefs.lastOpenedLimitedApp = ""
+            AppLimiter.endSession(prefs, System.currentTimeMillis())
         }
 
         // Soft "use it less" limit: gate the launch behind a progressive cooldown.
@@ -420,12 +432,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                             totalBanMinutes = decision.totalBanMinutes
                         )
                     )
-                    return
+                    return false
                 }
 
                 AppLimiter.Decision.Allow -> Unit // proceed
             }
         }
+
+        return true
+    }
+
+    private fun launchApp(packageName: String, activityClassName: String?, userHandle: UserHandle) {
+        val key = "$packageName|$userHandle"
+        if (!canLaunch(packageName, userHandle)) return
 
         // Track launches to rank drawer search results by frequency of use.
         prefs.incrementUsage(key)
@@ -451,12 +470,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         try {
             launcher.startMainActivity(component, userHandle, null, null)
-        } catch (e: SecurityException) {
-            try {
-                launcher.startMainActivity(component, android.os.Process.myUserHandle(), null, null)
-            } catch (e: Exception) {
-                appContext.showToast(appContext.getString(R.string.unable_to_open_app))
-            }
         } catch (e: Exception) {
             appContext.showToast(appContext.getString(R.string.unable_to_open_app))
         }
@@ -497,8 +510,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         homeAppAlignment.value = prefs.homeAlignment
     }
 
+    private var screenTimeJob: Job? = null
+
     fun getTodaysScreenTime() {
-        if (prefs.screenTimeLastUpdated.hasBeenMinutes(1).not()) return
+        if (!prefs.screenTimeLastUpdated.hasBeenMinutes(1) || screenTimeJob?.isActive == true) return
+        screenTimeJob = viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                runCatching { calculateScreenTime() }.getOrNull()
+            } ?: return@launch
+            screenTimeValue.value = result.first
+            prefs.screenTimeLastUpdated = result.second
+        }
+    }
+
+    private fun calculateScreenTime(): Pair<String, Long> {
 
         val eventLogWrapper = EventLogWrapper(
             appContext
@@ -519,8 +544,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             )
         )
         val viewTimeSpent = appContext.formattedTimeSpent(timeSpent)
-        screenTimeValue.postValue(viewTimeSpent)
-        prefs.screenTimeLastUpdated = endTime
+        return viewTimeSpent to endTime
     }
 
     fun getPrivateSpaceAppList() {

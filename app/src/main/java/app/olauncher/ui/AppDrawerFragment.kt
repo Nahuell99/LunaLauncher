@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import app.olauncher.MainViewModel
+import app.olauncher.helper.IconManager
 import app.olauncher.R
 import app.olauncher.data.AppModel
 import app.olauncher.data.Constants
@@ -396,14 +397,12 @@ class AppDrawerFragment : Fragment() {
                 }
                 viewModel.getAppList()
             },
-            appHideListener = { appModel, position ->
+            appHideListener = { appModel, _ ->
                 if (appModel is AppModel.PinnedShortcut) {
                     showCustomAlert(getString(R.string.hiding_pinned_shortcuts_not_supported))
                     return@AppDrawerAdapter
                 }
-                adapter.appFilteredList.removeAt(position)
-                adapter.notifyItemRemoved(position)
-                adapter.appsList.remove(appModel)
+                adapter.removeApp(appModel)
 
                 val newSet = mutableSetOf<String>()
                 newSet.addAll(prefs.hiddenApps)
@@ -425,12 +424,13 @@ class AppDrawerFragment : Fragment() {
                 viewModel.getHiddenApps()
             },
             appRenameListener = { appModel, renameLabel ->
-                val identifier = when (appModel) {
-                    is AppModel.PinnedShortcut -> appModel.shortcutId
-                    is AppModel.App -> appModel.appPackage
+                when (appModel) {
+                    is AppModel.PinnedShortcut -> prefs.setShortcutRenameLabel(
+                        appModel.appPackage, appModel.user.toString(), appModel.shortcutId, renameLabel
+                    )
+                    is AppModel.App -> prefs.setAppRenameLabel(appModel.appPackage, renameLabel)
                     else -> return@AppDrawerAdapter
                 }
-                prefs.setAppRenameLabel(identifier, renameLabel)
                 viewModel.getAppList()
             },
             appFolderListener = { appModel -> showFolderAssignDialog(appModel) },
@@ -487,6 +487,10 @@ class AppDrawerFragment : Fragment() {
     }
 
     private fun initObservers() {
+        IconManager.ready.observe(viewLifecycleOwner) { ready ->
+            if (ready) adapter.notifyItemRangeChanged(0, adapter.itemCount)
+        }
+
         viewModel.firstOpen.observe(viewLifecycleOwner) {
         }
         if (flag == Constants.FLAG_HIDDEN_APPS) {

@@ -247,8 +247,11 @@ private suspend fun getPinnedShortcuts(
                 if (isPrivateSpaceProfile(context, profile)) return@forEach
                 try {
                     shortcuts.getShortcuts(query, profile)?.forEach { shortcut ->
-                        if (shortcut.isPinned && pinnedShortcuts.none { it.shortcutId == shortcut.id }) {
-                            val label = prefs.getAppRenameLabel(shortcut.id)
+                        val alreadyAdded = pinnedShortcuts.any {
+                            it.shortcutId == shortcut.id && it.appPackage == shortcut.`package` && it.user == profile
+                        }
+                        if (shortcut.isPinned && !alreadyAdded) {
+                            val label = prefs.getShortcutRenameLabel(shortcut.`package`, profile.toString(), shortcut.id)
                                 .takeIf { it.isNotBlank() }
                                 ?: shortcut.shortLabel?.toString()
                                 ?: shortcut.longLabel?.toString().orEmpty()

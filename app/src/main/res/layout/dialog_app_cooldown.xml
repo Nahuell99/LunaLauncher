@@ -55,15 +55,10 @@
 
     <TextView
         android:id="@+id/cooldownButton"
-        style="@style/TextSmallBold"
-        android:layout_width="wrap_content"
+        style="@style/DialogPrimaryAction"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginTop="18dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp"
-        android:text="@string/okay"
-        android:textAllCaps="true"
-        android:textColor="?attr/primaryColor" />
+        android:text="@string/okay" />
 </LinearLayout>

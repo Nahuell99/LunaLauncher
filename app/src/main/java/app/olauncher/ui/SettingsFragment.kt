@@ -9,7 +9,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
@@ -73,7 +72,6 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
-    private var fontDialog: AlertDialog? = null
 
 
     private val enableAdminLauncher =
@@ -84,21 +82,6 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
             }
         }
 
-
-    // Custom font: let the user pick a .ttf/.otf, copy it into private storage and apply.
-    private val pickFontLauncher =
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-            if (uri == null) return@registerForActivityResult
-            val path = FontHelper.importCustomFont(requireContext(), uri)
-            if (path != null) {
-                prefs.customFontPath = path
-                prefs.fontFamily = FontHelper.CUSTOM_PREFIX + path.substringAfterLast('/')
-                requireContext().showToast(getString(R.string.font_imported))
-                applyFont()
-            } else {
-                requireContext().showToast(getString(R.string.font_import_failed))
-            }
-        }
 
     private lateinit var appWidgetManager: AppWidgetManager
     private lateinit var appWidgetHost: AppWidgetHost
@@ -263,7 +246,13 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
             R.id.themeChooseRow -> cycleTheme()
             R.id.actionAccessibility -> openAccessibilityService()
             R.id.closeAccessibility -> toggleAccessibilityVisibility(false)
-            R.id.notWorking -> requireContext().openUrl(Constants.URL_DOUBLE_TAP)
+            R.id.notWorking -> {
+                toggleAccessibilityVisibility(false)
+                showMessageDialog(
+                    R.string.gesture_help_title, R.string.gesture_help_message,
+                    R.string.open_accessibility_settings, R.string.close
+                ) { app.olauncher.helper.AccessibilityConsent.openSettings(requireContext()) }
+            }
             R.id.widgetEnabled -> toggleWidget()
             R.id.widgetChooseRow -> startWidgetPick()
 
@@ -616,15 +605,14 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
     private fun toggleAccessibilityVisibility(show: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             binding.notWorking.visibility = View.VISIBLE
-        if (isAccessServiceEnabled(requireContext()))
-            binding.actionAccessibility.text = getString(R.string.disable)
+        binding.actionAccessibility.setText(R.string.open_accessibility_settings)
         binding.accessibilityLayout.isVisible = show
         binding.scrollView.animateAlpha(if (show) 0.5f else 1f)
     }
 
     private fun openAccessibilityService() {
         toggleAccessibilityVisibility(false)
-        // prefs.lockModeOn = true
+        prefs.lockModeOn = true // Explicit gesture request; service reconnection must not change this.
         populateLockSettings()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             app.olauncher.helper.AccessibilityConsent.openSettings(requireContext())
@@ -632,7 +620,7 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
 
     private fun toggleLockMode() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            if (!prefs.lockModeOn && !isAccessServiceEnabled(requireContext())) {
+            if (!isAccessServiceEnabled(requireContext())) {
                 toggleAccessibilityVisibility(true)
                 populateLockSettings()
                 return
@@ -935,88 +923,6 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
                     ?: R.string.font_system_default
             )
         }
-    }
-
-    // Modern picker: a glass card listing each font rendered in its own typeface, with
-    // the current selection highlighted. The last row imports a custom .ttf/.otf.
-    private fun showFontDialog() {
-        val ctx = requireContext()
-        val view = layoutInflater.inflate(R.layout.dialog_font_picker, null)
-        val list = view.findViewById<LinearLayout>(R.id.fontPickerList)
-        val dialog = AlertDialog.Builder(ctx).setView(view).create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        fontDialog = dialog
-
-        val current = prefs.fontFamily
-        val padV = 14.dpToPx()
-        val padH = 10.dpToPx()
-        val rippleBg = TypedValue().also {
-            ctx.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
-        }.resourceId
-
-        fun addRow(label: String, preview: Typeface, selected: Boolean, onClick: () -> Unit) {
-            val row = TextView(ctx).apply {
-                text = label
-                textSize = 18f
-                setTextColor(ctx.getColorFromAttr(R.attr.primaryColor))
-                typeface = if (selected) Typeface.create(preview, Typeface.BOLD) else preview
-                gravity = Gravity.CENTER_VERTICAL
-                setPadding(padH, padV, padH, padV)
-                setBackgroundResource(if (selected) R.drawable.rounded_rect_shade_color_glass else rippleBg)
-                setOnClickListener { onClick() }
-            }
-            list.addView(
-                row,
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { topMargin = 2.dpToPx() }
-            )
-        }
-
-        for (opt in fontOptions) {
-            val preview = if (opt.family.isBlank()) Typeface.DEFAULT
-            else Typeface.create(opt.family, Typeface.NORMAL)
-            addRow(getString(opt.labelRes), preview, current == opt.family) {
-                prefs.fontFamily = opt.family
-                applyFont()
-                dialog.dismiss()
-            }
-        }
-
-        val isCustom = current.startsWith(FontHelper.CUSTOM_PREFIX)
-        val customPreview = if (isCustom)
-            runCatching { Typeface.createFromFile(prefs.customFontPath) }.getOrNull() ?: Typeface.DEFAULT
-        else Typeface.DEFAULT
-        val customLabel = if (isCustom) current.removePrefix(FontHelper.CUSTOM_PREFIX)
-        else getString(R.string.font_custom)
-        addRow(customLabel, customPreview, isCustom) {
-            // Restrict the system picker to font files. Different providers report
-            // fonts under different MIME types, so we pass the common ones; the file
-            // is still validated after copying (see FontHelper.importCustomFont).
-            dialog.dismiss()
-            pickFontLauncher.launch(FONT_MIME_TYPES)
-        }
-
-        dialog.show()
-        val displayMetrics = ctx.resources.displayMetrics
-        val maxHeight = (displayMetrics.heightPixels * 0.8).toInt()
-        view.post {
-            if (view.height > maxHeight) {
-                val scrollView = view.findViewById<View>(R.id.fontScrollView)
-                val lp = scrollView.layoutParams
-                lp.height = maxHeight - 48.dpToPx()
-                scrollView.layoutParams = lp
-            }
-        }
-    }
-
-
-
-    private fun applyFont() {
-        populateFont()
-        FontHelper.reload(requireContext())
-        recreateSettingsWithScroll()
     }
 
 
@@ -1406,16 +1312,8 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         requireContext().showToast(getString(R.string.widget_removed))
     }
 
-    override fun onStop() {
-        super.onStop()
-        // Don't leave the pickers floating over the home screen when we leave Settings.
-        fontDialog?.dismiss()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        fontDialog?.dismiss()
-        fontDialog = null
         _binding = null
     }
 
@@ -1432,18 +1330,6 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
     companion object {
         private const val WIDGET_TAG = "BLWidget"
         private const val KEY_PENDING_WIDGET_ID = "pending_widget_id"
-
-        // MIME types accepted by the custom-font picker (TrueType / OpenType, plus the
-        // generic font category some providers expose). Validated again after import.
-        private val FONT_MIME_TYPES = arrayOf(
-            "font/ttf",
-            "font/otf",
-            "font/sfnt",
-            "application/x-font-ttf",
-            "application/x-font-otf",
-            "application/font-sfnt",
-            "application/vnd.ms-opentype",
-        )
 
         // Apps-on-home slider bounds. 0 lets the user hide the apps column entirely.
         private const val APPS_NUM_MIN = 0

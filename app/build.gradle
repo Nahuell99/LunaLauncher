@@ -75,8 +75,10 @@ android {
     namespace 'app.olauncher'
 
     lint {
-        checkReleaseBuilds false
-        abortOnError false
+        baseline = file("lint-baseline.xml")
+        checkReleaseBuilds true
+        abortOnError true
+        warningsAsErrors true
     }
 }
 
@@ -91,14 +93,12 @@ dependencies {
     implementation libs.biometric
 
     // Android lifecycle
-    implementation libs.lifecycle.extensions
     implementation libs.lifecycle.viewmodel.ktx
 
     // Navigation
     implementation libs.navigation.fragment.ktx
 
     // Work Manager
-    implementation libs.work.runtime.ktx
 
     //Material dependency
     implementation libs.material

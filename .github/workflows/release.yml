@@ -10,9 +10,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+
   release:
+    needs: verify
     name: Build & Release APK
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.semantic_release.outputs.release_version }}
     permissions:
       contents: write
       issues: write
@@ -38,7 +44,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Node Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Make Gradle Executable
         run: chmod +x ./gradlew
@@ -50,10 +56,12 @@ jobs:
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 --decode > app/release.keystore
           else
-            echo "No keystore provided, skipping decoding."
+            echo "::error::Missing release signing keystore."
+            exit 1
           fi
 
       - name: Run Semantic Release
+        id: semantic_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KEYSTORE_PATH: release.keystore
@@ -61,3 +69,27 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: npx semantic-release
+
+  publish-play:
+    name: Publish stable release to Google Play testing
+    needs: release
+    if: >-
+      needs.release.outputs.version != '' &&
+      vars.GOOGLE_PLAY_AUTO_PUBLISH == 'true' &&
+      github.ref != 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: google-play-publish
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/publish-play
+        with:
+          tag: v${{ needs.release.outputs.version }}
+          track: ${{ vars.GOOGLE_PLAY_TRACK || 'beta' }}
+          status: ${{ vars.GOOGLE_PLAY_RELEASE_STATUS || 'draft' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}

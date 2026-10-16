@@ -1,19 +1,44 @@
 package app.olauncher.helper
 
-import android.os.Build
 import app.olauncher.data.Prefs
 
 /**
  * Soft "use it less" limiter. Unlike the biometric app-lock, this adds *friction*
  * rather than a hard wall: re-opening a limited app too soon triggers a cooldown,
  * and each impatient retry during that cooldown escalates the wait up an
- * (entirely parametric) ladder. Letting the timer run out and then opening the app
- * resets the ladder back to zero — good behaviour is rewarded.
+ * ladder. Severity decays on subsequent local days without an opening;
+ * each permitted session advances the ladder.
  *
  * The whole policy is a small state machine evaluated at launch time. State lives in
  * [Prefs] keyed by "package|user"; this object stays stateless and side-effect-explicit.
  */
 object AppLimiter {
+
+    /** End a permitted session once; repeated window events cannot restart it. */
+    fun endSession(prefs: Prefs, now: Long) {
+        val key = prefs.lastOpenedLimitedApp
+        if (key.isEmpty()) return
+        val level = prefs.limitLevel(key)
+        prefs.finishLimitedSession(key, if (level > 0) now + durationForStep(level) else null)
+    }
+
+    /** Daily decay has one owner; Activity only supplies the lifecycle trigger. */
+    fun decayDaily(prefs: Prefs, now: Long) {
+        val today = localDayNumber(now)
+        val lastDecay = prefs.lastDecayDay
+        if (lastDecay == 0L) {
+            prefs.lastDecayDay = today
+        } else if (today > lastDecay) {
+            val daysPassed = (today - lastDecay).toInt()
+            for (key in prefs.limitedApps) {
+                val currentLevel = prefs.limitLevel(key)
+                if (currentLevel > 0) {
+                    prefs.setDecayedLimit(key, maxOf(0, currentLevel - daysPassed), today)
+                }
+            }
+            prefs.lastDecayDay = today
+        }
+    }
 
     /** Outcome of a launch attempt for a limited app. */
     sealed interface Decision {

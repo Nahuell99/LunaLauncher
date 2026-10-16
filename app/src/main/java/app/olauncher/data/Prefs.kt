@@ -23,12 +23,15 @@ import org.json.JSONObject
  */
 class Prefs(private val context: Context) {
 
+    private val preferenceTypes = mutableMapOf<String, String>()
+
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
 
     private companion object {
         const val PREFS_FILENAME = "com.pierspad.betterlauncher"
         const val HOME_SLOTS = 8
+        val importLock = Any()
 
         // Keys that need special handling during import (see importFromJson).
         const val LOCK_MODE = "LOCK_MODE"
@@ -138,6 +141,19 @@ class Prefs(private val context: Context) {
 
     fun limitLastOpenDay(key: String): Long = prefs.getLong("LIMIT_LAST_OPEN_DAY_$key", 0L)
     fun setLimitLastOpenDay(key: String, value: Long) = prefs.edit { putLong("LIMIT_LAST_OPEN_DAY_$key", value) }
+
+    fun setDecayedLimit(key: String, level: Int, day: Long) = prefs.edit {
+        putInt("LIMIT_LEVEL_$key", level)
+        putLong("LIMIT_LAST_OPEN_DAY_$key", day)
+    }
+
+    fun finishLimitedSession(key: String, until: Long?) = prefs.edit {
+        if (until != null) {
+            putLong("LIMIT_UNTIL_$key", until)
+            putInt("LIMIT_RETRY_COUNT_$key", 0)
+        }
+        putString("LAST_OPENED_LIMITED_APP", "")
+    }
 
     fun clearLimitState(key: String) = prefs.edit {
         remove("LIMIT_LAST_OPEN_$key")
@@ -258,6 +274,13 @@ class Prefs(private val context: Context) {
 
     fun getAppRenameLabel(appPackage: String): String = prefs.getString(appPackage, "").orEmpty()
     fun setAppRenameLabel(appPackage: String, renameLabel: String) = prefs.edit { putString(appPackage, renameLabel) }
+
+    fun getShortcutRenameLabel(packageName: String, user: String, shortcutId: String): String =
+        prefs.getString("SHORTCUT_RENAME_$packageName|$user|$shortcutId", null)
+            ?: getAppRenameLabel(shortcutId) // Existing backups used only the shortcut ID.
+
+    fun setShortcutRenameLabel(packageName: String, user: String, shortcutId: String, label: String) =
+        prefs.edit { putString("SHORTCUT_RENAME_$packageName|$user|$shortcutId", label) }
 
     // ---- Shortcut-icon slots (0..7, right column) ----
 
@@ -398,7 +421,7 @@ class Prefs(private val context: Context) {
 
     /** Serializes every stored preference (with its type) to a JSON string. */
     fun exportToJson(): String {
-        val root = JSONObject()
+        val root = JSONObject().put("BACKUP_FORMAT_VERSION", JSONObject().put("t", "i").put("v", 1))
         for ((key, value) in prefs.all) {
             val entry = JSONObject()
             when (value) {
@@ -440,57 +463,78 @@ class Prefs(private val context: Context) {
      * on device-specific state (accessibility service, usage-access permission).
      * Returns true on success.
      */
-    fun importFromJson(json: String): Boolean = runCatching {
-        val root = JSONObject(json)
-        // Stage changes without applying them: a malformed entry must leave all
-        // existing preferences intact, including values parsed before that entry.
-        val editor = prefs.edit()
-        editor.apply {
-            clear()
-            for (key in root.keys()) {
-                when (key) {
-                    CUSTOM_FONT_EXPORT_KEY -> continue // handled below, not a preference
-                    LOCK_MODE -> putBoolean(key, false)
-                    SCREEN_TIME_APP_PACKAGE, SCREEN_TIME_APP_USER, SCREEN_TIME_APP_CLASS_NAME ->
-                        putString(key, "")
-                    "APP_LIST_CACHE" -> putString(key, "")
-
-                    else -> {
-                        val entry = root.getJSONObject(key)
-                        when (entry.getString("t")) {
-                            "b" -> putBoolean(key, entry.getBoolean("v"))
-                            "i" -> putInt(key, entry.getInt("v"))
-                            "l" -> putLong(key, entry.getLong("v"))
-                            "f" -> {
-                                val value = entry.getDouble("v").toFloat()
-                                require(value.isFinite())
-                                if (key == "TEXT_SIZE_SCALE") require(value in 0.5f..1.5f)
-                                putFloat(key, value)
-                            }
-                            "s" -> putString(key, entry.getString("v"))
-                            "set" -> {
-                                val arr = entry.getJSONArray("v")
-                                putStringSet(key, (0 until arr.length()).mapTo(mutableSetOf()) { arr.getString(it) })
-                            }
-                            else -> error("Unknown preference type")
-                        }
-                    }
+    fun importFromJson(json: String): Boolean = synchronized(importLock) {
+        var stagedFont: File? = null
+        var savedFont: File? = null
+        val fontFile = File(context.filesDir, CUSTOM_FONT_FILENAME)
+        val previous = prefs.all
+        var preferencesChanged = false
+        var fontChanged = false
+        var completed = false
+        try {
+            val backup = PreferenceBackup.parse(json, preferenceTypes)
+            val values = backup.preferences.toMutableMap().apply {
+                put(LOCK_MODE, false)
+                put(SCREEN_TIME_APP_PACKAGE, "")
+                put(SCREEN_TIME_APP_USER, "")
+                put(SCREEN_TIME_APP_CLASS_NAME, "")
+                put("APP_LIST_CACHE", "")
+                put("LAST_OPENED_LIMITED_APP", "")
+                put("WIDGET_ID", -1)
+                put("PENDING_WIDGET_ID", -1)
+            }
+            if (backup.fontBase64.isNotEmpty()) {
+                val bytes = Base64.decode(backup.fontBase64, Base64.NO_WRAP)
+                require(bytes.size <= PreferenceBackup.MAX_FONT_BYTES)
+                stagedFont = File.createTempFile("font-import-", ".tmp", context.filesDir)
+                stagedFont.writeBytes(bytes)
+                val typeface = android.graphics.Typeface.createFromFile(stagedFont)
+                require(typeface != null && typeface != android.graphics.Typeface.DEFAULT)
+                values["CUSTOM_FONT_PATH"] = fontFile.absolutePath
+            } else {
+                values["CUSTOM_FONT_PATH"] = ""
+                if ((values["FONT_FAMILY"] as? String)?.startsWith("custom:") == true) {
+                    values["FONT_FAMILY"] = ""
                 }
             }
+            // Keep the original until both the file replacement and preferences succeed.
+            if (fontFile.exists()) {
+                savedFont = File.createTempFile("font-previous-", ".tmp", context.filesDir)
+                check(savedFont.delete() && fontFile.renameTo(savedFont))
+            }
+            fontChanged = true
+            stagedFont?.let { check(it.renameTo(fontFile)) }
+            preferencesChanged = true
+            check(replacePreferences(values))
+            completed = true
+            true
+        } catch (_: Exception) {
+            if (preferencesChanged) replacePreferences(previous)
+            if (fontChanged) {
+                fontFile.delete()
+                savedFont?.let { if (it.renameTo(fontFile)) savedFont = null }
+            }
+            false
+        } finally {
+            stagedFont?.delete()
+            if (completed || !fontChanged) savedFont?.delete()
         }
+    }
 
-        editor.apply()
-
-        // Restore (or remove) the custom font file shipped inside the backup.
-        val fontFile = File(context.filesDir, CUSTOM_FONT_FILENAME)
-        val fontBase64 = root.optJSONObject(CUSTOM_FONT_EXPORT_KEY)?.optString("v").orEmpty()
-        runCatching {
-            if (fontBase64.isNotEmpty()) fontFile.writeBytes(Base64.decode(fontBase64, Base64.NO_WRAP))
-            else fontFile.delete()
+    private fun replacePreferences(values: Map<String, *>): Boolean {
+        val editor = prefs.edit().clear()
+        for ((key, value) in values) {
+            when (value) {
+                is Boolean -> editor.putBoolean(key, value)
+                is Int -> editor.putInt(key, value)
+                is Long -> editor.putLong(key, value)
+                is Float -> editor.putFloat(key, value)
+                is String -> editor.putString(key, value)
+                is Set<*> -> editor.putStringSet(key, value.filterIsInstance<String>().toSet())
+            }
         }
-
-        true
-    }.getOrDefault(false)
+        return editor.commit()
+    }
 
     fun resetToDefaults() = prefs.edit { clear() }
 
@@ -499,53 +543,43 @@ class Prefs(private val context: Context) {
     // Getters read straight from SharedPreferences (which caches in memory);
     // setters persist asynchronously via apply().
 
-    private fun bool(key: String, default: Boolean = false) = object : ReadWriteProperty<Any?, Boolean> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>) = prefs.getBoolean(key, default)
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) =
-            prefs.edit { putBoolean(key, value) }
+    private fun <T> preference(
+        key: String,
+        type: String,
+        read: () -> T,
+        write: (T) -> Unit,
+    ): ReadWriteProperty<Any?, T> {
+        preferenceTypes[key] = type
+        return object : ReadWriteProperty<Any?, T> {
+            override fun getValue(thisRef: Any?, property: KProperty<*>): T = read()
+            override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = write(value)
+        }
     }
 
-    private fun int(key: String, default: Int = 0) = object : ReadWriteProperty<Any?, Int> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>) = prefs.getInt(key, default)
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) =
-            prefs.edit { putInt(key, value) }
-    }
+    private fun bool(key: String, default: Boolean = false) = preference(key, "b",
+        { prefs.getBoolean(key, default) }, { value -> prefs.edit { putBoolean(key, value) } })
 
-    private fun long(key: String, default: Long = 0L) = object : ReadWriteProperty<Any?, Long> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>) = prefs.getLong(key, default)
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Long) =
-            prefs.edit { putLong(key, value) }
-    }
+    private fun int(key: String, default: Int = 0) = preference(key, "i",
+        { prefs.getInt(key, default) }, { value -> prefs.edit { putInt(key, value) } })
 
-    private fun float(key: String, default: Float = 0f) = object : ReadWriteProperty<Any?, Float> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>) = prefs.getFloat(key, default)
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Float) =
-            prefs.edit { putFloat(key, value) }
-    }
+    private fun long(key: String, default: Long = 0L) = preference(key, "l",
+        { prefs.getLong(key, default) }, { value -> prefs.edit { putLong(key, value) } })
 
-    private fun string(key: String, default: String = "") = object : ReadWriteProperty<Any?, String> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>) = prefs.getString(key, default) ?: default
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: String) =
-            prefs.edit { putString(key, value) }
-    }
+    private fun float(key: String, default: Float = 0f) = preference(key, "f",
+        { prefs.getFloat(key, default) }, { value -> prefs.edit { putFloat(key, value) } })
 
-    // Historically these getters never returned null (missing = ""), only the setters
-    // accepted null; we keep those exact semantics for backward compatibility.
-    private fun nullableString(key: String) = object : ReadWriteProperty<Any?, String?> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>): String? = prefs.getString(key, "").orEmpty()
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: String?) =
-            prefs.edit { putString(key, value.orEmpty()) }
-    }
+    private fun string(key: String, default: String = "") = preference(key, "s",
+        { prefs.getString(key, default) ?: default }, { value -> prefs.edit { putString(key, value) } })
 
-    // Returns a defensive copy: mutating the set returned by SharedPreferences
-    // directly is undefined behaviour per the Android API contract.
-    private fun stringSet(key: String) = object : ReadWriteProperty<Any?, MutableSet<String>> {
-        override fun getValue(thisRef: Any?, property: KProperty<*>): MutableSet<String> =
-            prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
+    // Missing/null historically read as an empty string; retain backup compatibility.
+    private fun nullableString(key: String): ReadWriteProperty<Any?, String?> = preference(key, "s",
+        { prefs.getString(key, "").orEmpty() }, { value -> prefs.edit { putString(key, value.orEmpty()) } })
 
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: MutableSet<String>) =
-            prefs.edit { putStringSet(key, value) }
-    }
+    // Never expose the mutable set owned by SharedPreferences.
+    private fun stringSet(key: String): ReadWriteProperty<Any?, MutableSet<String>> = preference(key, "set",
+        { prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf() },
+        { value -> prefs.edit { putStringSet(key, value.toSet()) } })
+
 }
 
 /** Snapshot of everything stored for a single home slot (1..8). */

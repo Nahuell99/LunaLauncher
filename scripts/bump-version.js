@@ -8,7 +8,7 @@ if (!nextVersion) {
     process.exit(1);
 }
 
-const gradlePropertiesPath = path.join(__dirname, 'gradle.properties');
+const gradlePropertiesPath = path.join(__dirname, '..', 'gradle.properties');
 let content = fs.readFileSync(gradlePropertiesPath, 'utf8');
 
 // 1. Update versionName
@@ -35,3 +35,9 @@ if (versionCodeMatch) {
 
 fs.writeFileSync(gradlePropertiesPath, content, 'utf8');
 console.log(`Successfully updated gradle.properties!`);
+
+// Expose a prepared version to the same workflow. The publish job only runs
+// after semantic-release has also succeeded in publishing the GitHub release.
+if (process.env.GITHUB_OUTPUT) {
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `release_version=${nextVersion}\n`);
+}

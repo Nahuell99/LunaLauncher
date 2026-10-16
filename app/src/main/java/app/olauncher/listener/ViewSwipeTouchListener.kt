@@ -1,8 +1,6 @@
 package app.olauncher.listener
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
@@ -12,13 +10,16 @@ import app.olauncher.data.Constants
 import kotlin.math.abs
 
 internal open class ViewSwipeTouchListener(c: Context?, v: View) : OnTouchListener {
-    private var longPressOn = false
+    private val longPress = DelayedLongPress()
     private val gestureDetector: GestureDetector
 
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
         when (motionEvent.action) {
             MotionEvent.ACTION_DOWN -> view.isPressed = true
-            MotionEvent.ACTION_UP -> view.isPressed = false
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                view.isPressed = false
+                longPress.cancel()
+            }
         }
         return gestureDetector.onTouchEvent(motionEvent)
     }
@@ -42,10 +43,7 @@ internal open class ViewSwipeTouchListener(c: Context?, v: View) : OnTouchListen
         }
 
         override fun onLongPress(e: MotionEvent) {
-            longPressOn = true
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (longPressOn) onLongClick(view)
-            }, Constants.LONG_PRESS_DELAY_MS)
+            longPress.schedule(view) { onLongClick(view) }
             super.onLongPress(e)
         }
 

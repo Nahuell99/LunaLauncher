@@ -171,25 +171,7 @@ class MainActivity : AppCompatActivity() {
         isResumed = true
         viewModel.isPrivateSpaceToggling = false
 
-        // Decay check for all limited apps once per (local) day:
-        val now = System.currentTimeMillis()
-        val today = AppLimiter.localDayNumber(now)
-        val lastDecay = prefs.lastDecayDay
-        if (lastDecay == 0L) {
-            prefs.lastDecayDay = today
-        } else if (today > lastDecay) {
-            val daysPassed = (today - lastDecay).toInt()
-            val limitedSet = prefs.limitedApps
-            for (key in limitedSet) {
-                val currentLevel = prefs.limitLevel(key)
-                if (currentLevel > 0) {
-                    val newLevel = maxOf(0, currentLevel - daysPassed)
-                    prefs.setLimitLevel(key, newLevel)
-                    prefs.setLimitLastOpenDay(key, today)
-                }
-            }
-            prefs.lastDecayDay = today
-        }
+        AppLimiter.decayDaily(prefs, System.currentTimeMillis())
 
         // The accessibility service starts cooldown on an observed app exit.
         // Activity resume can precede the final window event of the departing app.
@@ -350,7 +332,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun authenticateAndLaunch(appModel: AppModel.App) {
+    private fun authenticateAndLaunch(appModel: AppModel) {
         val executor = ContextCompat.getMainExecutor(this)
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -358,14 +340,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                // If the device has no biometric and no screen lock, don't lock the user out.
+                // Authentication errors never authorize a launch.
                 when (errorCode) {
                     BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL,
                     BiometricPrompt.ERROR_HW_NOT_PRESENT,
                     BiometricPrompt.ERROR_HW_UNAVAILABLE,
                     BiometricPrompt.ERROR_NO_BIOMETRICS -> {
                         showToast(getString(R.string.set_up_screen_lock_for_app_lock))
-                        viewModel.launchAppDirectly(appModel)
                     }
                     // ERROR_USER_CANCELED / ERROR_NEGATIVE_BUTTON / lockout: keep the app locked.
                     else -> {}
@@ -391,7 +372,7 @@ class MainActivity : AppCompatActivity() {
             BiometricPrompt(this, executor, callback).authenticate(builder.build())
         } catch (e: Exception) {
             e.printStackTrace()
-            viewModel.launchAppDirectly(appModel)
+            showToast(getString(R.string.unable_to_open_app))
         }
     }
 

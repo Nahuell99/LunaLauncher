@@ -13,6 +13,11 @@ class PinItemActivity : AppCompatActivity() {
         // Set window to be transparent
         window.setBackgroundDrawable(null)
 
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+            finish()
+            return
+        }
+
         val launcherApps = getSystemService(LauncherApps::class.java)
         val pinItemRequest = launcherApps.getPinItemRequest(intent)
 
@@ -24,6 +29,7 @@ class PinItemActivity : AppCompatActivity() {
         finish()
     }
 
+    @androidx.annotation.RequiresApi(android.os.Build.VERSION_CODES.O)
     private fun handleRequestType(pinItemRequest: LauncherApps.PinItemRequest) {
         when (pinItemRequest.requestType) {
             LauncherApps.PinItemRequest.REQUEST_TYPE_SHORTCUT ->
@@ -36,6 +42,7 @@ class PinItemActivity : AppCompatActivity() {
         }
     }
 
+    @androidx.annotation.RequiresApi(android.os.Build.VERSION_CODES.O)
     private fun handleShortcutRequest(pinItemRequest: LauncherApps.PinItemRequest) {
         val shortcutInfo = pinItemRequest.shortcutInfo
         if (shortcutInfo != null) {

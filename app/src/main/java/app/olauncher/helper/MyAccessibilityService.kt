@@ -33,7 +33,6 @@ class MyAccessibilityService : AccessibilityService() {
             disableSelf()
             return
         }
-        prefs.lockModeOn = true
         val info = serviceInfo
         info.packageNames = null // Monitor all packages for app limit enforcement
         serviceInfo = info
@@ -62,13 +61,7 @@ class MyAccessibilityService : AccessibilityService() {
                     if (lastOpened.isNotEmpty()) {
                         val lastOpenedPkg = lastOpened.substringBefore("|")
                         if (pkgName != lastOpenedPkg && pkgName != "android" && pkgName != "com.android.systemui") {
-                            val currentLevel = prefs.limitLevel(lastOpened)
-                            if (currentLevel > 0) {
-                                val duration = AppLimiter.durationForStep(currentLevel)
-                                prefs.setLimitUntil(lastOpened, now + duration)
-                                prefs.setLimitRetryCount(lastOpened, 0)
-                            }
-                            prefs.lastOpenedLimitedApp = ""
+                            AppLimiter.endSession(prefs, now)
                         }
                     }
 
@@ -111,6 +104,7 @@ class MyAccessibilityService : AccessibilityService() {
 
                 when (source.contentDescription) {
                     getString(R.string.lock_layout_description) -> {
+                        if (!prefs.lockModeOn || source.packageName?.toString() != packageName) return
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
                             performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
                     }

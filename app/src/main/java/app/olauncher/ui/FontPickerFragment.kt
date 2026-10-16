@@ -19,10 +19,17 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import app.olauncher.R
 import app.olauncher.data.Prefs
+import app.olauncher.data.PreferenceBackup
+import app.olauncher.helper.readBoundedBytes
+import android.util.AtomicFile
 import app.olauncher.databinding.FragmentFontPickerBinding
 import app.olauncher.helper.FontHelper
 import app.olauncher.helper.dpToPx
@@ -41,6 +48,7 @@ class FontPickerFragment : Fragment() {
     private var selectedFontFamily = ""
     private var tempCustomFontPath = ""
     private var isCustomFontDeleted = false
+    private var fontOperation = false
 
     private data class FontOption(val labelRes: Int, val family: String)
     private val fontOptions = listOf(
@@ -61,15 +69,23 @@ class FontPickerFragment : Fragment() {
     private val pickFontLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             if (uri == null) return@registerForActivityResult
-            val path = importTempFont(uri)
-            if (path != null) {
-                val fileName = getFileName(uri)
-                tempCustomFontPath = path
-                selectedFontFamily = FontHelper.CUSTOM_PREFIX + fileName
-                isCustomFontDeleted = false
-                updateSelectionState()
-            } else {
-                requireContext().showToast(getString(R.string.font_import_failed))
+            if (_binding == null) return@registerForActivityResult
+            val context = requireContext().applicationContext
+            viewLifecycleOwner.lifecycleScope.launch {
+                val imported = withContext(Dispatchers.IO) {
+                    runCatching {
+                        val path = importTempFont(context, uri)
+                        if (path == null) null else path to getFileName(context, uri)
+                    }.getOrNull()
+                }
+                if (imported != null) {
+                    tempCustomFontPath = imported.first
+                    selectedFontFamily = FontHelper.CUSTOM_PREFIX + imported.second
+                    isCustomFontDeleted = false
+                    updateSelectionState()
+                } else {
+                    context.showToast(getString(R.string.font_import_failed))
+                }
             }
         }
 
@@ -88,8 +104,9 @@ class FontPickerFragment : Fragment() {
 
         originalFontFamily = prefs.fontFamily
         originalCustomFontPath = prefs.customFontPath
-        selectedFontFamily = originalFontFamily
-        tempCustomFontPath = originalCustomFontPath
+        selectedFontFamily = savedInstanceState?.getString("selectedFont") ?: originalFontFamily
+        tempCustomFontPath = savedInstanceState?.getString("pendingFontPath") ?: originalCustomFontPath
+        isCustomFontDeleted = savedInstanceState?.getBoolean("fontDeleted") ?: false
 
         // Adjust padding dynamically to handle edge-to-edge system bars and keyboard (IME) insets
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -223,25 +240,40 @@ class FontPickerFragment : Fragment() {
         binding.btnApplyChanges.alpha = if (hasChanges) 1.0f else 0.4f
     }
 
-    private fun importTempFont(uri: Uri): String? {
-        return runCatching {
-            val context = requireContext()
-            val tempFile = File(context.filesDir, "temp_custom_font")
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                tempFile.outputStream().use { output -> input.copyTo(output) }
+    private fun importTempFont(context: Context, uri: Uri): String? {
+        val candidate = File.createTempFile("font-candidate-", ".tmp", context.filesDir)
+        return try {
+            val bytes = context.contentResolver.openInputStream(uri)?.use {
+                it.readBoundedBytes(PreferenceBackup.MAX_FONT_BYTES)
             } ?: return null
-            val tf = Typeface.createFromFile(tempFile)
-            if (tf == null || tf == Typeface.DEFAULT) {
-                tempFile.delete()
-                return null
-            }
+            candidate.writeBytes(bytes)
+            val typeface = Typeface.createFromFile(candidate)
+            require(typeface != Typeface.DEFAULT)
+            val tempFile = File(context.filesDir, "temp_custom_font")
+            writeFontAtomically(tempFile, bytes)
             tempFile.absolutePath
-        }.getOrNull()
+        } catch (_: Exception) {
+            null
+        } finally {
+            candidate.delete()
+        }
     }
 
-    private fun getFileName(uri: Uri): String {
+    private fun writeFontAtomically(file: File, bytes: ByteArray) {
+        val atomic = AtomicFile(file)
+        val stream = atomic.startWrite()
+        try {
+            stream.write(bytes)
+            atomic.finishWrite(stream)
+        } catch (failure: Exception) {
+            atomic.failWrite(stream)
+            throw failure
+        }
+    }
+
+    private fun getFileName(context: Context, uri: Uri): String {
         var name = "custom_font"
-        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
+        val cursor = context.contentResolver.query(uri, null, null, null, null)
         cursor?.use {
             if (it.moveToFirst()) {
                 val index = it.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
@@ -254,31 +286,57 @@ class FontPickerFragment : Fragment() {
     }
 
     private fun applyFontChanges() {
-        val context = requireContext()
-        val targetFile = File(context.filesDir, "custom_font")
-        val tempFile = File(context.filesDir, "temp_custom_font")
-
-        if (isCustomFontDeleted) {
-            if (targetFile.exists()) targetFile.delete()
-            if (tempFile.exists()) tempFile.delete()
-            prefs.customFontPath = ""
-            prefs.fontFamily = ""
-        } else if (tempCustomFontPath.isNotEmpty() && tempCustomFontPath.endsWith("temp_custom_font")) {
-            if (tempFile.exists()) {
-                runCatching {
-                    tempFile.copyTo(targetFile, overwrite = true)
-                    tempFile.delete()
+        if (fontOperation) return
+        fontOperation = true
+        val context = requireContext().applicationContext
+        val family = selectedFontFamily
+        val pendingPath = tempCustomFontPath
+        val deleted = isCustomFontDeleted
+        binding.btnApplyChanges.isClickable = false
+        binding.btnAddCustomFont.isEnabled = false
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val saved = withContext(Dispatchers.IO) {
+                    runCatching {
+                        val targetFile = File(context.filesDir, "custom_font")
+                        val tempFile = File(context.filesDir, "temp_custom_font")
+                        when {
+                            deleted -> {
+                                check(!targetFile.exists() || targetFile.delete())
+                                tempFile.delete()
+                                prefs.customFontPath = ""
+                                prefs.fontFamily = ""
+                            }
+                            pendingPath.isNotEmpty() && pendingPath.endsWith("temp_custom_font") -> {
+                                val bytes = tempFile.inputStream().use {
+                                    it.readBoundedBytes(PreferenceBackup.MAX_FONT_BYTES)
+                                }
+                                val typeface = Typeface.createFromFile(tempFile)
+                                require(typeface != null && typeface != Typeface.DEFAULT)
+                                writeFontAtomically(targetFile, bytes)
+                                prefs.customFontPath = targetFile.absolutePath
+                                prefs.fontFamily = family
+                                tempFile.delete()
+                            }
+                            else -> prefs.fontFamily = family
+                        }
+                    }.isSuccess
+                }
+                if (saved) {
+                    FontHelper.reload(context)
+                    AppCompatDelegate.setDefaultNightMode(prefs.appTheme)
+                    requireActivity().recreate()
+                } else {
+                    context.showToast(getString(R.string.font_import_failed))
+                }
+            } finally {
+                fontOperation = false
+                if (_binding != null) {
+                    binding.btnAddCustomFont.isEnabled = true
+                    updateSelectionState()
                 }
             }
-            prefs.customFontPath = targetFile.absolutePath
-            prefs.fontFamily = selectedFontFamily
-        } else {
-            prefs.fontFamily = selectedFontFamily
         }
-
-        FontHelper.reload(context)
-        AppCompatDelegate.setDefaultNightMode(prefs.appTheme)
-        requireActivity().recreate()
     }
 
     private fun handleBackPress() {
@@ -348,6 +406,13 @@ class FontPickerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as? app.olauncher.MainActivity)?.updateGlobalOpacityScrim(animate = true)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedFont", selectedFontFamily)
+        outState.putString("pendingFontPath", tempCustomFontPath)
+        outState.putBoolean("fontDeleted", isCustomFontDeleted)
     }
 
     override fun onDestroyView() {

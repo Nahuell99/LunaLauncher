@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.UserHandle
 import android.util.Xml
+import android.util.LruCache
+import androidx.lifecycle.MutableLiveData
 import androidx.core.content.ContextCompat
 import app.olauncher.R
 import app.olauncher.data.AppModel
@@ -17,13 +19,28 @@ import com.caverock.androidsvg.SVG
 import org.xmlpull.v1.XmlPullParser
 
 object IconManager {
+    @Volatile
     private var appFilterMap: Map<String, String>? = null
 
     @Volatile
     private var initialized = false
     private val initLock = Any()
+    private var initializing = false
+    val ready = MutableLiveData(false)
 
-    private val iconCache = mutableMapOf<String, Drawable>()
+    private data class CachedIcon(val state: Drawable.ConstantState, val bytes: Int)
+    private val iconCache = object : LruCache<String, CachedIcon>(8 * 1024 * 1024) {
+        override fun sizeOf(key: String, value: CachedIcon) = value.bytes
+    }
+
+    private fun cached(context: Context, key: String): Drawable? =
+        iconCache.get(key)?.state?.newDrawable(context.resources)?.mutate()
+
+    private fun cache(key: String, drawable: Drawable) {
+        val state = drawable.constantState ?: return
+        val bytes = (drawable as? BitmapDrawable)?.bitmap?.allocationByteCount ?: 32 * 1024
+        iconCache.put(key, CachedIcon(state, bytes))
+    }
 
     val hasLawnicons: Boolean
         get() = true
@@ -31,7 +48,8 @@ object IconManager {
     fun init(context: Context) {
         if (initialized) return
         synchronized(initLock) {
-            if (initialized) return
+            if (initialized || initializing) return
+            initializing = true
             val appContext = context.applicationContext
             Thread {
                 try {
@@ -40,6 +58,7 @@ object IconManager {
                     e.printStackTrace()
                 }
                 initialized = true
+                ready.postValue(true)
             }.start()
         }
     }
@@ -105,15 +124,14 @@ object IconManager {
 
     fun getAppIcon(context: Context, packageName: String, userHandle: UserHandle, tintColor: Int? = null): Drawable? {
         init(context)
-        val cacheKey = "$packageName|${userHandle.hashCode()}|${tintColor ?: 0}"
-        synchronized(iconCache) {
-            iconCache[cacheKey]?.let { return it }
-        }
+        val colorful = Prefs(context).useColorfulIcons
+        val cacheKey = "$packageName|$userHandle|$tintColor|$colorful|$initialized"
+        cached(context, cacheKey)?.let { return it }
 
         var drawable: Drawable? = null
 
         // 1. Try Lawnicons first
-        if (!Prefs(context).useColorfulIcons) {
+        if (!colorful) {
             val pm = context.packageManager
             val launchIntent = pm.getLaunchIntentForPackage(packageName)
             val activityName = launchIntent?.component?.className
@@ -142,18 +160,15 @@ object IconManager {
         }
 
         if (drawable != null) {
-            synchronized(iconCache) {
-                iconCache[cacheKey] = drawable
-            }
+            cache(cacheKey, drawable)
         }
         return drawable
     }
 
     fun getShortcutIcon(context: Context, packageName: String, shortcutId: String, userHandle: UserHandle): Drawable? {
-        val cacheKey = "$packageName|shortcut|$shortcutId|${userHandle.hashCode()}"
-        synchronized(iconCache) {
-            iconCache[cacheKey]?.let { return it }
-        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return null
+        val cacheKey = "$packageName|shortcut|$shortcutId|$userHandle"
+        cached(context, cacheKey)?.let { return it }
 
         var drawable: Drawable? = null
         try {
@@ -173,9 +188,7 @@ object IconManager {
         }
 
         if (drawable != null) {
-            synchronized(iconCache) {
-                iconCache[cacheKey] = drawable
-            }
+            cache(cacheKey, drawable)
         }
         return drawable
     }
@@ -209,8 +222,6 @@ object IconManager {
     }
 
     fun clearCache() {
-        synchronized(iconCache) {
-            iconCache.clear()
-        }
+        iconCache.evictAll()
     }
 }

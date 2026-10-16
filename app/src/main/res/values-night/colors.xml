@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Opaque surface for dialogs (dark theme). -->
-    <color name="dialogSurface">#FF1C1C1E</color>
+    <color name="dialogSurface">#FF20242B</color>
     <color name="cooldownSevere">#FF5252</color>
+    <color name="dialogActionSurface">#FF2B4668</color>
+    <color name="dialogActionText">#FFDCEBFF</color>
+    <color name="dialogActionRipple">#33DCEBFF</color>
 </resources>

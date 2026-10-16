@@ -1,5 +1,6 @@
 *.iml
 *.jks
+*.keystore
 .gradle
 /local.properties
 /.idea/*
@@ -22,3 +23,19 @@ betterlauncher
 
 # Studio-selected Gradle JDK (machine-specific absolute path)
 gradle/config.properties
+
+# Local Python publishing-script bytecode
+/scripts/__pycache__/
+
+# Local build caches and desktop metadata
+.kotlin/
+.directory
+
+# Local reviews, audits and investigation notes (keep public docs explicit).
+/[Aa][Uu][Dd][Ii][Tt]*.md
+/**/[Aa][Uu][Dd][Ii][Tt]*.md
+/**/*[Aa][Uu][Dd][Ii][Tt]*.md
+/**/*[Rr][Ee][Vv][Ii][Ee][Ww]-notes*.md
+/docs/*-validation.md
+/gitlab_feedback/
+/local-notes/

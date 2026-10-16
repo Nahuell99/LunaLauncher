@@ -9,7 +9,7 @@ enum class SearchMode(val value: Int) {
 
     companion object {
         fun fromValue(value: Int): SearchMode =
-            values().firstOrNull { it.value == value } ?: SMART
+            entries.firstOrNull { it.value == value } ?: SMART
     }
 }
 
@@ -26,6 +26,8 @@ enum class SearchMode(val value: Int) {
  */
 object FuzzySearch {
 
+    private val whitespaceRegex = Regex("\\s+")
+    private val wordsRegex = Regex("[\\s\\-_+,.`']+")
     private val diacriticsRegex = Regex("\\p{InCombiningDiacriticalMarks}+")
     private val separatorsRegex = Regex("[-_+,.`'\\s\\p{Z}]")
 
@@ -39,12 +41,12 @@ object FuzzySearch {
         Normalizer.normalize(s, Normalizer.Form.NFD)
             .replace(diacriticsRegex, "")
             .replace(separatorsRegex, " ")
-            .replace(Regex("\\s+"), " ")
+            .replace(whitespaceRegex, " ")
             .trim()
             .lowercase()
 
     private fun getWords(label: String): List<String> =
-        label.split(Regex("[\\s\\-_+,.`']+"))
+        label.split(wordsRegex)
             .map { normalize(it) }
             .filter { it.isNotEmpty() }
 
@@ -80,25 +82,21 @@ object FuzzySearch {
         return initials.startsWith(queryToken) || initials.contains(queryToken)
     }
 
-    private fun matchesParts(target: String, parts: List<String>, partIdx: Int, targetStartIdx: Int): Boolean {
-        if (partIdx >= parts.size) return true
-        val part = parts[partIdx]
-        var searchIdx = targetStartIdx
-        while (true) {
-            val idx = target.indexOf(part, searchIdx)
-            if (idx == -1) return false
-            if (matchesParts(target, parts, partIdx + 1, idx + part.length + 1)) {
-                return true
-            }
-            searchIdx = idx + 1
+    private fun isSubsequence(target: String, query: String): Boolean {
+        var position = 0
+        for (character in query) {
+            val found = target.indexOf(character, position)
+            if (found < 0) return false
+            position = found + 1
         }
+        return true
     }
 
     fun score(label: String, query: String, mode: SearchMode = SearchMode.SMART): Int {
         val qClean = query.trim()
         if (qClean.isEmpty()) return 0
 
-        val parts = qClean.split(Regex("\\s+"))
+        val parts = qClean.split(whitespaceRegex)
             .map { normalize(it) }
             .filter { it.isNotEmpty() }
 
@@ -117,7 +115,7 @@ object FuzzySearch {
 
             SearchMode.LOOSE_FUZZY -> {
                 val lSpaces = normalizeWithSpaces(label)
-                val matches = matchesParts(lSpaces, parts, 0, 0) || matchesParts(lNoSeparators, parts, 0, 0)
+                val matches = isSubsequence(lNoSeparators, qConcat)
                 if (!matches) return -1
 
                 if (lNoSeparators.startsWith(qConcat)) return 1000
@@ -139,7 +137,7 @@ object FuzzySearch {
             }
 
             SearchMode.SMART -> {
-                val hasSpaces = qClean.contains(" ")
+                val hasSpaces = parts.size > 1
 
                 if (hasSpaces) {
                     // Multi-token query (e.g. "Proton M" or "Proton L")
@@ -164,8 +162,7 @@ object FuzzySearch {
                     if (idx > 0) return 700 - idx.coerceAtMost(200)
 
                     // 5. Subsequence match (e.g. "rdd" -> "Reddit")
-                    val lSpaces = normalizeWithSpaces(label)
-                    val matches = matchesParts(lSpaces, parts, 0, 0) || matchesParts(lNoSeparators, parts, 0, 0)
+                    val matches = isSubsequence(lNoSeparators, qConcat)
                     if (matches) return 400
 
                     -1

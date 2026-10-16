@@ -22,7 +22,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "node bump-version.js ${nextRelease.version} && ./gradlew assembleRelease bundleRelease"
+        "prepareCmd": "node scripts/bump-version.js ${nextRelease.version} && ./gradlew assembleRelease bundleRelease"
       }
     ],
     [

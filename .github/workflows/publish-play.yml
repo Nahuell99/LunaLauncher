@@ -1,0 +1,40 @@
+name: Publish existing release to Google Play
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Stable release already published on GitHub (vX.Y.Z)
+        required: true
+        type: string
+      track:
+        description: Existing testing track API name (beta = open testing)
+        default: beta
+        required: true
+        type: string
+      status:
+        description: Save a draft or release to the selected testers
+        default: draft
+        type: choice
+        options:
+          - draft
+          - completed
+
+permissions:
+  contents: read
+concurrency:
+  group: google-play-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/publish-play
+        with:
+          tag: ${{ inputs.tag }}
+          track: ${{ inputs.track }}
+          status: ${{ inputs.status }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
