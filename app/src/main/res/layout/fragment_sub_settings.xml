@@ -35,6 +35,16 @@
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
+    <!-- Optional content that stays visible while the cards scroll (live previews). -->
+    <FrameLayout
+        android:id="@+id/subSettingsPinned"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:background="@drawable/rounded_rect_shade_color_glass"
+        android:padding="12dp"
+        android:visibility="gone" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/subSettingsScroll"
         android:layout_width="match_parent"

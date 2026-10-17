@@ -140,20 +140,13 @@ object Constants {
 
     const val MIN_ANIM_REFRESH_RATE = 30f
 
-    const val URL_ABOUT_OLAUNCHER = "https://github.com/pierspad/Nahuel Launcher"
-    const val URL_OLAUNCHER_PRIVACY = "https://pierspad.com/en/17.0.0.0/2026-07-05-betterlauncher-privacy-policy/"
-    const val URL_DOUBLE_TAP = "https://github.com/pierspad/Nahuel Launcher/blob/main/docs/README.md#double-tap-to-lock"
-    const val URL_OLAUNCHER_GITHUB = "https://github.com/pierspad/Nahuel Launcher"
-    const val URL_PIERSPAD = "https://pierspad.com"
-    const val URL_OLAUNCHER_PLAY_STORE = "https://play.google.com/store/apps/details?id=app.olauncher"
-    const val URL_OLAUNCHER_PRO = "https://play.google.com/store/apps/details?id=app.prolauncher"
-    const val URL_PLAY_STORE_DEV = "https://pierspad.com"
-    const val URL_TWITTER_TANUJ = ""
-    const val URL_INSTA_TANUJ = ""
-    const val URL_NTS = ""
-    const val URL_PENTASTIC = ""
+    // LunaLauncher's own pages. Upstream projects are credited in the README ("Credits").
+    const val URL_REPO = "https://github.com/Nahuell99/olauncher"
+    const val URL_ABOUT = "$URL_REPO#readme"
+    const val URL_CREDITS = "$URL_REPO#credits"
+    const val URL_PRIVACY = "$URL_REPO/blob/main/docs/privacy.md"
+    const val URL_RELEASES = "$URL_REPO/releases"
     const val URL_DUCK_SEARCH = "https://duck.co/?q="
-    const val URL_DIGITAL_WELLBEING_LEARN_MORE = "https://github.com/pierspad/Nahuel Launcher#digital-wellbeing"
 
     const val DIGITAL_WELLBEING_PACKAGE_NAME = "com.google.android.apps.wellbeing"
     const val DIGITAL_WELLBEING_ACTIVITY = "com.google.android.apps.wellbeing.settings.TopLevelSettingsActivity"

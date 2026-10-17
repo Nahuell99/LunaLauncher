@@ -32,6 +32,8 @@ import androidx.core.view.isVisible
 import app.olauncher.R
 import app.olauncher.data.GridItem
 import app.olauncher.data.GridOps
+import app.olauncher.data.GridSurface
+import app.olauncher.helper.NotificationDots
 import app.olauncher.data.HomeGrid
 import app.olauncher.data.Prefs
 import app.olauncher.helper.IconManager
@@ -56,6 +58,7 @@ import app.olauncher.widgets.WidgetDef
  */
 class HomeGridController(
     private val grid: HomeGridView,
+    private val dock: HomeGridView,
     private val doneButton: TextView,
     private val prefs: Prefs,
     private val widgetManager: AppWidgetManager,
@@ -88,23 +91,52 @@ class HomeGridController(
     var editing = false
         private set
 
+    // The dock is a one-row HomeGridView with its own items; it forwards to the same handlers.
+    private val dockListener = object : HomeGridView.Listener {
+        override fun onItemClick(item: GridItem) = this@HomeGridController.onItemClick(item)
+        override fun onItemLongClick(item: GridItem) = this@HomeGridController.onItemLongClick(item)
+        override fun onSwipe(direction: Int) = this@HomeGridController.onSwipe(direction)
+        override fun onEditItemTap(item: GridItem) = showItemMenu(item)
+        override fun onEditEmptyCellTap(col: Int, row: Int) = showAddMenu(col, row, GridSurface.DOCK)
+        override fun onItemMoved(item: GridItem, col: Int, row: Int) = this@HomeGridController.onItemMoved(item, col, row)
+    }
+
     init {
         grid.listener = this
+        dock.listener = dockListener
         doneButton.setOnClickListener { exitEditMode() }
         ViewCompat.setOnApplyWindowInsetsListener(grid) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            v.setPadding(bars.left + 8.dpToPx(), bars.top + 12.dpToPx(), bars.right + 8.dpToPx(), bars.bottom + 12.dpToPx())
+            // The grid stops above the dock when the dock is shown.
+            val dockSpace = if (prefs.dockEnabled) dockHeightPx() + 6.dpToPx() else 0
+            v.setPadding(bars.left + 8.dpToPx(), bars.top + 12.dpToPx(), bars.right + 8.dpToPx(), bars.bottom + 12.dpToPx() + dockSpace)
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(dock) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            // Sits just above the navigation bar so its background never runs behind it.
+            (v.layoutParams as android.widget.FrameLayout.LayoutParams).let { lp ->
+                lp.height = dockHeightPx()
+                lp.bottomMargin = bars.bottom + 6.dpToPx()
+                lp.leftMargin = bars.left + 12.dpToPx()
+                lp.rightMargin = bars.right + 12.dpToPx()
+                v.layoutParams = lp
+            }
+            v.setPadding(4.dpToPx(), 6.dpToPx(), 4.dpToPx(), 6.dpToPx())
             insets
         }
     }
+
+    private fun dockHeightPx() = (if (prefs.dockShowLabels) DOCK_HEIGHT_LABELS_DP else DOCK_HEIGHT_DP).dpToPx()
 
     // ---------------------------------------------------------------------------------
     // Rendering
     // ---------------------------------------------------------------------------------
 
     fun render() {
+        renderDock()
         if (!prefs.gridEnabled) {
-            if (editing) exitEditMode()
+            if (editing && !prefs.dockEnabled) exitEditMode()
             grid.isVisible = false
             stopTicking()
             return
@@ -123,25 +155,52 @@ class HomeGridController(
         }
     }
 
+    private var dockShown: Boolean? = null
+
+    private fun renderDock() {
+        val enabled = prefs.dockEnabled
+        dock.isVisible = enabled
+        if (enabled != dockShown) {
+            dockShown = enabled
+            // Dock height and the grid's bottom padding both come from the insets listeners.
+            ViewCompat.requestApplyInsets(dock)
+            ViewCompat.requestApplyInsets(grid)
+        }
+        if (!enabled) return
+        dock.setBackgroundResource(
+            when (prefs.dockBackground) {
+                1 -> R.drawable.rounded_rect_shade_color_glass
+                2 -> R.drawable.rounded_dialog_surface
+                else -> 0
+            }
+        )
+        dock.setGridColor(context.getColorFromAttr(R.attr.primaryColor))
+        val items = prefs.dockItems.filter(::isAvailable)
+        dock.setItems(GridOps.columns(prefs, GridSurface.DOCK), 1, items) { item, old ->
+            ((old as? GridIconView) ?: GridIconView(context)).also { bindIcon(it, item, prefs.dockShowLabels) }
+        }
+    }
+
     private fun isAvailable(item: GridItem): Boolean = when (item.type) {
         GridItem.TYPE_APP, GridItem.TYPE_SHORTCUT -> isPackageInstalled(context, item.pkg, item.user)
         GridItem.TYPE_FOLDER -> prefs.getFolder(item.folderId) != null
         else -> true
     }
 
-    private fun defOf(item: GridItem): WidgetDef? = WidgetDef.Library.find(context, prefs, item.widgetDefId)
+    private fun defOf(item: GridItem): WidgetDef? = WidgetDef.findAny(context, prefs, item.widgetDefId)
 
     private fun viewFor(item: GridItem, old: View?, snapshot: () -> WidgetData): View = when (item.type) {
         GridItem.TYPE_APP_WIDGET -> appWidgetView(item, old)
         GridItem.TYPE_CUSTOM_WIDGET -> customWidgetView(item, old, snapshot())
-        else -> ((old as? GridIconView) ?: GridIconView(context)).also { bindIcon(it, item) }
+        else -> ((old as? GridIconView) ?: GridIconView(context)).also { bindIcon(it, item, prefs.gridShowLabels) }
     }
 
-    private fun bindIcon(view: GridIconView, item: GridItem) {
+    private fun bindIcon(view: GridIconView, item: GridItem, showLabel: Boolean) {
         val ctx = context
         val tint = ctx.getColorFromAttr(R.attr.primaryColor)
         view.iconScale = prefs.gridIconScale.coerceIn(0.3f, 2.5f)
-        view.showLabel = prefs.gridShowLabels
+        view.showLabel = showLabel
+        view.badge = if (item.type == GridItem.TYPE_FOLDER) 0 else NotificationDots.badge(prefs, item.pkg, item.user)
         when (item.type) {
             GridItem.TYPE_FOLDER -> {
                 val folder = prefs.getFolder(item.folderId)
@@ -364,13 +423,14 @@ class HomeGridController(
     // ---------------------------------------------------------------------------------
 
     fun enterEditMode(announce: Boolean = true) {
-        if (!prefs.gridEnabled) {
+        if (!prefs.gridEnabled && !prefs.dockEnabled) {
             context.showToast(context.getString(R.string.grid_disabled_hint), Toast.LENGTH_LONG)
             return
         }
         if (editing) return
         editing = true
         grid.editMode = true
+        dock.editMode = true
         doneButton.isVisible = true
         actions.onEditModeChanged(true)
         if (announce) context.showToast(context.getString(R.string.grid_edit_hint), Toast.LENGTH_LONG)
@@ -380,6 +440,7 @@ class HomeGridController(
         if (!editing) return
         editing = false
         grid.editMode = false
+        dock.editMode = false
         doneButton.isVisible = false
         actions.onEditModeChanged(false)
     }
@@ -423,7 +484,9 @@ class HomeGridController(
             entries += context.getString(R.string.grid_edit_text) to { editItemText(item) }
         if (item.type == GridItem.TYPE_APP_WIDGET && widgetManager.getAppWidgetInfo(item.appWidgetId)?.configure != null)
             entries += context.getString(R.string.grid_reconfigure) to { reconfigure(item) }
-        entries += context.getString(R.string.grid_resize) to { showResize(item) }
+        // Dock items are always one cell.
+        if (GridOps.surfaceOf(prefs, item.id) == GridSurface.GRID)
+            entries += context.getString(R.string.grid_resize) to { showResize(item) }
         entries += context.getString(R.string.grid_remove) to { removeItem(item) }
         IconPickerDialog.showList(context, itemTitle(item), entries.map { it.first }) { entries[it].second() }
     }
@@ -504,21 +567,24 @@ class HomeGridController(
             .show()
     }
 
-    private fun showAddMenu(col: Int, row: Int) {
-        val entries = listOf<Pair<String, () -> Unit>>(
+    private fun showAddMenu(col: Int, row: Int, surface: GridSurface = GridSurface.GRID) {
+        val entries = mutableListOf<Pair<String, () -> Unit>>(
             context.getString(R.string.grid_add_app) to {
-                prefs.gridPendingCell = "$col,$row"
+                prefs.gridPendingCell = GridOps.pendingCell(surface, col, row)
                 resumeEditing = true
                 actions.pickAppForGrid()
             },
-            context.getString(R.string.grid_add_folder) to { addFolder(col, row) },
-            context.getString(R.string.grid_add_android_widget) to { startAndroidWidgetPick(col, row) },
-            context.getString(R.string.grid_add_custom_widget) to { addCustomWidget(col, row) },
+            context.getString(R.string.grid_add_folder) to { addFolder(col, row, surface) },
         )
+        // Widgets only fit on the grid.
+        if (surface == GridSurface.GRID) {
+            entries += context.getString(R.string.grid_add_android_widget) to { startAndroidWidgetPick(col, row) }
+            entries += context.getString(R.string.grid_add_custom_widget) to { addCustomWidget(col, row) }
+        }
         IconPickerDialog.showList(context, context.getString(R.string.grid_add_title), entries.map { it.first }) { entries[it].second() }
     }
 
-    private fun addFolder(col: Int, row: Int) {
+    private fun addFolder(col: Int, row: Int, surface: GridSurface) {
         val folders = prefs.folders
         if (folders.isEmpty()) {
             context.showToast(context.getString(R.string.grid_no_folders))
@@ -526,14 +592,14 @@ class HomeGridController(
         }
         IconPickerDialog.showList(context, context.getString(R.string.grid_add_folder), folders.map { it.name }) { index ->
             val folder = folders[index]
-            if (GridOps.add(prefs, GridItem(type = GridItem.TYPE_FOLDER, col = col, row = row, folderId = folder.id, label = folder.name)))
+            if (GridOps.add(prefs, GridItem(type = GridItem.TYPE_FOLDER, col = col, row = row, folderId = folder.id, label = folder.name), surface))
                 render()
             else context.showToast(context.getString(R.string.grid_full))
         }
     }
 
     private fun addCustomWidget(col: Int, row: Int) {
-        val defs = WidgetDef.Library.all(context, prefs)
+        val defs = WidgetDef.WIDGETS.all(context, prefs) + WidgetDef.CLOCKS.all(context, prefs)
         IconPickerDialog.showList(context, context.getString(R.string.grid_add_custom_widget), defs.map { it.name() }) { index ->
             val def = defs[index]
             val item = GridItem(
@@ -737,6 +803,7 @@ class HomeGridController(
         stopTicking()
         hostViews.clear()
         grid.listener = null
+        dock.listener = null
     }
 
     companion object {
@@ -745,6 +812,8 @@ class HomeGridController(
         const val REQUEST_CONFIGURE = 3
         const val REQUEST_RECONFIGURE = 4
         private const val PLACEHOLDER = "grid_placeholder"
+        private const val DOCK_HEIGHT_DP = 76
+        private const val DOCK_HEIGHT_LABELS_DP = 96
         private const val TAG = "BLGrid"
 
         // Survives the trip to the app drawer (which recreates the home view) so the

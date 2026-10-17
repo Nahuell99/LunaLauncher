@@ -32,7 +32,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import app.olauncher.MainViewModel
+import app.olauncher.helper.DrawerOrganizer
 import app.olauncher.helper.IconManager
+import app.olauncher.helper.NotificationDots
+import app.olauncher.helper.search.SearchActions
 import app.olauncher.R
 import app.olauncher.data.AppModel
 import app.olauncher.data.Constants
@@ -342,7 +345,14 @@ class AppDrawerFragment : BaseFragment() {
             appLimitLevel = { viewModel.appLimitLevel(it) },
             appCooldownRemainingMillis = { viewModel.appCooldownRemainingMillis(it) },
             appClickListener = { appModel ->
-                if (appModel is AppModel.SettingTile) {
+                if (appModel is AppModel.SearchExtra) {
+                    when (SearchActions.run(requireContext(), appModel)) {
+                        SearchActions.COMMAND_OPEN_LAUNCHER_SETTINGS ->
+                            findNavController().navigate(R.id.action_appListFragment_to_settingsFragment2)
+                        else -> if (appModel.kind == AppModel.SearchExtra.KIND_COMMAND)
+                            findNavController().popBackStack(R.id.mainFragment, false)
+                    }
+                } else if (appModel is AppModel.SettingTile) {
                     AndroidSettingsCatalog.launchSettingTile(requireContext(), appModel)
                     findNavController().popBackStack(R.id.mainFragment, false)
                 } else if (appModel is AppModel.Contact) {
@@ -396,6 +406,8 @@ class AppDrawerFragment : BaseFragment() {
                 when (appModel) {
                     is AppModel.PrivateSpaceHeader -> {}
                     is AppModel.FolderHeader -> {}
+                    is AppModel.CategoryHeader -> {}
+                    is AppModel.SearchExtra -> {}
                     is AppModel.SettingTile -> {}
                     is AppModel.Contact -> {}
                     is AppModel.PinnedShortcut ->
@@ -477,6 +489,9 @@ class AppDrawerFragment : BaseFragment() {
                 else prefs.getUsageCount(model.appPackage + "|" + model.user.toString())
             },
             searchModeProvider = { prefs.searchMode },
+            extrasProvider = { query ->
+                if (flag == Constants.FLAG_LAUNCH_APP) SearchActions.extrasFor(requireContext(), prefs, query) else emptyList()
+            },
         )
 
         linearLayoutManager = object : LinearLayoutManager(requireContext()) {
@@ -518,6 +533,9 @@ class AppDrawerFragment : BaseFragment() {
     private fun initObservers() {
         IconManager.ready.observe(viewLifecycleOwner) { ready ->
             if (ready) adapter.notifyItemRangeChanged(0, adapter.itemCount)
+        }
+        NotificationDots.changes.observe(viewLifecycleOwner) {
+            if (prefs.notificationDots != NotificationDots.OFF) adapter.notifyItemRangeChanged(0, adapter.itemCount)
         }
 
         viewModel.firstOpen.observe(viewLifecycleOwner) {
@@ -620,7 +638,7 @@ class AppDrawerFragment : BaseFragment() {
 
         // Only show folders in the main launcher drawer
         if (flag == Constants.FLAG_LAUNCH_APP)
-            adapter.setAppList(combined, prefs.folders)
+            adapter.setAppList(DrawerOrganizer.organize(requireContext(), prefs, combined).toMutableList(), prefs.folders)
         else
             adapter.setAppList(combined)
     }
@@ -745,11 +763,41 @@ class AppDrawerFragment : BaseFragment() {
         )
     }
 
+    private fun showCategoryPicker(appModel: AppModel.App) {
+        val ctx = requireContext()
+        val packages = viewModel.appList.value.orEmpty().map { it.appPackage }
+        val categories = DrawerOrganizer.knownCategories(ctx, prefs, packages)
+        val options = listOf(getString(R.string.category_automatic)) + categories + getString(R.string.category_new)
+        IconPickerDialog.showList(ctx, appModel.appLabel, options) { index ->
+            when (index) {
+                0 -> prefs.setAppCategory(appModel.appPackage, "")
+                options.lastIndex -> {
+                    val input = android.widget.EditText(ctx).apply { setTextColor(ctx.getColorFromAttr(R.attr.primaryColor)) }
+                    AlertDialog.Builder(ctx)
+                        .setTitle(R.string.category_new)
+                        .setView(input)
+                        .setPositiveButton(android.R.string.ok) { _, _ ->
+                            val name = input.text.toString().trim().take(40)
+                            if (name.isNotEmpty()) {
+                                prefs.setAppCategory(appModel.appPackage, name)
+                                updateCombinedAppList()
+                            }
+                        }
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show()
+                    return@showList
+                }
+                else -> prefs.setAppCategory(appModel.appPackage, options[index])
+            }
+            updateCombinedAppList()
+        }
+    }
+
     private fun showFolderAssignDialog(appModel: AppModel) {
         if (appModel !is AppModel.App || appModel.appPackage.isEmpty()) return
         val key = appModel.appPackage + "|" + appModel.user.toString()
         val currentFolders = prefs.folders
-        if (currentFolders.isEmpty()) {
+        if (currentFolders.isEmpty() && !prefs.drawerGroupByCategory) {
             showCreateFolderDialog(key)
             return
         }
@@ -770,6 +818,23 @@ class AppDrawerFragment : BaseFragment() {
         val rippleBg = TypedValue().also {
             ctx.theme.resolveAttribute(android.R.attr.selectableItemBackground, it, true)
         }.resourceId
+
+        // With the drawer grouped by category, the same dialog lets the user re-file the app.
+        if (prefs.drawerGroupByCategory) {
+            val current = DrawerOrganizer.categoryOf(ctx, prefs, appModel.appPackage) ?: getString(R.string.category_other)
+            list.addView(TextView(ctx).apply {
+                text = getString(R.string.category_of_app, current)
+                textSize = 18f
+                setTextColor(ctx.getColorFromAttr(R.attr.primaryColor))
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(padH, padV, padH, padV)
+                setBackgroundResource(rippleBg)
+                setOnClickListener {
+                    dialog.dismiss()
+                    showCategoryPicker(appModel)
+                }
+            })
+        }
 
         val checkedState = currentFolders.map { it.apps.contains(key) }.toMutableList()
 

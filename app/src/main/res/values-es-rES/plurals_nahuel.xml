@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="restore_widgets_rebind">
+        <item quantity="one">%d widget de Android hay que volver a configurarlo: tócalo en la cuadrícula.</item>
+        <item quantity="other">%d widgets de Android hay que volver a configurarlos: tócalos en la cuadrícula.</item>
+        <item quantity="many">%d widgets de Android hay que volver a configurarlos: tócalos en la cuadrícula.</item>
+    </plurals>
+    <plurals name="icon_overrides_missing">
+        <item quantity="one">%d icono personalizado viene de un pack que ya no está instalado.</item>
+        <item quantity="other">%d iconos personalizados vienen de packs que ya no están instalados.</item>
+        <item quantity="many">%d iconos personalizados vienen de packs que ya no están instalados.</item>
+    </plurals>
+</resources>

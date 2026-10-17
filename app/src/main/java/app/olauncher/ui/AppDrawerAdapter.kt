@@ -26,6 +26,8 @@ import app.olauncher.data.AppModel
 import app.olauncher.data.Constants
 import app.olauncher.data.Folder
 import app.olauncher.data.GridOps
+import app.olauncher.data.GridSurface
+import app.olauncher.helper.NotificationDots
 import app.olauncher.databinding.AdapterAppDrawerBinding
 import app.olauncher.databinding.AdapterFolderHeaderBinding
 import app.olauncher.databinding.AdapterPrivateSpaceHeaderBinding
@@ -59,14 +61,18 @@ class AppDrawerAdapter(
     // Per-item launch count, used to rank search results by frequency of use.
     private val usageProvider: (AppModel) -> Int = { 0 },
     private val searchModeProvider: () -> Int = { 0 },
+    // Calculator / unit / command rows shown above the matches while searching.
+    private val extrasProvider: (String) -> List<AppModel> = { emptyList() },
 ) : ListAdapter<AppModel, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         const val VIEW_TYPE_APP = 0
         const val VIEW_TYPE_PRIVATE_HEADER = 1
         const val VIEW_TYPE_FOLDER_HEADER = 2
+        const val VIEW_TYPE_CATEGORY_HEADER = 3
         private const val MENU_GRID = 1
         private const val MENU_LIST = 2
+        private const val MENU_DOCK = 3
 
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<AppModel>() {
             override fun areItemsTheSame(oldItem: AppModel, newItem: AppModel): Boolean = when {
@@ -88,6 +94,12 @@ class AppDrawerAdapter(
 
                 oldItem is AppModel.Contact && newItem is AppModel.Contact ->
                     oldItem.lookupUri == newItem.lookupUri
+
+                oldItem is AppModel.CategoryHeader && newItem is AppModel.CategoryHeader ->
+                    oldItem.name == newItem.name
+
+                oldItem is AppModel.SearchExtra && newItem is AppModel.SearchExtra ->
+                    oldItem.kind == newItem.kind && oldItem.appLabel == newItem.appLabel
 
                 else -> false
             }
@@ -135,6 +147,7 @@ class AppDrawerAdapter(
         return when (getItem(position)) {
             is AppModel.PrivateSpaceHeader -> VIEW_TYPE_PRIVATE_HEADER
             is AppModel.FolderHeader -> VIEW_TYPE_FOLDER_HEADER
+            is AppModel.CategoryHeader -> VIEW_TYPE_CATEGORY_HEADER
             else -> VIEW_TYPE_APP
         }
     }
@@ -147,6 +160,9 @@ class AppDrawerAdapter(
 
             VIEW_TYPE_FOLDER_HEADER ->
                 FolderHeaderViewHolder(AdapterFolderHeaderBinding.inflate(inflater, parent, false))
+
+            VIEW_TYPE_CATEGORY_HEADER ->
+                CategoryHeaderViewHolder(AdapterFolderHeaderBinding.inflate(inflater, parent, false))
 
             else -> ViewHolder(AdapterAppDrawerBinding.inflate(inflater, parent, false))
         }
@@ -164,6 +180,9 @@ class AppDrawerAdapter(
 
                 is FolderHeaderViewHolder -> if (appModel is AppModel.FolderHeader)
                     holder.bind(appModel, appLabelGravity, folderManageListener)
+
+                is CategoryHeaderViewHolder -> if (appModel is AppModel.CategoryHeader)
+                    holder.bind(appModel, appLabelGravity)
 
                 is ViewHolder -> holder.bind(
                     flag,
@@ -209,7 +228,7 @@ class AppDrawerAdapter(
             val mode = SearchMode.fromValue(searchModeProvider())
             val scored = ArrayList<Pair<AppModel, Int>>(appsList.size + searchOnly.size)
             for (item in appsList) {
-                if (item is AppModel.PrivateSpaceHeader || item is AppModel.FolderHeader) continue
+                if (item is AppModel.PrivateSpaceHeader || item is AppModel.FolderHeader || item is AppModel.CategoryHeader) continue
                 val s = FuzzySearch.score(item.appLabel, q, mode)
                 if (s >= 0) scored.add(item to s)
             }
@@ -219,14 +238,15 @@ class AppDrawerAdapter(
             }
 
             val usageCounts = scored.associate { it.first to usageProvider(it.first) }
-            scored.asSequence()
+            val extras = extrasProvider(q)
+            (extras + scored.asSequence()
                 .sortedWith(
                     compareByDescending<Pair<AppModel, Int>> { it.second }
                         .thenByDescending { usageCounts.getValue(it.first) }
                         .thenBy { it.first.appLabel.lowercase() }
                 )
                 .map { it.first }
-                .toMutableList()
+                .toList()).toMutableList()
         }
 
         submitList(result.toList()) {
@@ -324,6 +344,19 @@ class AppDrawerAdapter(
         }
     }
 
+    /** Category title above a group of apps (drawer grouped by category). Not clickable. */
+    class CategoryHeaderViewHolder(private val binding: AdapterFolderHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(header: AppModel.CategoryHeader, appLabelGravity: Int) = with(binding) {
+            folderTitle.text = header.name
+            folderTitle.gravity = appLabelGravity
+            folderTitle.setOnClickListener(null)
+            folderTitle.setOnLongClickListener(null)
+            folderTitle.isClickable = false
+            folderTitle.setCompoundDrawables(null, null, null, null)
+        }
+    }
+
     class FolderHeaderViewHolder(private val binding: AdapterFolderHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(
@@ -409,6 +442,8 @@ class AppDrawerAdapter(
             }
 
             if (appModel.isNew) builder.append(" ✦")
+            if (appModel is AppModel.App || appModel is AppModel.PinnedShortcut)
+                builder.append(NotificationDots.textSuffix(Prefs(appTitle.context), appModel.appPackage, appModel.user.toString()))
 
             val showLock = isAppLocked(appModel) &&
                 (flag == Constants.FLAG_LAUNCH_APP || flag == Constants.FLAG_LOCKED_APPS)
@@ -564,21 +599,23 @@ class AppDrawerAdapter(
                 appTitle.visibility = View.VISIBLE
                 val ctx = root.context
                 val currentPrefs = Prefs(ctx)
-                if (!currentPrefs.gridEnabled) {
+                if (!currentPrefs.gridEnabled && !currentPrefs.dockEnabled) {
                     addToHomeList(ctx, currentPrefs)
                     return@setOnClickListener
                 }
-                // With the grid on, ask where the app should go.
+                // With the grid or the dock on, ask where the app should go.
                 val menu = PopupMenu(ctx, appAddToHome)
-                menu.menu.add(0, MENU_GRID, 0, ctx.getString(R.string.add_to_grid))
-                menu.menu.add(0, MENU_LIST, 1, ctx.getString(R.string.add_to_home_list))
+                if (currentPrefs.gridEnabled) menu.menu.add(0, MENU_GRID, 0, ctx.getString(R.string.add_to_grid))
+                if (currentPrefs.dockEnabled) menu.menu.add(0, MENU_DOCK, 1, ctx.getString(R.string.add_to_dock))
+                menu.menu.add(0, MENU_LIST, 2, ctx.getString(R.string.add_to_home_list))
                 menu.setOnMenuItemClickListener { choice ->
-                    if (choice.itemId == MENU_GRID) {
-                        val added = GridOps.addAnywhere(currentPrefs, appModel)
+                    if (choice.itemId == MENU_LIST) {
+                        addToHomeList(ctx, currentPrefs)
+                    } else {
+                        val surface = if (choice.itemId == MENU_DOCK) GridSurface.DOCK else GridSurface.GRID
+                        val added = GridOps.addAnywhere(currentPrefs, appModel, surface)
                         ctx.showToast(ctx.getString(if (added) R.string.grid_added else R.string.grid_full))
                         appAddToHomeListener(appModel)
-                    } else {
-                        addToHomeList(ctx, currentPrefs)
                     }
                     true
                 }

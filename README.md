@@ -1,47 +1,56 @@
-# <img src="docs/images/icon.png" alt="" height="36"> Olauncher fork
+# <img src="docs/images/icon.png" alt="" height="36"> LunaLauncher
 
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
-[![Android](https://img.shields.io/badge/Android-7.0%2B-3ddc84?logo=android&logoColor=white)](https://github.com/tanujnotes/Olauncher)
+[![Android](https://img.shields.io/badge/Android-7.0%2B-3ddc84?logo=android&logoColor=white)](#install)
 
-[Features](#features) · [Screenshots](#screenshots) · [Install](#install) · [Search](#search) · [Gestures](#gestures-and-accessibility) · [Development](#development) · [Contributing](CONTRIBUTING.md)
+[Features](#features) · [Install](#install) · [Search](#search) · [Privacy](#privacy) · [Development](#development) · [Credits](#credits) · [License](#license)
 
-Fork personal de [Olauncher](https://github.com/tanujnotes/olauncher) v6.9.17, con las funciones añadidas en [BetterLauncher](https://github.com/pierspad/BetterLauncher): accesos directos, widgets, carpetas, bloqueo biométrico, límites de uso, fuentes propias y copia de seguridad de ajustes. Software libre, sin anuncios.
+LunaLauncher es un launcher minimalista para Android: por defecto se ve como una pantalla de
+texto limpia, y todo lo demás (íconos, grilla, dock, widgets, estilos de reloj) se activa solo
+si lo querés. Software libre (GPL-3.0), sin anuncios y **sin permiso de Internet**.
+
+Es un fork de [Olauncher](https://github.com/tanujnotes/olauncher) que incorpora las funciones
+de [BetterLauncher](https://github.com/pierspad/BetterLauncher). Ver [Credits](#credits).
 
 ## Features
 
-- Text-based home screen with adjustable font, size, alignment and background opacity.
-- Up to eight home apps and eight customizable shortcut icons; drag to reorder.
-- A home-screen widget, app folders, hidden apps and optional monochrome Lawnicons.
-- Icon packs: system, themed (Android 13+), built-in Lawnicons or any installed ADW/Nova pack, with icon shape, size, tint and per-app icon picks. Icons can show in the drawer, the home list and the shortcut column.
-- Optional free-form home grid: place apps, shortcuts, folders and widgets on any cell, resize them and drag them around, like a classic launcher.
-- Several Android widgets on the grid, plus custom JSON widgets (clocks, date, battery, alarm, calendar, music, notes, countdowns) that you can export, edit and import. See [docs/widgets.md](docs/widgets.md).
+**Home screen**
+- Text-based home with adjustable font, size, alignment and background opacity.
+- Up to eight home apps and eight shortcut icons; drag to reorder.
+- Optional free-form grid: apps, shortcuts, folders and widgets on any cell; drag, resize and edit in place.
+- Optional dock: a fixed row of icons at the bottom.
+- Clock styles: a gallery of 10 styles (thin, bold, stacked, in words, binary, terminal, serif…) and a visual editor.
+
+**Icons & colours**
+- Icon sources: system, themed (Android 13+), bundled Lawnicons or any installed ADW/Nova icon pack.
+- Icon shape, size and tint, and per-app icon picks from any pack.
+- Material You: text and accent colours from the wallpaper (Android 12+).
+- Notification dots or counts on the home list, grid, dock and drawer (optional notification access).
+
+**Widgets**
+- Several Android widgets on the grid.
+- Custom JSON widgets (clocks, date, battery, alarm, calendar, music, notes, countdown, screen time) that you can export, edit and import. See [docs/widgets.md](docs/widgets.md).
+
+**App drawer & search**
+- Three search modes; optional contact and Android settings search; `!` searches the web.
+- Calculator and unit conversion inline (`12*3+4`, `10 km a mi`), and `>` commands (`> wifi`, `> linterna`, `> alarma 7:30`, `> timer 10m`…).
+- Order A–Z, by use or by recent use; optional grouping by category, with your own categories.
+- App folders, hidden apps, renaming.
+
+**Wellbeing & security**
 - App opening protected by device credentials or biometrics within the launcher.
 - Optional app limits with progressive cooldowns.
-- App search with three matching modes; optional contact and Android settings search.
-- Custom TrueType/OpenType fonts and an app language independent of the system.
-- Settings import/export through JSON files or clipboard.
 - Optional double tap to lock the screen.
 
-## Screenshots
-
-Click a preview to see the full image.
-
-| Choose a widget | Widget on Home | App lock |
-| :---: | :---: | :---: |
-| <a href="docs/images/widget_chooser.png"><img src="docs/images/widget_chooser.png" width="160" alt="System widget picker" /></a> | <a href="docs/images/widget_added.png"><img src="docs/images/widget_added.png" width="160" alt="Widget and shortcuts on the home screen" /></a> | <a href="docs/images/lock_apps.png"><img src="docs/images/lock_apps.png" width="160" alt="Choose apps to protect with device authentication" /></a> |
-
-<details>
-<summary>Settings compared with the original Olauncher</summary>
-
-| BetterLauncher | Olauncher |
-| :---: | :---: |
-| <a href="docs/images/BetterLauncher.png"><img src="docs/images/BetterLauncher.png" width="200" alt="BetterLauncher settings" /></a> | <a href="docs/images/Olauncher.png"><img src="docs/images/Olauncher.png" width="200" alt="Original Olauncher settings" /></a> |
-
-</details>
+**Settings**
+- Import/export of every setting (grid, dock, widgets, styles, icon picks) as a JSON file or through the clipboard.
+- Custom TrueType/OpenType fonts and an app language independent of the system.
 
 ## Install
 
-Abrí el proyecto en Android Studio y ejecutá la variante debug. El paquete es `app.nahuell.launcher.debug`, así que no pisa ni Olauncher ni BetterLauncher si ya los tenés instalados.
+Descargá el APK desde [Releases](https://github.com/Nahuell99/olauncher/releases) o compilalo
+(ver [Development](#development)) e instalalo en el teléfono. Después elegí LunaLauncher como
+app de inicio en Ajustes de Android → Apps predeterminadas.
 
 ## Search
 
@@ -51,33 +60,42 @@ Abrí el proyecto en Android Studio y ejecutá la variante debug. El paquete es 
 | Word prefix | Each term must start a word in the app label | `p m` → Proton Mail |
 | Loose fuzzy | Query characters may occur anywhere, in order | `rdd` → Reddit |
 
-Contact search is optional and requires contact permission. Ordinary app search works without it.
+Calculator, unit conversion and `>` commands are enabled in Settings → App drawer & search.
 
-## Gestures and accessibility
+## Privacy
 
-Enable **Double tap to lock** in Settings → Gestures and enable BetterLauncher in Android Accessibility settings. The in-app notice includes troubleshooting help.
+LunaLauncher has no Internet permission and sends nothing anywhere. Optional permissions
+(contacts, calendar, usage access, notification access, accessibility) are requested only
+when you turn on the feature that needs them and are processed on the device. Details in
+[docs/privacy.md](docs/privacy.md).
 
-The optional accessibility service also enforces configured app cooldowns. A separate disclosure explains its access before activation. Accessibility data is processed on the device. You can decline or disable the service and keep using ordinary launcher features.
-
-App lock protects launches through BetterLauncher; it does not prevent another application or Android itself from opening the target app.
+App lock protects launches through LunaLauncher; it does not prevent another application or
+Android itself from opening the target app.
 
 ## Development
 
 Use JDK 17, Android SDK 36 and the included Gradle wrapper:
 
 ```sh
-./gradlew assembleDebug assembleDebugAndroidTest lintDebug
+./gradlew testDebugUnitTest lintDebug assembleDebug
 ```
 
-The debug app has a separate `.debug` package. See [CONTRIBUTING.md](CONTRIBUTING.md) for emulator regression checks and the release workflow. Google Play release automation is described in [docs/google-play-release.md](docs/google-play-release.md).
+The debug build installs as `app.nahuell.launcher.debug`, next to any release build. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for emulator regression checks.
 
-## Contributing
+## Credits
 
-Bug reports, translations and focused pull requests are welcome. Please discuss substantial changes in an issue first. See [CONTRIBUTING.md](CONTRIBUTING.md).
+LunaLauncher would not exist without:
 
-## Acknowledgements
+- **[Olauncher](https://github.com/tanujnotes/olauncher)** by Tanuj Notes — the original
+  minimal launcher this project is forked from (GPL-3.0).
+- **[BetterLauncher](https://github.com/pierspad/BetterLauncher)** by pierspad — shortcuts,
+  widgets, folders, biometric lock, app limits, custom fonts and settings backup (GPL-3.0).
+- **[Lawnicons](https://github.com/LawnchairLauncher/lawnicons)** — the bundled monochrome icons
+  (Apache-2.0). App icons and brand names belong to their respective owners.
 
-Basado en [Olauncher](https://github.com/tanujnotes/olauncher) (GPL-3.0, Tanuj Notes) y en las funciones de [BetterLauncher](https://github.com/pierspad/BetterLauncher) (GPL-3.0). Los iconos monocromos vienen de [Lawnicons](https://github.com/LawnchairLauncher/lawnicons). Las licencias y la atribución se mantienen en el código.
+Olauncher and BetterLauncher are projects of their respective authors. LunaLauncher is an independent fork and is not
+affiliated with or endorsed by Olauncher or BetterLauncher.
 
 ## AI disclosure
 
@@ -85,4 +103,5 @@ Development and documentation have been assisted by language models. Contributio
 
 ## License
 
-[GNU GPL v3](LICENSE).
+[GNU GPL v3](LICENSE). Copyright of the original code belongs to its authors; modifications
+in this fork are released under the same license.

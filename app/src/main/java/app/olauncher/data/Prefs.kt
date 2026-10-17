@@ -42,6 +42,8 @@ class Prefs(private val context: Context) {
         const val CUSTOM_FONT_FILENAME = "custom_font"
         const val ICON_OVERRIDE_PREFIX = "ICON_OVERRIDE_"
         const val GRID_ITEMS = "GRID_ITEMS"
+        const val DOCK_ITEMS = "DOCK_ITEMS"
+        const val LAST_USED_PREFIX = "LAST_USED_"
     }
 
     // ---- First-run flags ----
@@ -109,6 +111,14 @@ class Prefs(private val context: Context) {
         else putString("$ICON_OVERRIDE_PREFIX$packageName|$user", value)
     }
 
+    /** Every manual icon pick: "<package>|<user>" → "<icon pack>/<drawable>". */
+    fun iconOverrides(): Map<String, String> = prefs.all
+        .filterKeys { it.startsWith(ICON_OVERRIDE_PREFIX) }
+        .mapNotNull { (key, value) -> (value as? String)?.let { key.removePrefix(ICON_OVERRIDE_PREFIX) to it } }
+        .toMap()
+
+    fun removeIconOverride(key: String) = prefs.edit { remove(ICON_OVERRIDE_PREFIX + key) }
+
     fun clearIconOverrides() = prefs.edit {
         prefs.all.keys.filter { it.startsWith(ICON_OVERRIDE_PREFIX) }.forEach(::remove)
     }
@@ -133,6 +143,49 @@ class Prefs(private val context: Context) {
 
     // JSON array of imported / bundled declarative widget definitions.
     var customWidgetDefs by string("CUSTOM_WIDGET_DEFS")
+
+    // ---- Dock (a fixed row of icons at the bottom) ----
+    var dockEnabled by bool("DOCK_ENABLED")
+    var dockColumns by int("DOCK_COLUMNS", 5)
+    var dockShowLabels by bool("DOCK_SHOW_LABELS")
+    // 0 = transparent, 1 = glass, 2 = solid
+    var dockBackground by int("DOCK_BACKGROUND", 1)
+    var dockItems: List<GridItem>
+        get() = HomeGrid.fromJson(prefs.getString(DOCK_ITEMS, "").orEmpty())
+        set(value) = prefs.edit { putString(DOCK_ITEMS, HomeGrid.toJson(value)) }
+
+    // ---- Drawer search extras ----
+    var searchCalculator by bool("SEARCH_CALCULATOR")
+    var searchCommands by bool("SEARCH_COMMANDS")
+
+    // ---- Drawer organisation ----
+    // 0 = A–Z, 1 = most used, 2 = recently used
+    var drawerSort by int("DRAWER_SORT")
+    var drawerGroupByCategory by bool("DRAWER_GROUP_CATEGORY")
+
+    fun getLastUsed(key: String): Long = prefs.getLong("$LAST_USED_PREFIX$key", 0L)
+    fun setLastUsed(key: String, time: Long) = prefs.edit { putLong("$LAST_USED_PREFIX$key", time) }
+
+    // Manual category for an app; empty = Android's own category.
+    fun getAppCategory(packageName: String): String = prefs.getString("APP_CATEGORY_$packageName", "").orEmpty()
+    fun setAppCategory(packageName: String, value: String) = prefs.edit {
+        if (value.isEmpty()) remove("APP_CATEGORY_$packageName") else putString("APP_CATEGORY_$packageName", value)
+    }
+    fun customCategories(): Set<String> = prefs.all
+        .filterKeys { it.startsWith("APP_CATEGORY_") }
+        .values.filterIsInstance<String>().filter { it.isNotBlank() }.toSet()
+
+    // ---- Colours & notification dots ----
+    // Android 12+: take the text / accent colours from the wallpaper (Material You).
+    var dynamicColors by bool("DYNAMIC_COLORS")
+    // 0 = off, 1 = dot, 2 = count
+    var notificationDots by int("NOTIFICATION_DOTS")
+
+    // ---- Home clock style (Fase 4) ----
+    // Id of a clock-style definition; empty = the classic TextClock + date.
+    var clockStyleId by string("CLOCK_STYLE_ID")
+    // JSON array of the user's edited / imported clock styles.
+    var clockStyleDefs by string("CLOCK_STYLE_DEFS")
 
     // Scrim intensity (0f..1f) for the home screen and the app drawer respectively.
     // A value of 0 means no scrim.

@@ -1,0 +1,30 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.battery",
+  "name": "Clock & battery",
+  "name_es": "Reloj y batería",
+  "spanX": 5,
+  "spanY": 2,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{time}",
+      "size": 60,
+      "font": "sans-serif-light"
+    },
+    {
+      "text": "{date:EEE d MMM} · {battery}% {charging}",
+      "size": 14,
+      "alpha": 0.8
+    },
+    {
+      "type": "bar",
+      "value": "{battery}",
+      "max": 100,
+      "height": 3,
+      "alpha": 0.8
+    }
+  ]
+}

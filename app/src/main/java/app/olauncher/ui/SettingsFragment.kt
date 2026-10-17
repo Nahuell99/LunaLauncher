@@ -41,6 +41,7 @@ import app.olauncher.MainViewModel
 import app.olauncher.R
 import app.olauncher.data.Constants
 import app.olauncher.data.IconSources
+import app.olauncher.widgets.WidgetDef
 import app.olauncher.data.Prefs
 import app.olauncher.databinding.FragmentSettingsBinding
 import app.olauncher.helper.IconManager
@@ -152,6 +153,7 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
         populateAlignment()
         populateClockCalendarApps()
         populateIconsSettings()
+        populateDateTime()
         (activity as? app.olauncher.MainActivity)?.updateGlobalOpacityScrim(animate = true)
     }
 
@@ -239,6 +241,8 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
             R.id.switchDrawerIcons -> toggleDrawerIcons()
             R.id.switchHomeIcons -> toggleHomeIcons()
             R.id.switchHomeOnlyIcons -> toggleHomeOnlyIcons()
+            R.id.drawerSettingsRow -> findNavController().navigate(R.id.action_settingsFragment_to_drawerSettingsFragment)
+            R.id.clockStyleRow -> findNavController().navigate(R.id.action_settingsFragment_to_clockStyleFragment)
             R.id.iconSettingsRow -> findNavController().navigate(R.id.action_settingsFragment_to_iconSettingsFragment)
             R.id.gridSettingsRow -> findNavController().navigate(R.id.action_settingsFragment_to_homeGridSettingsFragment)
             R.id.dateTimeSwitch -> toggleDateTimeEnabled()
@@ -272,7 +276,7 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
 
             R.id.aboutOlauncher -> {
                 prefs.aboutClicked = true
-                requireContext().openUrl(Constants.URL_ABOUT_OLAUNCHER)
+                requireContext().openUrl(Constants.URL_ABOUT)
             }
 
             R.id.share -> requireActivity().shareApp()
@@ -281,9 +285,9 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
                 requireActivity().rateApp()
             }
 
-            R.id.website -> requireContext().openUrl(Constants.URL_PIERSPAD)
-            R.id.github -> requireContext().openUrl(Constants.URL_OLAUNCHER_GITHUB)
-            R.id.privacy -> requireContext().openUrl(Constants.URL_OLAUNCHER_PRIVACY)
+            R.id.website -> requireContext().openUrl(Constants.URL_CREDITS)
+            R.id.github -> requireContext().openUrl(Constants.URL_REPO)
+            R.id.privacy -> requireContext().openUrl(Constants.URL_PRIVACY)
         }
     }
 
@@ -331,6 +335,8 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
         binding.switchHomeIcons.setOnClickListener(this)
         binding.switchHomeOnlyIcons.setOnClickListener(this)
         binding.iconSettingsRow.setOnClickListener(this)
+        binding.clockStyleRow.setOnClickListener(this)
+        binding.drawerSettingsRow.setOnClickListener(this)
         binding.gridSettingsRow.setOnClickListener(this)
         binding.dateTimeSwitch.setOnClickListener(this)
         binding.dateOnlySwitch.setOnClickListener(this)
@@ -508,6 +514,10 @@ class SettingsFragment : BaseFragment(), View.OnClickListener, View.OnLongClickL
         binding.dateTimeSwitch.isChecked = enabled
         binding.dateOnlyRow.isVisible = enabled
         binding.dateOnlySwitch.isChecked = prefs.dateTimeVisibility == Constants.DateTime.DATE_ONLY
+        binding.clockStyleRow.isVisible = enabled
+        binding.clockStyleValue.text = prefs.clockStyleId.takeIf { it.isNotEmpty() }
+            ?.let { WidgetDef.CLOCKS.find(requireContext(), prefs, it)?.name() }
+            ?: getString(R.string.clock_style_classic)
     }
 
     private fun showStatusBar() {

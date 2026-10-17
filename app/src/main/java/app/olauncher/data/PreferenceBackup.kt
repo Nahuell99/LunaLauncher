@@ -16,6 +16,8 @@ internal data class PreferenceBackup(
         private val homeBoolean = Regex("(?:IS_SHORTCUT|IS_FOLDER)_[1-8]")
         private val iconString = Regex("SHORTCUT_(?:PKG|CLS|USR|LBL)_[0-7]")
         private val iconIndex = Regex("SHORTCUT_ICON_INDEX_[0-7]")
+        // Values that must hold a JSON array (grid, dock, widget and clock-style libraries).
+        val JSON_ARRAY_KEYS = setOf("GRID_ITEMS", "DOCK_ITEMS", "CUSTOM_WIDGET_DEFS", "CLOCK_STYLE_DEFS")
         private val packageName = Regex("[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)+")
 
         fun parse(json: String, types: Map<String, String>): PreferenceBackup {
@@ -38,6 +40,7 @@ internal data class PreferenceBackup(
                     homeBoolean.matches(key) -> "b"
                     iconIndex.matches(key) -> "i"
                     key.startsWith("LIMIT_LEVEL_") || key.startsWith("LIMIT_RETRY_COUNT_") || key.startsWith("USAGE_") -> "i"
+                    key.startsWith("LAST_USED_") -> "l"
                     key.startsWith("LIMIT_UNTIL_") || key.startsWith("LIMIT_LAST_OPEN_DAY_") || key.startsWith("LIMIT_LAST_OPEN_") -> "l"
                     packageName.matches(key) -> "s" // Historical package-keyed app renames.
                     else -> "s" // Legacy shortcut renames use arbitrary shortcut IDs.
@@ -76,6 +79,9 @@ internal data class PreferenceBackup(
                     key == "GRID_COLUMNS" -> require(value as Int in HomeGrid.MIN_COLUMNS..HomeGrid.MAX_COLUMNS)
                     key == "GRID_ROWS" -> require(value as Int in HomeGrid.MIN_ROWS..HomeGrid.MAX_ROWS)
                     key == "ICON_SHAPE" -> require(value as Int in 0..5)
+                    key == "DOCK_COLUMNS" -> require(value as Int in 3..8)
+                    key == "DOCK_BACKGROUND" || key == "DRAWER_SORT" || key == "NOTIFICATION_DOTS" -> require(value as Int in 0..2)
+                    key in JSON_ARRAY_KEYS -> (value as String).takeIf { it.isNotBlank() }?.let { JSONArray(it) }
                     key == "ICON_SIZE_SCALE" || key == "GRID_ICON_SCALE" -> require(value as Float in 0.2f..3f)
                     key.startsWith("LIMIT_") || key.startsWith("USAGE_") -> require((value as Number).toLong() >= 0)
                 }

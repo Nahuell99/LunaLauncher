@@ -1,0 +1,31 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.serif",
+  "name": "Serif",
+  "name_es": "Serif elegante",
+  "spanX": 5,
+  "spanY": 2,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{date:EEEE}",
+      "size": 18,
+      "font": "serif",
+      "italic": true,
+      "alpha": 0.85
+    },
+    {
+      "text": "{time}",
+      "size": 64,
+      "font": "serif"
+    },
+    {
+      "text": "{date:d MMMM yyyy}",
+      "size": 14,
+      "font": "serif",
+      "alpha": 0.7
+    }
+  ]
+}

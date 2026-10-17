@@ -1,0 +1,25 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.bold",
+  "name": "Bold",
+  "name_es": "Negrita",
+  "spanX": 5,
+  "spanY": 2,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{time}",
+      "size": 76,
+      "font": "sans-serif-black"
+    },
+    {
+      "text": "{date:EEEE d MMMM}",
+      "size": 13,
+      "uppercase": true,
+      "letterSpacing": 0.3,
+      "alpha": 0.8
+    }
+  ]
+}

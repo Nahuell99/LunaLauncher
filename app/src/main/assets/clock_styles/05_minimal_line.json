@@ -1,0 +1,18 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.minimal_line",
+  "name": "One line",
+  "name_es": "Una línea",
+  "spanX": 5,
+  "spanY": 1,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{time} · {date:EEE d MMM}",
+      "size": 22,
+      "font": "sans-serif-light"
+    }
+  ]
+}

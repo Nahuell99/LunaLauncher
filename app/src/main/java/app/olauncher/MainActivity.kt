@@ -106,6 +106,9 @@ class MainActivity : AppCompatActivity() {
         FontHelper.install(this)
         if (isEinkDisplay() || isSystemAnimationsDisabled())
             theme.applyStyle(R.style.NoAnimationOverlay, true)
+        // Material You: text and accent colours from the wallpaper.
+        if (prefs.dynamicColors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            theme.applyStyle(R.style.DynamicColorOverlay, true)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -514,7 +517,7 @@ class MainActivity : AppCompatActivity() {
             R.id.languagePickerFragment -> prefs.opacityDrawer
             else -> 0f
         }
-        android.util.Log.d("Nahuel Launcher", "updateGlobalOpacityScrim: dest=$destinationId, opacity=$opacity, current=$currentOpacity, animate=$animate")
+        android.util.Log.d("LunaLauncher", "updateGlobalOpacityScrim: dest=$destinationId, opacity=$opacity, current=$currentOpacity, animate=$animate")
 
         // Ensure the background is solid (alpha 255) black or white depending on the active theme
         binding.globalOpacityScrim.setBackgroundColor(this.scrimColor(255))
@@ -522,14 +525,14 @@ class MainActivity : AppCompatActivity() {
         if (currentOpacity == opacity) return
 
         if (animate && currentOpacity >= 0f) {
-            android.util.Log.d("Nahuel Launcher", "updateGlobalOpacityScrim: Animating from $currentOpacity to $opacity")
+            android.util.Log.d("LunaLauncher", "updateGlobalOpacityScrim: Animating from $currentOpacity to $opacity")
             binding.globalOpacityScrim.animate().cancel()
             binding.globalOpacityScrim.animate()
                 .alpha(opacity.coerceIn(0f, 1f))
                 .setDuration(220)
                 .start()
         } else {
-            android.util.Log.d("Nahuel Launcher", "updateGlobalOpacityScrim: Immediately setting to $opacity")
+            android.util.Log.d("LunaLauncher", "updateGlobalOpacityScrim: Immediately setting to $opacity")
             binding.globalOpacityScrim.animate().cancel()
             binding.globalOpacityScrim.alpha = opacity.coerceIn(0f, 1f)
         }

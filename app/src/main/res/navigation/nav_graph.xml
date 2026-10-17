@@ -68,6 +68,20 @@
             app:popEnterAnim="@anim/fade_enter"
             app:popExitAnim="@anim/fade_exit" />
         <action
+            android:id="@+id/action_settingsFragment_to_drawerSettingsFragment"
+            app:destination="@id/drawerSettingsFragment"
+            app:enterAnim="@anim/fade_enter"
+            app:exitAnim="@anim/fade_exit"
+            app:popEnterAnim="@anim/fade_enter"
+            app:popExitAnim="@anim/fade_exit" />
+        <action
+            android:id="@+id/action_settingsFragment_to_clockStyleFragment"
+            app:destination="@id/clockStyleFragment"
+            app:enterAnim="@anim/fade_enter"
+            app:exitAnim="@anim/fade_exit"
+            app:popEnterAnim="@anim/fade_enter"
+            app:popExitAnim="@anim/fade_exit" />
+        <action
             android:id="@+id/action_settingsFragment_to_iconSettingsFragment"
             app:destination="@id/iconSettingsFragment"
             app:enterAnim="@anim/fade_enter"
@@ -101,6 +115,32 @@
         android:name="app.olauncher.ui.FontPickerFragment"
         android:label="FontPickerFragment"
         tools:layout="@layout/fragment_font_picker" />
+
+    <fragment
+        android:id="@+id/drawerSettingsFragment"
+        android:name="app.olauncher.ui.settings.DrawerSettingsFragment"
+        android:label="DrawerSettingsFragment"
+        tools:layout="@layout/fragment_sub_settings" />
+
+    <fragment
+        android:id="@+id/clockStyleFragment"
+        android:name="app.olauncher.ui.settings.ClockStyleFragment"
+        android:label="ClockStyleFragment"
+        tools:layout="@layout/fragment_sub_settings">
+        <action
+            android:id="@+id/action_clockStyleFragment_to_clockStyleEditorFragment"
+            app:destination="@id/clockStyleEditorFragment"
+            app:enterAnim="@anim/fade_enter"
+            app:exitAnim="@anim/fade_exit"
+            app:popEnterAnim="@anim/fade_enter"
+            app:popExitAnim="@anim/fade_exit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/clockStyleEditorFragment"
+        android:name="app.olauncher.ui.settings.ClockStyleEditorFragment"
+        android:label="ClockStyleEditorFragment"
+        tools:layout="@layout/fragment_sub_settings" />
 
     <fragment
         android:id="@+id/iconSettingsFragment"

@@ -39,6 +39,8 @@ class CustomWidgetView(
     private var itemData: String,
     private val onTap: (String) -> Unit,
     private val onMediaAction: (Int) -> Unit,
+    // Horizontal Gravity imposed by the host (the home clock follows Settings → alignment).
+    private val forcedGravity: Int? = null,
 ) : LinearLayout(context) {
 
     private class TextBinding(val view: TextView, val template: String, val hideIfEmpty: Boolean, val uppercase: Boolean, val baseSizePx: Float)
@@ -55,7 +57,8 @@ class CustomWidgetView(
     init {
         val json = def.json
         orientation = VERTICAL
-        gravity = horizontalGravity(json.optString("gravity", "start")) or verticalGravity(json.optString("vgravity", "center"))
+        gravity = (forcedGravity ?: horizontalGravity(json.optString("gravity", "start"))) or
+            verticalGravity(json.optString("vgravity", "center"))
         val pad = json.optInt("padding", 8).coerceIn(0, 48).dpToPx()
         setPadding(pad, pad, pad, pad)
         json.optJSONObject("background")?.let { background = backgroundOf(it) }
@@ -108,11 +111,12 @@ class CustomWidgetView(
             maxLines = line.optInt("maxLines", 2).coerceIn(1, 10)
             ellipsize = TextUtils.TruncateAt.END
             if (line.optBoolean("shadow", true)) setShadowLayer(4f, 0f, 1f, shadow)
-            line.optString("gravity").takeIf { it.isNotEmpty() }?.let { gravity = horizontalGravity(it) }
+            if (forcedGravity == null) line.optString("gravity").takeIf { it.isNotEmpty() }?.let { gravity = horizontalGravity(it) }
             layoutParams = if (inRow) LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             else LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).also { lp ->
                 // Text lines follow the widget's horizontal alignment unless they set their own.
-                if (line.optString("gravity").isEmpty()) gravity = this@CustomWidgetView.gravity and Gravity.HORIZONTAL_GRAVITY_MASK
+                if (forcedGravity != null || line.optString("gravity").isEmpty())
+                    gravity = this@CustomWidgetView.gravity and Gravity.HORIZONTAL_GRAVITY_MASK
                 lp.topMargin = line.optInt("marginTop", 0).coerceIn(-40, 100).dpToPx()
             }
         }
@@ -164,7 +168,7 @@ class CustomWidgetView(
         val base = when (spec.lowercase(Locale.ROOT)) {
             "primary", "" -> primary
             "secondary", "primary50" -> context.getColorFromAttr(R.attr.primaryColorTrans50)
-            "accent" -> "#3B82F6".toColorInt()
+            "accent" -> accentColor(context)
             "inverse" -> context.getColorFromAttr(R.attr.primaryInverseColor)
             else -> try { spec.toColorInt() } catch (_: IllegalArgumentException) { primary }
         }
@@ -200,7 +204,9 @@ class CustomWidgetView(
 
     // ---- Refresh ----
 
-    fun refresh(data: WidgetData) {
+    fun refresh(snapshot: WidgetData) {
+        // "hour24": true / false forces the clock format; absent = follow the system.
+        val data = if (def.json.has("hour24")) snapshot.copy(is24h = def.json.optBoolean("hour24")) else snapshot
         for (binding in texts) {
             var text = WidgetTokens.resolve(binding.template, data, itemData)
             if (binding.uppercase) text = text.uppercase(Locale.getDefault())
@@ -273,6 +279,11 @@ class CustomWidgetView(
     }
 
     companion object {
+        /** Blue by default; the wallpaper accent when Material You colours are on. */
+        fun accentColor(context: Context): Int =
+            if (app.olauncher.data.Prefs(context).dynamicColors) ContextCompat.getColor(context, R.color.dynamic_accent)
+            else "#3B82F6".toColorInt()
+
         const val MEDIA_PREVIOUS = 0
         const val MEDIA_PLAY_PAUSE = 1
         const val MEDIA_NEXT = 2

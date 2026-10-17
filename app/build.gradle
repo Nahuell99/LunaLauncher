@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-// Names the build outputs betterlauncher-<buildType>.apk / .aab instead of app-<buildType>.*
+// Names the build outputs lunalauncher-<buildType>.apk / .aab instead of app-<buildType>.*
 base {
-    archivesName = 'betterlauncher'
+    archivesName = 'lunalauncher'
 }
 
 android {

@@ -42,6 +42,12 @@
         <item name="cardStrokeColor">#1A000000</item>
     </style>
 
+    <!-- Applied over AppTheme when "wallpaper colours" is on (Android 12+). -->
+    <style name="DynamicColorOverlay">
+        <item name="primaryColor">@color/dynamic_text</item>
+        <item name="colorAccent">@color/dynamic_accent</item>
+    </style>
+
     <style name="WindowAnimationTransition">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>

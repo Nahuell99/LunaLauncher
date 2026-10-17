@@ -120,7 +120,7 @@ class BackupRestoreFragment : Fragment() {
         binding.btnCopy.setOnClickListener {
             val textToCopy = binding.etSettingsJson.text.toString()
             val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("Nahuel Launcher Settings", textToCopy)
+            val clip = ClipData.newPlainText("LunaLauncher Settings", textToCopy)
             clipboard.setPrimaryClip(clip)
             requireContext().showToast(getString(R.string.copied))
         }
@@ -151,6 +151,12 @@ class BackupRestoreFragment : Fragment() {
                         val localeList = if (lang.isEmpty()) androidx.core.os.LocaleListCompat.getEmptyLocaleList() else androidx.core.os.LocaleListCompat.forLanguageTags(lang)
                         AppCompatDelegate.setApplicationLocales(localeList)
                         requireContext().showToast(getString(R.string.restore_done))
+                        // Android widget ids do not survive a restore: say how many need a tap.
+                        val toRebind = prefs.gridItems.count { it.type == app.olauncher.data.GridItem.TYPE_APP_WIDGET }
+                        if (toRebind > 0) requireContext().showToast(
+                            resources.getQuantityString(R.plurals.restore_widgets_rebind, toRebind, toRebind),
+                            android.widget.Toast.LENGTH_LONG,
+                        )
                         isModified = false
                         originalJson = jsonToApply
                         updateApplyButtonState()

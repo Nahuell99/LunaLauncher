@@ -1,0 +1,32 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.stacked",
+  "name": "Stacked",
+  "name_es": "Apilado",
+  "spanX": 5,
+  "spanY": 3,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{time:HH}",
+      "size": 96,
+      "bold": true
+    },
+    {
+      "text": "{time:mm}",
+      "size": 96,
+      "bold": true,
+      "color": "accent",
+      "marginTop": -24
+    },
+    {
+      "text": "{date:EEE d}",
+      "size": 14,
+      "uppercase": true,
+      "letterSpacing": 0.2,
+      "alpha": 0.7
+    }
+  ]
+}

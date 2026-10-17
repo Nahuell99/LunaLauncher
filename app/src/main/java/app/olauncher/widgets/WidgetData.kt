@@ -190,6 +190,13 @@ object WidgetTokens {
         return Math.round((target.time - today) / TimeUnit.DAYS.toMillis(1).toDouble()).toString()
     }
 
+    // Fixed-width binary, most significant bit first. [chars] = "<one><zero>", e.g. "10".
+    private fun binary(value: Int, bits: Int, chars: String): String {
+        val one = chars.getOrNull(0) ?: '●'
+        val zero = chars.getOrNull(1) ?: '○'
+        return (bits - 1 downTo 0).joinToString(" ") { if (value shr it and 1 == 1) "$one" else "$zero" }
+    }
+
     private fun value(token: String, arg: String, d: WidgetData, itemData: String): String? = when (token) {
         "time" -> format(arg.ifEmpty { if (d.is24h) "HH:mm" else "h:mm" }, d.now)
         "date" -> format(arg.ifEmpty { "EEE, d MMM" }, d.now)
@@ -205,9 +212,50 @@ object WidgetTokens {
         "event_time" -> d.event?.let { e ->
             if (e.allDay) "" else format(arg.ifEmpty { if (d.is24h) "EEE HH:mm" else "EEE h:mm a" }, e.begin)
         }.orEmpty()
+        "time_words" -> TimeWords.format(d.now, Locale.getDefault().language, full = arg == "full")
+        "binary_h" -> binary(Calendar.getInstance().apply { timeInMillis = d.now }.get(Calendar.HOUR_OF_DAY), 5, arg)
+        "binary_m" -> binary(Calendar.getInstance().apply { timeInMillis = d.now }.get(Calendar.MINUTE), 6, arg)
         "media_title" -> d.media?.title.orEmpty()
         "media_artist" -> d.media?.artist.orEmpty()
         "media_app" -> d.media?.app.orEmpty()
         else -> null
+    }
+}
+
+/**
+ * Time in words, rounded to five minutes like a word clock:
+ * "diez y cuarto" / "quarter past ten". [full] adds the "Son las" / "It's" lead-in.
+ */
+object TimeWords {
+    private val ES_HOURS = listOf("doce", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once")
+    private val ES_MINUTES = mapOf(
+        5 to "y cinco", 10 to "y diez", 15 to "y cuarto", 20 to "y veinte", 25 to "y veinticinco", 30 to "y media",
+        35 to "menos veinticinco", 40 to "menos veinte", 45 to "menos cuarto", 50 to "menos diez", 55 to "menos cinco",
+    )
+    private val EN_HOURS = listOf("twelve", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven")
+    private val EN_MINUTES = mapOf(
+        5 to "five past", 10 to "ten past", 15 to "quarter past", 20 to "twenty past", 25 to "twenty-five past", 30 to "half past",
+        35 to "twenty-five to", 40 to "twenty to", 45 to "quarter to", 50 to "ten to", 55 to "five to",
+    )
+
+    fun format(time: Long, language: String, full: Boolean = false): String {
+        val cal = Calendar.getInstance().apply { timeInMillis = time }
+        var hour = cal.get(Calendar.HOUR_OF_DAY)
+        var minute = ((cal.get(Calendar.MINUTE) + 2) / 5) * 5
+        if (minute == 60) {
+            minute = 0
+            hour += 1
+        }
+        // From :35 on, phrases count down to the next hour ("menos veinte" / "twenty to").
+        val shown = (if (minute > 30) hour + 1 else hour) % 12
+        return if (language == "es") {
+            val h = ES_HOURS[shown]
+            val text = if (minute == 0) "$h en punto" else "$h ${ES_MINUTES.getValue(minute)}"
+            if (full) (if (shown == 1) "Es la " else "Son las ") + text else text
+        } else {
+            val h = EN_HOURS[shown]
+            val text = if (minute == 0) "$h o'clock" else "${EN_MINUTES.getValue(minute)} $h"
+            if (full) "It's $text" else text
+        }
     }
 }

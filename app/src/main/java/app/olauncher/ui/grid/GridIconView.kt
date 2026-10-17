@@ -1,6 +1,8 @@
 package app.olauncher.ui.grid
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.view.Gravity
@@ -9,7 +11,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
 import app.olauncher.R
+import app.olauncher.helper.NotificationDots
 import app.olauncher.helper.dpToPx
+import app.olauncher.widgets.CustomWidgetView
 import kotlin.math.min
 
 /** An app / shortcut / folder icon on the home grid: icon centered in its cells, optional label. */
@@ -26,6 +30,20 @@ class GridIconView(context: Context) : LinearLayout(context) {
     }
 
     var iconScale = 1f
+
+    /** 0 = none, [NotificationDots.BADGE_DOT] = dot, n > 0 = notification count. */
+    var badge = 0
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
+    private val badgePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = CustomWidgetView.accentColor(context) }
+    private val badgeText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = android.graphics.Color.WHITE
+        textAlign = Paint.Align.CENTER
+        isFakeBoldText = true
+    }
     var showLabel = true
         set(value) {
             field = value
@@ -33,6 +51,7 @@ class GridIconView(context: Context) : LinearLayout(context) {
         }
 
     init {
+        setWillNotDraw(false)
         orientation = VERTICAL
         gravity = Gravity.CENTER
         addView(icon)
@@ -61,5 +80,20 @@ class GridIconView(context: Context) : LinearLayout(context) {
             height = size
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        if (badge == 0) return
+        // Top-right corner of the icon itself, not of the whole cell.
+        val radius = if (badge == NotificationDots.BADGE_DOT) 4.dpToPx().toFloat() else 8.dpToPx().toFloat()
+        val cx = icon.right - radius * 0.6f
+        val cy = icon.top + radius * 0.6f
+        canvas.drawCircle(cx, cy, radius, badgePaint)
+        if (badge > 0) {
+            badgeText.textSize = radius * 1.3f
+            val count = if (badge > 99) "99+" else badge.toString()
+            canvas.drawText(count, cx, cy - (badgeText.descent() + badgeText.ascent()) / 2, badgeText)
+        }
     }
 }

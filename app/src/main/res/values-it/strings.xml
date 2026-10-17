@@ -11,10 +11,10 @@
     <string name="reorder_completed">Ordine salvato</string>
     <string name="set_as_default_launcher">Imposta come launcher predefinito</string>
     <string name="set_as_default_launcher_u"><u>Imposta come launcher predefinito</u></string>
-    <string name="set_as_default_launcher_first">Imposta prima Olauncher come predefinito</string>
+    <string name="set_as_default_launcher_first">Imposta prima LunaLauncher come predefinito</string>
     <string name="app_text_color">Colore del testo</string>
     <string name="double_tap_to_lock_screen">Tocca due volte per bloccare</string>
-    <string name="admin_permission_message">Nahuel Launcher userà l’autorizzazione della schermata di blocco in modo responsabile. Nahuel Launcher non raccoglie né condivide alcun dato.</string>
+    <string name="admin_permission_message">LunaLauncher userà l’autorizzazione della schermata di blocco in modo responsabile. LunaLauncher non raccoglie né condivide alcun dato.</string>
     <string name="about">Info</string>
     <string name="off">Off</string>
     <string name="on">On</string>
@@ -79,40 +79,29 @@
     <string name="light">Chiaro</string>
     <string name="welcome_to_olauncher_settings">Benvenuto nelle impostazioni!
         \n\nRicorda, se hai domande, la nostra pagina Informazioni ha la risposta.</string>
-    <string name="rate_us_message">Ehi, trovi utile Nahuel Launcher? Se sì, una valutazione a 5 stelle è il modo migliore per sostenerci.
+    <string name="rate_us_message">Ehi, trovi utile LunaLauncher? Se sì, una valutazione a 5 stelle è il modo migliore per sostenerci.
         \n\nGrazie e non lo vedrai più.</string>
-    <string name="share_message">Ciao, abbiamo bisogno del tuo aiuto! L\'anno scorso abbiamo superato il milione di download. Quest’anno vogliamo raggiungere un milione in più ma non possiamo farcela da soli.
-        \n\nSaresti così gentile da condividere Nahuel Launcher con i tuoi amici, per favore? Grazie e buona giornata!</string>
-    <string name="keyboard_message">Ciao, la tastiera è il modo più veloce per trovare e avviare le app in Nahuel Launcher. Possiamo chiederti di metterlo alla prova ancora per qualche giorno e poi decidere?
+    <string name="keyboard_message">Ciao, la tastiera è il modo più veloce per trovare e avviare le app in LunaLauncher. Possiamo chiederti di metterlo alla prova ancora per qualche giorno e poi decidere?
         \n\nSei sempre tu a scegliere.</string>
     <string name="digital_wellbeing_message">Se desideri impostare limiti di tempo per determinate app, la funzionalità Benessere digitale di Android può aiutarti a farlo.
         \n\nCerca Benessere digitale nelle impostazioni del telefono e attivalo.</string>
     <string name="app_usage_message">Per mostrare/nascondere il tempo di utilizzo dello schermo nella schermata iniziale, concedi o nega l\'autorizzazione all\'utilizzo delle app.\n\nNota: non vengono raccolti dati sull\'utilizzo delle app. Tutto viene elaborato sul tuo dispositivo.</string>
-    <string name="pro_message">Nahuel Launcher ha anche una versione pro chiamata Pro Launcher. Ha funzionalità extra come meteo, widget, font, cartelle, sfondi AMOLED, e così via.
-        \n\nÈ anche il modo migliore per supportare gli sviluppatori di Nahuel Launcher. Dai un\'occhiata!</string>
-    <string name="wallpaper_message">Nahuel Launcher offre bellissimi sfondi nuovi ogni giorno. Dai un aspetto fresco alla tua schermata principale ogni giorno, gratuitamente!
-        \n\nVuoi provarlo?</string>
-    <string name="support_olauncher_for_free">Supporta Nahuel Launcher gratuitamente utilizzando il nostro link di affiliazione su Amazon.</string>
-    <string name="support_olauncher_message">Ogni volta che acquisti qualcosa utilizzando il nostro link, riceviamo una piccola commissione. Salva il link e usalo ogni volta che fai acquisti online.\nGrazie!</string>
     <string name="open">Apri link</string>
     <string name="copy">Copia</string>
     <string name="close">Chiudi</string>
     <string name="not_now">Non ora</string>
-    <string name="public_roadmap">Roadmap pubblica di Nahuel Launcher</string>
     <string name="roadmap">Roadmap</string>
     <string name="date">Data</string>
     <string name="date_only">Solo data</string>
     <string name="bottom_on">In basso: acceso</string>
     <string name="bottom_off">In basso: spento</string>
-    <string name="please_set_olauncher_as_default_first">Imposta Nahuel Launcher come launcher predefinito</string>
+    <string name="please_set_olauncher_as_default_first">Imposta LunaLauncher come launcher predefinito</string>
     <string name="affiliate">Affiliazione</string>
     <string name="tip_start_typing_for_rename">Suggerimento: inizia a digitare per RINOMINARE l\'app</string>
-    <string name="hidden_apps_message">Nota: tocca \'Nahuel Launcher\' nella parte superiore di questa pagina per trovare le tue app nascoste.
-        \n\nUlteriori dettagli sono disponibili nella pagina Informazioni di seguito.</string>
     <string name="swipe_down_for">Scorri verso il basso per</string>
     <string name="search">Ricerca</string>
     <string name="notifications">Notifiche</string>
-    <string name="accessibility_disclosure">Attiva il servizio di accessibilità di Nahuel Launcher nelle impostazioni del tuo dispositivo per abilitare i gesti Doppio tocco per bloccare o Tasto Home per le app recenti.\n\nTieni presente che questo servizio viene utilizzato solo per questi gesti. Il nostro servizio di accessibilità non raccoglie né condivide alcun dato.</string>
+    <string name="accessibility_disclosure">Attiva il servizio di accessibilità di LunaLauncher nelle impostazioni del tuo dispositivo per abilitare i gesti Doppio tocco per bloccare o Tasto Home per le app recenti.\n\nTieni presente che questo servizio viene utilizzato solo per questi gesti. Il nostro servizio di accessibilità non raccoglie né condivide alcun dato.</string>
     <string name="accept">Accetta</string>
     <string name="permission">Autorizzazione</string>
     <string name="double_tap_lock">Tocca due volte per bloccare</string>
@@ -126,7 +115,7 @@
     <string name="enabled">Abilitato</string>
     <string name="disabled">Disabilitato</string>
     <string name="please_turn_on_double_tap_to_unlock">Attiva il doppio tocco per bloccare</string>
-    <string name="launcher_failed_to_lock_device">Nahuel Launcher non è riuscito a bloccare il dispositivo.\nControlla le impostazioni dell\'app.</string>
+    <string name="launcher_failed_to_lock_device">LunaLauncher non è riuscito a bloccare il dispositivo.\nControlla le impostazioni dell\'app.</string>
     <string name="long_press_to_select_app">Premere a lungo per selezionare l\'app</string>
     <string name="unable_to_open_app">Impossibile aprire l\'app</string>
     <string name="copied">Copiato</string>
@@ -142,20 +131,18 @@ Inserisci prima un nuovo nome per l\'app</string>
     <string name="swipe_left_app_disabled">App scorrimento a sinistra disabilitata</string>
     <string name="swipe_right_app_disabled">App scorrimento a destra disabilitata</string>
     <string name="your_wallpaper_will_update_shortly">Lo sfondo verrà aggiornato a breve</string>
-    <string name="olauncher_is_not_default_launcher">Nahuel Launcher non è il programma di avvio predefinito.\nL\'aggiornamento giornaliero dello sfondo potrebbe non riuscire.</string>
+    <string name="olauncher_is_not_default_launcher">LunaLauncher non è il programma di avvio predefinito.\nL\'aggiornamento giornaliero dello sfondo potrebbe non riuscire.</string>
     <string name="long_press_to_enable">Premere a lungo per abilitare</string>
     <string name="no_hidden_apps">Nessuna app nascosta</string>
     <string name="hidden_apps">App nascoste</string>
     <string name="adapter_show">Mostra</string>
     <string name="adapter_hide">Nascondi</string>
     <string name="are_you_using_your_phone_or_is_your_phone_using_you">Stai usando il tuo telefono, o è il tuo telefono che sta usando te?</string>
-    <string name="about_olauncher">Info Nahuel Launcher</string>
+    <string name="about_olauncher">Info LunaLauncher</string>
     <string name="learn_more">Scopri di più</string>
     <string name="screen_time">Tempo di schermo</string>
     <string name="did_you_know">Lo sapevi?</string>
     <string name="leave_a_review">Lascia una recensione</string>
-    <string name="review_message">Nahuel Launcher è e sarà sempre completamente gratuito. Non ha pubblicità. Non raccoglie dati. Ancora più importante, ti aiuta a ridurre il tempo trascorso davanti allo schermo e a vivere una vita digitale più sana.
-        \n\nCrediamo che passare a un launcher minimale sia un\'ottima decisione. Anche se siamo ovviamente di parte, ci auguriamo che l\'esperienza ti piaccia. Sentitevi liberi di condividere i tuoi pensieri con noi!</string>
     <string name="alignment_changed">Allineamento cambiato ✅</string>
     <string name="home_screen">Schermata principale</string>
     <string name="hey">Ciao</string>
@@ -182,7 +169,7 @@ Inserisci prima un nuovo nome per l\'app</string>
     <string name="long_press_to_remove_widget">Tieni premuto per rimuovere il widget</string>
     <string name="no_widgets_available">Nessun widget disponibile</string>
     <string name="widget_bind_failed">Impossibile aggiungere il widget</string>
-    <string name="widget_requires_default_launcher">Imposta Nahuel Launcher come launcher predefinito per aggiungere i widget</string>
+    <string name="widget_requires_default_launcher">Imposta LunaLauncher come launcher predefinito per aggiungere i widget</string>
 
     <!-- Cartelle / gruppi -->
     <string name="home_icons_count">Icone app preferite</string>
@@ -294,11 +281,8 @@ per rimuovere serve che sia ≤ 2</string>
 
     <string name="hidden_apps_instructions">Per nascondere un\'app, tieni premuto il suo nome nel drawer delle app e seleziona \'Nascondi\'. Per ripristinare un\'app nascosta, apri questa schermata, tieni premuta l\'app e seleziona \'Mostra\'.</string>
 
-    <string name="app_name">Nahuel Launcher</string>
-    <string name="website">pierspad.com</string>
     <string name="github">Github</string>
     <string name="lock_layout_description">la descrizione del layout di blocco deve essere utilizzata come ID univoco per bloccare la schermata</string>
-    <string name="olauncher_pro">Nahuel Launcher Pro</string>
     <string name="digital_minimalism"></string>
     <string name="new_app_note_safe"></string>
     <string name="new_app_minimal_todo_lists"></string>
@@ -344,15 +328,15 @@ Non è possibile nascondere le scorciatoie bloccate</string>
     <string name="settings_home_icons">Mostra icone nella home</string>
     <string name="settings_home_only_icons">Non mostrare il testo delle app nella home</string>
     <string name="settings_icons_title">Icone</string>
-    <string name="accessibility_service_description">Nahuel Launcher usa l’API AccessibilityService di Android per il blocco schermo con doppio tocco e i limiti delle app configurati da te, entrambi facoltativi.\n\nAccede ai nomi dei pacchetti delle app in primo piano e agli eventi di cambio finestra per rilevare apertura e chiusura delle app limitate, e alle informazioni sulle viste toccate (tipo ed etichetta di accessibilità) per riconoscere il gesto di blocco schermo. Quando un’app scelta è in pausa, torna alla schermata Home e mostra il tempo rimanente. Impostazioni e scadenze dei limiti sono salvate solo sul dispositivo.\n\nI dati di accessibilità sono elaborati sul dispositivo, senza inviarli a server o condividerli con terze parti. Puoi rifiutare e usare il launcher senza queste funzioni, oppure disattivare il servizio nelle impostazioni di Accessibilità di Android.</string>
+    <string name="accessibility_service_description">LunaLauncher usa l’API AccessibilityService di Android per il blocco schermo con doppio tocco e i limiti delle app configurati da te, entrambi facoltativi.\n\nAccede ai nomi dei pacchetti delle app in primo piano e agli eventi di cambio finestra per rilevare apertura e chiusura delle app limitate, e alle informazioni sulle viste toccate (tipo ed etichetta di accessibilità) per riconoscere il gesto di blocco schermo. Quando un’app scelta è in pausa, torna alla schermata Home e mostra il tempo rimanente. Impostazioni e scadenze dei limiti sono salvate solo sul dispositivo.\n\nI dati di accessibilità sono elaborati sul dispositivo, senza inviarli a server o condividerli con terze parti. Puoi rifiutare e usare il launcher senza queste funzioni, oppure disattivare il servizio nelle impostazioni di Accessibilità di Android.</string>
     <string name="accessibility_disclosure_title">Servizio di accessibilità</string>
-    <string name="accessibility_disclosure_message">Nahuel Launcher usa l’API AccessibilityService di Android per il blocco schermo con doppio tocco e i limiti delle app configurati da te, entrambi facoltativi.\n\nAccede ai nomi dei pacchetti delle app in primo piano e agli eventi di cambio finestra per rilevare apertura e chiusura delle app limitate, e alle informazioni sulle viste toccate (tipo ed etichetta di accessibilità) per riconoscere il gesto di blocco schermo. Quando un’app scelta è in pausa, torna alla schermata Home e mostra il tempo rimanente. Impostazioni e scadenze dei limiti sono salvate solo sul dispositivo.\n\nI dati di accessibilità sono elaborati sul dispositivo, senza inviarli a server o condividerli con terze parti. Puoi rifiutare e usare il launcher senza queste funzioni, oppure disattivare il servizio nelle impostazioni di Accessibilità di Android.</string>
+    <string name="accessibility_disclosure_message">LunaLauncher usa l’API AccessibilityService di Android per il blocco schermo con doppio tocco e i limiti delle app configurati da te, entrambi facoltativi.\n\nAccede ai nomi dei pacchetti delle app in primo piano e agli eventi di cambio finestra per rilevare apertura e chiusura delle app limitate, e alle informazioni sulle viste toccate (tipo ed etichetta di accessibilità) per riconoscere il gesto di blocco schermo. Quando un’app scelta è in pausa, torna alla schermata Home e mostra il tempo rimanente. Impostazioni e scadenze dei limiti sono salvate solo sul dispositivo.\n\nI dati di accessibilità sono elaborati sul dispositivo, senza inviarli a server o condividerli con terze parti. Puoi rifiutare e usare il launcher senza queste funzioni, oppure disattivare il servizio nelle impostazioni di Accessibilità di Android.</string>
     <string name="accessibility_disclosure_accept">Acconsento — apri impostazioni</string>
     <string name="accessibility_disclosure_decline">No, grazie</string>
-    <string name="gestures_accessibility_message">Il doppio tocco per bloccare usa il servizio di accessibilità di Android. Lo stesso servizio permette a Nahuel Launcher di applicare i cooldown delle app che scegli.\n\nEntrambe le funzioni sono facoltative: puoi usare il launcher senza attivarle. Prima dell’attivazione, Nahuel Launcher spiega a quali dati accede il servizio e chiede il tuo consenso.</string>
+    <string name="gestures_accessibility_message">Il doppio tocco per bloccare usa il servizio di accessibilità di Android. Lo stesso servizio permette a LunaLauncher di applicare i cooldown delle app che scegli.\n\nEntrambe le funzioni sono facoltative: puoi usare il launcher senza attivarle. Prima dell’attivazione, LunaLauncher spiega a quali dati accede il servizio e chiede il tuo consenso.</string>
     <string name="open_accessibility_settings">Apri impostazioni di accessibilità</string>
     <string name="gesture_help_title">Aiuto con il doppio tocco per bloccare</string>
-    <string name="gesture_help_message">1. Nelle Impostazioni di Android → Accessibilità → App scaricate, seleziona Nahuel Launcher e attiva il servizio. I nomi possono cambiare in base al dispositivo.\n\n2. Torna in Nahuel Launcher e attiva Doppio tocco per bloccare nella sezione Gesti. Tocca due volte un’area vuota della schermata Home.\n\n3. Se Android segnala un’impostazione con restrizioni per un’installazione da APK, apri Impostazioni → App → Nahuel Launcher → Altre opzioni → Consenti impostazioni con restrizioni, poi riprova. Fallo solo se ti fidi dell’installazione.\n\n4. Se il servizio si interrompe dopo un riavvio, controlla che sia ancora attivo e verifica le restrizioni della batteria applicate dal dispositivo. Disattivare il servizio lascia disponibili le normali funzioni del launcher.</string>
+    <string name="gesture_help_message">1. Nelle Impostazioni di Android → Accessibilità → App scaricate, seleziona LunaLauncher e attiva il servizio. I nomi possono cambiare in base al dispositivo.\n\n2. Torna in LunaLauncher e attiva Doppio tocco per bloccare nella sezione Gesti. Tocca due volte un’area vuota della schermata Home.\n\n3. Se Android segnala un’impostazione con restrizioni per un’installazione da APK, apri Impostazioni → App → LunaLauncher → Altre opzioni → Consenti impostazioni con restrizioni, poi riprova. Fallo solo se ti fidi dell’installazione.\n\n4. Se il servizio si interrompe dopo un riavvio, controlla che sia ancora attivo e verifica le restrizioni della batteria applicate dal dispositivo. Disattivare il servizio lascia disponibili le normali funzioni del launcher.</string>
     <string name="more_features">Altre funzionalità…</string>
     <string name="pin_action_not_supported">Questa azione di aggiunta non è supportata</string>
     <string name="shortcut_pinned">Scorciatoia aggiunta</string>

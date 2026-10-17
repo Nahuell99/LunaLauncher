@@ -42,6 +42,34 @@ sealed class AppModel : Comparable<AppModel> {
     }
 
     // A shortcut to an Android system Settings screen, surfaced only while searching.
+    /** Category title shown above a group of apps when the drawer is grouped. */
+    data class CategoryHeader(
+        val name: String,
+        override val user: UserHandle = android.os.Process.myUserHandle(),
+    ) : AppModel() {
+        override val appLabel: String = name
+        override val key: CollationKey? = null
+        override val appPackage: String = ""
+        override val isNew: Boolean = false
+    }
+
+    /** A drawer search result that is not an app: calculator, unit conversion or command. */
+    data class SearchExtra(
+        override val appLabel: String,
+        val kind: Int,
+        val payload: String,
+        override val user: UserHandle = android.os.Process.myUserHandle(),
+    ) : AppModel() {
+        override val key: CollationKey? = null
+        override val appPackage: String = ""
+        override val isNew: Boolean = false
+
+        companion object {
+            const val KIND_COPY = 0      // payload = text copied to the clipboard
+            const val KIND_COMMAND = 1   // payload = command id understood by SearchExtras.run
+        }
+    }
+
     data class SettingTile(
         override val appLabel: String,
         val intentAction: String,

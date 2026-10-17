@@ -1,0 +1,32 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.binary",
+  "name": "Binary",
+  "name_es": "Binario",
+  "spanX": 5,
+  "spanY": 2,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{binary_h}",
+      "size": 28,
+      "font": "monospace",
+      "letterSpacing": 0.1
+    },
+    {
+      "text": "{binary_m}",
+      "size": 28,
+      "font": "monospace",
+      "letterSpacing": 0.1,
+      "color": "accent"
+    },
+    {
+      "text": "{time}",
+      "size": 13,
+      "alpha": 0.6,
+      "marginTop": 4
+    }
+  ]
+}

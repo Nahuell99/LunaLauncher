@@ -12,7 +12,7 @@ Los integrados están en [`app/src/main/assets/widgets`](../app/src/main/assets/
 
 ```json
 {
-  "format": "olauncher-widget",
+  "format": "lunalauncher-widget",
   "version": 1,
   "name": "Reloj y batería",
   "spanX": 4,
@@ -32,7 +32,7 @@ Los integrados están en [`app/src/main/assets/widgets`](../app/src/main/assets/
 
 | Campo | Valores | Por defecto |
 | :--- | :--- | :--- |
-| `format` | siempre `"olauncher-widget"` | obligatorio |
+| `format` | siempre `"lunalauncher-widget"` | obligatorio |
 | `version` | `1` | `1` |
 | `id` | texto; al importar se reasigna si choca con otro | automático |
 | `name`, `name_es`, `name_<idioma>` | nombre visible | `id` |
@@ -42,6 +42,7 @@ Los integrados están en [`app/src/main/assets/widgets`](../app/src/main/assets/
 | `padding` | dp | `8` |
 | `background` | `{ "color", "alpha", "radius", "stroke", "strokeWidth" }` | sin fondo |
 | `tap` | `none`, `clock`, `calendar`, `edit`, `media`, `app:<paquete>` | `none` |
+| `hour24` | `true` / `false`: fuerza 24 h o 12 h en `{time}` | según el sistema |
 | `lines` | 1 a 24 líneas (ver abajo) | obligatorio |
 
 `tap: "edit"` abre un cuadro de texto que guarda lo escrito en el elemento de la grilla; ese
@@ -84,8 +85,28 @@ valor está vacío; `{token:argumento}` pasa un formato.
 | `{data}` | texto guardado con `tap: "edit"` |
 | `{days_until}`, `{days_until:2026-12-25}` | días hasta una fecha; sin argumento usa la primera palabra de `{data}` |
 | `{data_rest}` | `{data}` sin su primera palabra (el nombre en "2026-12-25 Navidad") |
+| `{time_words}`, `{time_words:full}` | hora en palabras, de a 5 minutos ("diez y cuarto"; con `full`: "Son las diez y cuarto"). En español o inglés según el idioma |
+| `{binary_h}`, `{binary_m}`, `{binary_m:10}` | horas (5 bits) y minutos (6 bits) en binario; el argumento cambia los símbolos de 1 y 0 (por defecto `●○`) |
 
 Los tokens desconocidos se muestran tal cual, para que los errores de tipeo se vean al diseñar.
+
+## Estilos del reloj
+
+El bloque de hora y fecha de la pantalla de inicio también se puede reemplazar por un estilo
+en este mismo formato: **Ajustes → Pantalla de inicio → Estilo del reloj**. Ahí hay una
+galería con vista previa (10 estilos incluidos, en
+[`app/src/main/assets/clock_styles`](../app/src/main/assets/clock_styles)) y un editor visual
+con texto y tokens, tamaño, fuente, negrita, cursiva, mayúsculas, espaciado, color, opacidad y
+espacio entre líneas. Mantené presionado un estilo para personalizarlo, exportarlo o borrarlo.
+
+Diferencias con un widget de la grilla:
+
+- En el inicio, la alineación horizontal sale de **Ajustes → Alineación del reloj**, no de
+  `gravity`.
+- Tocar el reloj abre la app de reloj elegida; mantenerlo presionado permite cambiarla.
+- `hour24: true | false` fuerza el formato 24/12 h de `{time}`; sin el campo se sigue al sistema.
+
+Los estilos importados o editados también aparecen al agregar un widget personalizado a la grilla.
 
 ## Permisos
 

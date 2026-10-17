@@ -117,6 +117,8 @@ class SettingsBuilder(private val context: Context, private val root: LinearLayo
                 TextViewCompat.setTextAppearance(this, R.style.TextSmallBold)
                 this.text = value
                 maxLines = 1
+                ellipsize = android.text.TextUtils.TruncateAt.END
+                maxWidth = 180.dpToPx()
                 setPadding(8.dpToPx(), 8.dpToPx(), 8.dpToPx(), 8.dpToPx())
             }
             row.addView(valueView)

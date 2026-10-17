@@ -8,6 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import app.olauncher.R
 import app.olauncher.data.IconSources
 import app.olauncher.helper.IconManager
+import app.olauncher.helper.MediaNotificationListener
+import app.olauncher.helper.NotificationDots
 import app.olauncher.helper.dpToPx
 import app.olauncher.helper.getColorFromAttr
 import app.olauncher.helper.icons.IconPack
@@ -71,6 +73,32 @@ class IconSettingsFragment : SubSettingsFragment() {
             }
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) builder.card(getString(R.string.colors_title)) {
+            switchRow(getString(R.string.dynamic_colors), R.drawable.ic_contrast, prefs.dynamicColors) {
+                prefs.dynamicColors = it
+                // The colours are part of the theme: recreate to re-inflate with them.
+                requireActivity().recreate()
+            }
+            hint(getString(R.string.dynamic_colors_hint))
+        }
+
+        builder.card(getString(R.string.dots_title)) {
+            val modes = listOf(R.string.dots_off, R.string.dots_dot, R.string.dots_count).map(::getString)
+            valueRow(getString(R.string.dots_mode), R.drawable.ic_bell, modes[prefs.notificationDots.coerceIn(0, modes.lastIndex)]) {
+                IconPickerDialog.showList(ctx, getString(R.string.dots_title), modes) { index ->
+                    prefs.notificationDots = index
+                    viewModel.refreshHome(false)
+                    rebuild()
+                }
+            }
+            hint(getString(R.string.dots_hint))
+            if (prefs.notificationDots != NotificationDots.OFF && !MediaNotificationListener.isEnabled(ctx)) {
+                actionRow(getString(R.string.dots_grant), R.drawable.ic_shield) {
+                    runCatching { startActivity(android.content.Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)) }
+                }
+            }
+        }
+
         builder.card(getString(R.string.icon_shape)) {
             val names = listOf(
                 R.string.icon_shape_system, R.string.icon_shape_circle, R.string.icon_shape_squircle,
@@ -98,12 +126,28 @@ class IconSettingsFragment : SubSettingsFragment() {
 
         builder.card(getString(R.string.icon_overrides_reset)) {
             hint(getString(R.string.icon_override_hint))
+            // Picks from packs that are no longer installed silently fall back to automatic.
+            val missing = prefs.iconOverrides().filterValues { !isInstalled(it.substringBefore('/')) }
+            if (missing.isNotEmpty()) {
+                hint(resources.getQuantityString(R.plurals.icon_overrides_missing, missing.size, missing.size))
+                actionRow(getString(R.string.icon_overrides_clear_missing), R.drawable.ic_delete) {
+                    missing.keys.forEach(prefs::removeIconOverride)
+                    applyIconChange()
+                }
+            }
             actionRow(getString(R.string.icon_overrides_reset), R.drawable.ic_delete) {
                 prefs.clearIconOverrides()
                 applyIconChange()
                 ctx.showToast(getString(R.string.icon_overrides_reset_done))
             }
         }
+    }
+
+    private fun isInstalled(packageName: String): Boolean = try {
+        requireContext().packageManager.getPackageInfo(packageName, 0)
+        true
+    } catch (_: Exception) {
+        false
     }
 
     private fun preview(): LinearLayout {

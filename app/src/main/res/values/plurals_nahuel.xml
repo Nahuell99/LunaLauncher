@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <plurals name="restore_widgets_rebind">
+        <item quantity="one">%d Android widget has to be set up again: tap it on the grid.</item>
+        <item quantity="other">%d Android widgets have to be set up again: tap them on the grid.</item>
+    </plurals>
+    <plurals name="icon_overrides_missing">
+        <item quantity="one">%d custom icon comes from a pack that is no longer installed.</item>
+        <item quantity="other">%d custom icons come from packs that are no longer installed.</item>
+    </plurals>
+</resources>

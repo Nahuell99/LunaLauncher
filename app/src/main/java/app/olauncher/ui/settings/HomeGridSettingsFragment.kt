@@ -74,13 +74,41 @@ class HomeGridSettingsFragment : SubSettingsFragment() {
             actionRow(getString(R.string.grid_clear), R.drawable.ic_delete) { confirmClear() }
         }
 
+        builder.card(getString(R.string.dock_title)) {
+            switchRow(getString(R.string.dock_enabled), R.drawable.ic_sc_star, prefs.dockEnabled) {
+                prefs.dockEnabled = it
+                viewModel.refreshHome(false)
+                rebuild()
+            }
+            if (!prefs.dockEnabled) return@card
+            sliderRow(getString(R.string.dock_columns), null, 3, 8, prefs.dockColumns.coerceIn(3, 8), { it.toString() }) { value ->
+                prefs.dockColumns = value
+                // Icons beyond the last column would be hidden: drop them back in range.
+                prefs.dockItems = prefs.dockItems.filter { it.col < value }
+                viewModel.refreshHome(false)
+            }
+            switchRow(getString(R.string.grid_show_labels), R.drawable.ic_font, prefs.dockShowLabels) {
+                prefs.dockShowLabels = it
+                viewModel.refreshHome(false)
+            }
+            val backgrounds = listOf(R.string.dock_bg_none, R.string.dock_bg_glass, R.string.dock_bg_solid).map(::getString)
+            valueRow(getString(R.string.dock_background), R.drawable.ic_opacity, backgrounds[prefs.dockBackground.coerceIn(0, 2)]) {
+                IconPickerDialog.showList(requireContext(), getString(R.string.dock_background), backgrounds) { index ->
+                    prefs.dockBackground = index
+                    viewModel.refreshHome(false)
+                    rebuild()
+                }
+            }
+            hint(getString(R.string.dock_hint))
+        }
+
         builder.card(getString(R.string.widget_custom_title)) {
             hint(getString(R.string.widget_custom_hint))
             actionRow(getString(R.string.widget_import), R.drawable.ic_sc_download) {
                 importLauncher.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
             }
             val ctx = requireContext()
-            for (def in WidgetDef.Library.all(ctx, prefs)) {
+            for (def in WidgetDef.WIDGETS.all(ctx, prefs)) {
                 valueRow(def.name(), R.drawable.ic_widget, getString(if (def.builtIn) R.string.widget_built_in else R.string.widget_imported)) {
                     widgetOptions(def)
                 }
@@ -99,7 +127,7 @@ class HomeGridSettingsFragment : SubSettingsFragment() {
                 }
 
                 1 -> {
-                    WidgetDef.Library.delete(prefs, def.id)
+                    WidgetDef.WIDGETS.delete(prefs, def.id)
                     // Grid items pointing at the deleted definition go too.
                     prefs.gridItems = prefs.gridItems.filterNot {
                         it.type == GridItem.TYPE_CUSTOM_WIDGET && it.widgetDefId == def.id
@@ -130,7 +158,7 @@ class HomeGridSettingsFragment : SubSettingsFragment() {
                 runCatching {
                     val bytes = ctx.contentResolver.openInputStream(uri)?.use { it.readBoundedBytes(WidgetDef.MAX_BYTES) }
                         ?: error("Unreadable")
-                    WidgetDef.Library.import(ctx, prefs, String(bytes, Charsets.UTF_8))
+                    WidgetDef.WIDGETS.import(ctx, prefs, String(bytes, Charsets.UTF_8))
                 }
             }
             result.onSuccess { def ->

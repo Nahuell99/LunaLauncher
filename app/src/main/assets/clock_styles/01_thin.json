@@ -1,0 +1,23 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.thin",
+  "name": "Thin",
+  "name_es": "Fino",
+  "spanX": 5,
+  "spanY": 2,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{time}",
+      "size": 64,
+      "font": "sans-serif-thin"
+    },
+    {
+      "text": "{date:EEE, d MMM} · {battery}%",
+      "size": 16,
+      "alpha": 0.85
+    }
+  ]
+}

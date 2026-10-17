@@ -1,0 +1,30 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.terminal",
+  "name": "Terminal",
+  "name_es": "Terminal",
+  "spanX": 5,
+  "spanY": 2,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "> {date:yyyy-MM-dd}",
+      "size": 15,
+      "font": "monospace",
+      "color": "accent"
+    },
+    {
+      "text": "{time:HH:mm}_",
+      "size": 48,
+      "font": "monospace"
+    },
+    {
+      "text": "bat {battery}% {charging:+}",
+      "size": 13,
+      "font": "monospace",
+      "alpha": 0.7
+    }
+  ]
+}

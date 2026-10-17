@@ -1,0 +1,29 @@
+{
+  "format": "lunalauncher-widget",
+  "version": 1,
+  "id": "clock.greeting",
+  "name": "Greeting",
+  "name_es": "Saludo",
+  "spanX": 5,
+  "spanY": 3,
+  "padding": 0,
+  "tap": "clock",
+  "lines": [
+    {
+      "text": "{greeting}",
+      "size": 20,
+      "font": "sans-serif-light",
+      "alpha": 0.85
+    },
+    {
+      "text": "{time}",
+      "size": 64,
+      "font": "sans-serif-thin"
+    },
+    {
+      "text": "{date:EEE d MMM} · ⏰ {alarm|—}",
+      "size": 14,
+      "alpha": 0.7
+    }
+  ]
+}

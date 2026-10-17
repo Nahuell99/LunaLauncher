@@ -1,5 +1,5 @@
 {
-  "format": "olauncher-widget",
+  "format": "lunalauncher-widget",
   "version": 1,
   "id": "builtin.next_event",
   "name": "Next event",

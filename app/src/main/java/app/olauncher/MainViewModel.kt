@@ -202,6 +202,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             if (!canLaunch(appModel.appPackage, appModel.user)) return
             launcher.startShortcut(shortcut, null, null)
             prefs.incrementUsage(appKey(appModel))
+            prefs.setLastUsed(appKey(appModel), System.currentTimeMillis())
         } catch (_: Exception) {
             appContext.showToast(appContext.getString(R.string.unable_to_open_app))
         }
@@ -458,6 +459,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         // Track launches to rank drawer search results by frequency of use.
         prefs.incrementUsage(key)
+        prefs.setLastUsed(key, System.currentTimeMillis())
         val launcher = appContext.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
         val activityInfo = launcher.getActivityList(packageName, userHandle)
 

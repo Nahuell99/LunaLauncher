@@ -51,6 +51,7 @@ import app.olauncher.helper.dpToPx
 import app.olauncher.helper.getColorFromAttr
 import app.olauncher.helper.scrimColor
 import app.olauncher.helper.IconManager
+import app.olauncher.helper.NotificationDots
 import app.olauncher.helper.expandNotificationDrawer
 import app.olauncher.helper.getUserHandleFromString
 import app.olauncher.helper.isPackageInstalled
@@ -67,6 +68,7 @@ import app.olauncher.listener.OnSwipeTouchListener
 import app.olauncher.listener.ViewSwipeTouchListener
 import app.olauncher.ui.grid.HomeGridController
 import app.olauncher.ui.grid.HomeGridView
+import app.olauncher.widgets.ClockStyleController
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -82,6 +84,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
 
     // ---- Free-form home grid ----
     private var gridController: HomeGridController? = null
+    private var clockStyle: ClockStyleController? = null
     private var gridBackCallback: OnBackPressedCallback? = null
 
     private fun gridResultLauncher(request: Int) =
@@ -136,6 +139,14 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         initShortcutIcons()
         initReorder()
         initGrid()
+        clockStyle = ClockStyleController(
+            container = binding.clockStyleContainer,
+            classicViews = listOf(binding.clock, binding.date),
+            prefs = prefs,
+            onTap = { if (!reorderMode) openClockApp() },
+            onLongTap = { if (!reorderMode) showAppList(Constants.FLAG_SET_CLOCK_APP) },
+        )
+        populateDateTime()
 
 
     }
@@ -170,6 +181,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         if (reorderMode) exitReorderMode(announce = false)
         gridController?.exitEditMode()
         gridController?.stopTicking()
+        clockStyle?.stop()
         try {
             appWidgetHost?.stopListening()
         } catch (e: Exception) {
@@ -290,6 +302,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
             it?.let {
                 binding.tvScreenTime.text = it
                 gridController?.setScreenTime(it)
+                clockStyle?.setScreenTime(it)
             }
         }
         viewModel.enterReorderMode.observe(viewLifecycleOwner) {
@@ -300,6 +313,9 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         }
         viewModel.clearGrid.observe(viewLifecycleOwner) {
             gridController?.clearAll()
+        }
+        NotificationDots.changes.observe(viewLifecycleOwner) {
+            if (prefs.notificationDots != NotificationDots.OFF) populateHomeScreen(false)
         }
         // Home button for recents feature disabled
         // viewModel.showRecentApps.observe(viewLifecycleOwner) {
@@ -338,6 +354,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
 
         // Clock/date — independent horizontal alignment
         binding.dateTimeLayout.gravity = prefs.clockAlignment
+        clockStyle?.render(binding.dateTimeLayout.isVisible, prefs.clockAlignment)
 
         // Screen time — independent horizontal alignment
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && requireContext().appUsagePermissionGranted()) {
@@ -399,6 +416,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
                 dateText = getString(R.string.day_battery, dateText, battery)
         }
         binding.date.text = dateText.replace(".,", ",")
+        clockStyle?.render(binding.dateTimeLayout.isVisible, prefs.clockAlignment)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -641,9 +659,10 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
 
         // Helper to bind the text/label to the TextView
         fun bindText() {
+            val dots = NotificationDots.textSuffix(prefs, packageName, userHandle.toString())
             if (onlyIcons && showIcons) {
                 textView.hint = null
-                textView.text = if (isBanned) "⏳︎" else ""
+                textView.text = if (isBanned) "⏳︎" else dots.trim()
             } else {
                 textView.hint = textView.context.getString(R.string.app)
                 if (isBanned) {
@@ -657,7 +676,8 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
                     }
                     textView.text = "$appName  ⏳︎\u00A0$timeStr"
                 } else {
-                    textView.text = appName
+                    // Notification dot / count after the name (empty when off).
+                    textView.text = buildString { append(appName); append(dots) }
                 }
             }
         }
@@ -1515,6 +1535,7 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         val host = appWidgetHost ?: return
         gridController = HomeGridController(
             grid = binding.homeGrid,
+            dock = binding.homeDock,
             doneButton = binding.gridEditDone,
             prefs = prefs,
             widgetManager = manager,
@@ -1572,6 +1593,8 @@ class HomeFragment : BaseFragment(), View.OnClickListener, View.OnLongClickListe
         super.onDestroyView()
         gridController?.onDestroy()
         gridController = null
+        clockStyle?.stop()
+        clockStyle = null
         clearWiggle()
         reorderMode = false
         appsReorder = null

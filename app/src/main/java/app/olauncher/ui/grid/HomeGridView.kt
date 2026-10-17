@@ -87,7 +87,8 @@ class HomeGridView @JvmOverloads constructor(
      */
     fun setItems(columns: Int, rows: Int, newItems: List<GridItem>, viewFor: (GridItem, View?) -> View) {
         this.columns = columns.coerceIn(HomeGrid.MIN_COLUMNS, HomeGrid.MAX_COLUMNS)
-        this.rows = rows.coerceIn(HomeGrid.MIN_ROWS, HomeGrid.MAX_ROWS)
+        // 1 row is allowed here: the dock reuses this view as a single row.
+        this.rows = rows.coerceIn(1, HomeGrid.MAX_ROWS)
         items = newItems.filter { it.col + it.spanX <= this.columns && it.row + it.spanY <= this.rows }
         val keep = items.map { it.id }.toSet()
         views.keys.filter { it !in keep }.forEach { id -> views.remove(id)?.let(::removeView) }

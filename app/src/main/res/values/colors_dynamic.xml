@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material You colours (Settings → Icons → Colours). Fallbacks for Android < 12;
+     the real values come from the wallpaper on API 31+ (values-v31 / values-night-v31). -->
+<resources>
+    <color name="dynamic_text">@color/black</color>
+    <color name="dynamic_accent">#3B82F6</color>
+</resources>

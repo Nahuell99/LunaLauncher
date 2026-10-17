@@ -63,6 +63,13 @@
             android:paddingHorizontal="3dp"
             android:textSize="@dimen/date_size"
             tools:text="Thu, 30 Dec" />
+
+        <!-- Custom clock style (Settings → Clock style); replaces clock + date when set. -->
+        <FrameLayout
+            android:id="@+id/clockStyleContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
     </LinearLayout>
 
     <!-- Screen time-->
@@ -318,6 +325,14 @@
         android:id="@+id/homeGrid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!-- Dock: one fixed row of icons at the bottom (Settings → Home grid & widgets). -->
+    <app.olauncher.ui.grid.HomeGridView
+        android:id="@+id/homeDock"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_gravity="bottom"
         android:visibility="gone" />
 
     <!-- Grid edit mode: tap to finish -->

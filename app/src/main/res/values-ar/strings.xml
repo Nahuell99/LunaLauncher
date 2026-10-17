@@ -3,7 +3,7 @@
     <string name="app">تطبيق</string>
     <string name="set_as_default_launcher">تعيين كمشغل افتراضي</string>
     <string name="set_as_default_launcher_u"><u>تعيين كمشغل افتراضي</u></string>
-    <string name="set_as_default_launcher_first">عيّن Olauncher كمشغل افتراضي أولاً</string>
+    <string name="set_as_default_launcher_first">عيّن LunaLauncher كمشغل افتراضي أولاً</string>
     <string name="_0">0</string>
     <string name="_1">1</string>
     <string name="_2">2</string>
@@ -18,17 +18,16 @@
     <string name="cool">رائع!</string>
     <string name="tip_start_typing_for_rename">نصيحة: ابدأ الكتابة لإظهار خيار إعادة تسمية التطبيق</string>
     <string name="your_wallpaper_will_update_shortly">سيتم تحديث الخلفية الخاصة بك قريبًا</string>
-    <string name="olauncher_is_not_default_launcher">Nahuel Launcher ليس المشغل الافتراضي. قد يفشل التحديث اليومي للخلفية.</string>
+    <string name="olauncher_is_not_default_launcher">LunaLauncher ليس المشغل الافتراضي. قد يفشل التحديث اليومي للخلفية.</string>
     <string name="long_press_to_enable">اضغط مطولًا للتمكين</string>
     <string name="no_hidden_apps">لا توجد تطبيقات مخفية</string>
     <string name="hidden_apps">تطبيقات مخفية</string>
     <string name="swipe_left_app_disabled">التمرير لليسار معطّل</string>
     <string name="swipe_right_app_disabled">التمرير لليمين معطّل</string>
-    <string name="hidden_apps_message">ملاحظة: اضغط على \"Nahuel Launcher\" أعلى الصفحة للعثور على تطبيقاتك المخفية.  المزيد من التفاصيل متوفرة في صفحة \"حول\" أدناه.</string>
     <string name="swipe_down_for">اسحب لأسفل من أجل</string>
     <string name="search">يبحث</string>
     <string name="notifications">إشعارات</string>
-    <string name="accessibility_disclosure">يرجى تشغيل خدمة الوصول في Nahuel Launcher في إعدادات جهازك لتمكين إيماءة النقر المزدوج للقفل أو زر الشاشة الرئيسية لعرض التطبيقات الأخيرة.
+    <string name="accessibility_disclosure">يرجى تشغيل خدمة الوصول في LunaLauncher في إعدادات جهازك لتمكين إيماءة النقر المزدوج للقفل أو زر الشاشة الرئيسية لعرض التطبيقات الأخيرة.
     \n\nيرجى ملاحظة أن هذه الخدمة تُستخدم فقط لهذه الإيماءات. خدمة الوصول لدينا لا تجمع أو تشارك أي بيانات.</string>
     <string name="accept">قبول</string>
     <string name="permission">إذن</string>
@@ -43,7 +42,7 @@
     <string name="enabled">ممكّن</string>
     <string name="disabled">مُطفأ</string>
     <string name="please_turn_on_double_tap_to_unlock">يرجى تشغيل النقر المزدوج للقفل</string>
-    <string name="launcher_failed_to_lock_device">فشل Nahuel Launcher في قفل الجهاز. يرجى التحقق من إعدادات التطبيق الخاص بك.</string>
+    <string name="launcher_failed_to_lock_device">فشل LunaLauncher في قفل الجهاز. يرجى التحقق من إعدادات التطبيق الخاص بك.</string>
     <string name="long_press_to_select_app">اضغط مطوّلًا لاختيار التطبيق</string>
     <string name="unable_to_open_app">تعذر فتح التطبيق</string>
     <string name="copied">نُسخ</string>
@@ -53,7 +52,7 @@
     <string name="adapter_hide">إخفاء</string>
     <string name="app_text_color">لون الخط</string>
     <string name="double_tap_to_lock_screen">انقر مرتين لقفل الشاشة</string>
-    <string name="admin_permission_message">يعد Nahuel Launcher باستخدام إذن قفل الشاشة بشكل مسؤول. لا يقوم Nahuel Launcher بجمع أو مشاركة أي بيانات.</string>
+    <string name="admin_permission_message">يعد LunaLauncher باستخدام إذن قفل الشاشة بشكل مسؤول. لا يقوم LunaLauncher بجمع أو مشاركة أي بيانات.</string>
     <string name="about">حول</string>
     <string name="off">إيقاف</string>
     <string name="on">تشغيل</string>
@@ -90,31 +89,22 @@
     <string name="light">فاتح</string>
     <string name="welcome_to_olauncher_settings">مرحبًا بك في الإعدادات!\n\nتذكر، إذا كان لديك أي سؤال، فإن صفحة \"حول\" لدينا تحتوي على الإجابة.</string>
     <string name="rate_us_message">مرحبًا ، لن ترى هذه الرسالة مرة أخرى.
-        \n\nإذا كنت تحب Nahuel Launcher ، فهل يمكنك أن تعطينا تصنيف 5 نجوم؟ يساعدنا ذلك على تحسين تصنيفنا ويجعلنا سعداء. شكرًا لك!</string>
-    <string name="share_message">مرحبا، نحن بحاجة لمساعدتكم! في العام الماضي تجاوزنا مليون عملية تنزيل. نريد هذا العام أن نصل إلى مليون آخرين ولكن لا يمكننا القيام بذلك بمفردنا.
-        \n\nهل تتفضل بمشاركة Nahuel Launcher مع أصدقائك، من فضلك؟ شكرا لك، ويوم رائع!</string>
-    <string name="keyboard_message">مرحبًا ، لوحة المفاتيح هي أسرع طريقة للعثور على التطبيقات وتشغيلها في Nahuel Launcher. هل يمكننا أن نطلب منك الاحتفاظ بهذا الأمر لبضعة أيام أخرى ثم اتخاذ القرار؟ الاختيار دائما لك.</string>
+        \n\nإذا كنت تحب LunaLauncher ، فهل يمكنك أن تعطينا تصنيف 5 نجوم؟ يساعدنا ذلك على تحسين تصنيفنا ويجعلنا سعداء. شكرًا لك!</string>
+    <string name="keyboard_message">مرحبًا ، لوحة المفاتيح هي أسرع طريقة للعثور على التطبيقات وتشغيلها في LunaLauncher. هل يمكننا أن نطلب منك الاحتفاظ بهذا الأمر لبضعة أيام أخرى ثم اتخاذ القرار؟ الاختيار دائما لك.</string>
     <string name="digital_wellbeing_message">إذا كنت تريد تعيين حدود زمنية لتطبيقات معينة، فيمكن أن تساعدك ميزة الرفاهية الرقمية في Android على القيام بذلك.
         \n\nيرجى البحث عن الرفاهية الرقمية في إعدادات هاتفك وتمكينها.</string>
     <string name="app_usage_message">لعرض/إخفاء وقت استخدام الشاشة على الشاشة الرئيسية، يرجى السماح أو منع إذن استخدام التطبيق.
         \n\nملاحظة: لا يتم جمع أي بيانات حول استخدام التطبيقات. يتم معالجة كل شيء على جهازك.</string>
-    <string name="pro_message">يحتوي Nahuel Launcher أيضًا على إصدار احترافي يسمى Pro Launcher. يحتوي على ميزات إضافية مثل الطقس، والأدوات، والخطوط، والمجلدات، وخلفيات AMOLED، وما إلى ذلك.
-        \n\nإنه أيضًا أفضل طريقة لدعم مطوري Nahuel Launcher. تحقق من ذلك!</string>
-    <string name="wallpaper_message">يقدم Nahuel Launcher خلفيات جميلة جديدة يوميًا. امنح شاشتك الرئيسية مظهرًا جديدًا كل يوم، مجانًا!
-        \n\nهل ترغب في تجربته؟</string>
-    <string name="support_olauncher_for_free">ادعم Nahuel Launcher مجانًا باستخدام رابط الشراكة التابع لشركة Amazon.</string>
-    <string name="support_olauncher_message">في كل مرة تشتري فيها شيئًا باستخدام رابطنا، نحصل على عمولة صغيرة. يرجى حفظ الرابط واستخدامه كلما تسوقت عبر الإنترنت.\nشكرًا لك!</string>
     <string name="open">افتح الرابط</string>
     <string name="copy">نسخ</string>
     <string name="close">إغلاق</string>
     <string name="not_now">ليس الآن</string>
-    <string name="public_roadmap">خارطة طريق Nahuel Launcher العامة</string>
     <string name="roadmap">خريطة الطريق</string>
     <string name="date">تاريخ</string>
     <string name="date_only">التاريخ فقط</string>
     <string name="bottom_on">المحاذاة لأسفل</string>
     <string name="bottom_off">المحاذاة لأعلى</string>
-    <string name="please_set_olauncher_as_default_first">يرجى تعيين Nahuel Launcher كمشغل افتراضي أولاً</string>
+    <string name="please_set_olauncher_as_default_first">يرجى تعيين LunaLauncher كمشغل افتراضي أولاً</string>
     <string name="affiliate">الشراكة</string>
     <string name="app_not_found">التطبيق غير موجود</string>
     <string name="unable_to_launch_app">تعذر تشغيل التطبيق</string>
@@ -122,12 +112,10 @@
     <string name="swipe_left_app_enabled">التمرير لليسار مفعّل</string>
     <string name="swipe_right_app_enabled">التمرير لليمين مفعّل</string>
     <string name="are_you_using_your_phone_or_is_your_phone_using_you">هل تستخدم هاتفك أم أن هاتفك يستخدمك؟</string>
-    <string name="about_olauncher">عن Nahuel Launcher</string>
+    <string name="about_olauncher">عن LunaLauncher</string>
     <string name="learn_more">اعرف المزيد</string>
     <string name="did_you_know">هل كنت تعلم؟</string>
     <string name="leave_a_review">اترك تقييمًا</string>
-    <string name="review_message">Nahuel Launcher هو وسيظل دائمًا مجانيًا تمامًا. ليس لديها إعلانات. لا يجمع أي بيانات. والأهم من ذلك أنه يساعدك على تقليل وقت الشاشة والعيش حياة رقمية أكثر صحة.
-        \n\nنحن نعتقد أن التحول إلى الحد الأدنى من المشغل هو قرار ممتاز. على الرغم من أننا متحيزون بشكل واضح، إلا أننا نأمل أن تستمتع بالتجربة. لا تتردد في مشاركة أفكارك معنا!</string>
     <string name="screen_time">وقت الشاشة</string>
     <string name="alignment_changed">تم تغيير المحاذاة ✅</string>
     <string name="home_screen">الشاشة الرئيسية</string>
@@ -138,17 +126,14 @@
     <string name="cheers">بصحتك!</string>
     <string name="notification_bar">شريط الإشعارات</string>
 
-    <string name="app_name">Nahuel Launcher</string>
     <string name="layout_positioning">التخطيط وتحديد المواقع</string>
     <string name="reorder_items">إعادة ترتيب العناصر والأيقونات</string>
     <string name="reorder_mode_hint">اضغط مع الاستمرار واسحب لأعلى أو لأسفل لإعادة الترتيب. اضغط على ✓ عند الانتهاء.</string>
     <string name="reorder_done">✓ تم</string>
     <string name="reorder_completed">تم حفظ الطلب ✅</string>
-    <string name="website">بيرسباد.كوم</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="github">جيثب</string>
     <string name="lock_layout_description">وصف تخطيط القفل لاستخدامه معرفًا فريدًا لقفل الشاشة</string>
-    <string name="olauncher_pro">برنامج Nahuel Launcher Pro</string>
     <string name="digital_minimalism"></string>
     <string name="new_app_note_safe"></string>
     <string name="new_app_minimal_todo_lists"></string>
@@ -185,7 +170,7 @@
     <string name="long_press_to_remove_widget">اضغط لفترة طويلة لإزالة القطعة</string>
     <string name="no_widgets_available">لا توجد الحاجيات المتاحة</string>
     <string name="widget_bind_failed">لا يمكن إضافة القطعة</string>
-    <string name="widget_requires_default_launcher">قم بتعيين Nahuel Launcher كمشغل افتراضي لإضافة عناصر واجهة المستخدم</string>
+    <string name="widget_requires_default_launcher">قم بتعيين LunaLauncher كمشغل افتراضي لإضافة عناصر واجهة المستخدم</string>
     <string name="home_icons_count">أيقونات التطبيقات المفضلة</string>
     <string name="group">مجموعة</string>
     <string name="add_to_group">أضف إلى المجموعة</string>
@@ -295,7 +280,7 @@
     <string name="settings_home_icons">عرض الأيقونات على الشاشة الرئيسية</string>
     <string name="settings_home_only_icons">إخفاء أسماء التطبيقات على الشاشة الرئيسية</string>
     <string name="settings_icons_title">الأيقونات</string>
-    <string name="accessibility_service_description">إذن إمكانية الوصول مطلوب لتفعيل إيماءة النقر المزدوج للقفل. أي بيانات يحصل عليها Olauncher عبر هذه الخدمة لن تغادر جهازك.</string>
+    <string name="accessibility_service_description">إذن إمكانية الوصول مطلوب لتفعيل إيماءة النقر المزدوج للقفل. أي بيانات يحصل عليها LunaLauncher عبر هذه الخدمة لن تغادر جهازك.</string>
     <string name="pin_action_not_supported">إجراء التثبيت هذا غير مدعوم</string>
     <string name="shortcut_pinned">تمت إضافة الاختصار</string>
     <string name="shortcut_pin_failed">تعذرت إضافة الاختصار</string>

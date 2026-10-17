@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark theme: light text tinted by the wallpaper. -->
+<resources>
+    <color name="dynamic_text">@android:color/system_accent1_100</color>
+    <color name="dynamic_accent">@android:color/system_accent1_300</color>
+</resources>

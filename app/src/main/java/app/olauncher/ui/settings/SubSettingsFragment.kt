@@ -25,6 +25,9 @@ abstract class SubSettingsFragment : BaseFragment() {
     abstract val titleRes: Int
     abstract fun build(builder: SettingsBuilder)
 
+    /** Runs once [prefs] and [viewModel] are ready, before the first [build]. */
+    protected open fun onReady(savedInstanceState: Bundle?) = Unit
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSubSettingsBinding.inflate(inflater, container, false)
         return binding.root
@@ -41,6 +44,7 @@ abstract class SubSettingsFragment : BaseFragment() {
             v.setPadding(0, bars.top + 8.dpToPx(), 0, bars.bottom)
             insets
         }
+        onReady(savedInstanceState)
         rebuild()
     }
 
