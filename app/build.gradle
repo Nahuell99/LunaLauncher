@@ -80,7 +80,7 @@ android {
         abortOnError true
         warningsAsErrors true
         // Version availability is advisory and changes independently of this source.
-        disable 'GradleDependency', 'AndroidGradlePluginVersion'
+        disable 'GradleDependency', 'AndroidGradlePluginVersion', 'OldTargetApi'
     }
 }
 
